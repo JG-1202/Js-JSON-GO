@@ -1,0 +1,116 @@
+{
+    "holding": "appleCompany",
+    "mainStore": "Amsterdam",
+    "stores": [
+        {
+            "storeName": "Berlin",
+            "expensive": 5,
+            "items": [
+                {
+                    "name": "Granny Smith small bag",
+                    "family": "Granny's'",
+                    "weight": 1,
+                    "price": 3
+                },
+                {
+                    "name": "Granny Smith medium bag",
+                    "family": "Granny's",
+                    "weight": 2,
+                    "price": 5
+                },
+                {
+                    "name": "Granny Smith large bag",
+                    "family": "Granny's",
+                    "weight": 3,
+                    "price": 6
+                },
+                {
+                    "name": "Fuji small bag",
+                    "family": "Fuji",
+                    "weight": 1,
+                    "price": 3.50
+                },
+                {
+                    "name": "Pink Lady small bag",
+                    "family": "Pink Lady",
+                    "weight": 1,
+                    "price": 8
+                },
+                {
+                    "name": "Pink Lady medium bag",
+                    "family": "Pink Lady",
+                    "weight": 2,
+                    "price": 8
+                }
+            ]
+        },
+        {
+            "storeName": "Amsterdam",
+            "expensive": 6,
+            "items": [
+                {
+                    "name": "Granny Smith small bag",
+                    "family": "Granny's",
+                    "weight": 1,
+                    "price": 3
+                },
+                {
+                    "name": "Granny Smith medium bag",
+                    "family": "Granny's",
+                    "weight": 2,
+                    "price": 5
+                },
+                {
+                    "name": "Granny Smith large bag",
+                    "family": "Granny's",
+                    "weight": 3,
+                    "price": 6,
+                    "expensive": true
+                },
+                {
+                    "name": "Pink Lady medium bag",
+                    "family": "Pink Lady",
+                    "weight": 2,
+                    "price": 8,
+                    "expensive": true
+                },
+                {
+                    "name": "Pink Lady large bag",
+                    "family": "Pink Lady",
+                    "weight": 3,
+                    "price": 10,
+                    "expensive": true
+                }
+            ]
+        },
+        {
+            "storeName": "Barcelona",
+            "expensive": 4.50,
+            "items": [
+                {
+                    "name": "Granny Smith small bag",
+                    "family": "Granny's",
+                    "weight": 1,
+                    "price": 1
+                },
+                {
+                    "name": "Granny Smith medium bag",
+                    "family": "Granny's",
+                    "weight": 2,
+                    "price": 2
+                },
+                {
+                    "name": "Granny Smith large bag",
+                    "family": "Granny's",
+                    "weight": 3,
+                    "price": 3
+                }
+            ]
+        },
+        {
+            "storeName": "Rome",
+            "expensive": null,
+            "items": []
+        }
+    ]
+}

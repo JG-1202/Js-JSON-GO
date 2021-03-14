@@ -1,0 +1,27 @@
+# Changelog
+All notable changes to this project will be documented here.
+
+## [0.1.2] - 2021-03-14
+### Changed
+- README.md documentation
+
+## [0.1.1] - 2021-03-14
+### Added
+- support for wildcards on set/get/translate
+- performance improvement
+
+## [0.1.0] - 2021-03-07
+### Added
+- Chop: Chops an array or object into smaller pieces
+- Parse: Parses input value if it is stringified
+- Stringify: Stringifies input value if it is an object
+- Unlink: Unlinks object, removes reference to other object
+- Get: Retreives single value from objects specified path
+- GetAll: Retreives all values from objects specified path
+- Set: Sets single value on specified path
+- SetAll: Sets all values on specified path
+- MakeArray: Makes an array, parses input value if stringified, if no array is found as input, it returns an empty array.
+- MakeJson: Makes an object/array, parses input value if stringified, if no object/array is found as input, it returns an empty object.
+- MakeObject: Makes an object, parses input value if stringified, if no object is found as input, it returns an empty object.
+- Json constructor: allowing to: (1) set, (2) setAll, (3) get, (4) getAll, (5) export into/from object
+- Map constructor:  allowing to: (1) translate, (2) translateAll, (3) translateOneToAll, (4) translateAllToOne, (5) export into/from object

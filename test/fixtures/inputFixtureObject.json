@@ -1,0 +1,45 @@
+{
+    "holding": "appleWholesale",
+    "expensive": "3",
+    "itemFamilies": {
+        "Granny's": {
+            "small": {
+                "weight": 1,
+                "price": 1
+            },
+            "medium": {
+                "weight": 2,
+                "price": 2
+            },
+            "large": {
+                "weight": 3,
+                "price": 3
+            }
+        },
+        "Fuji": {
+            "small": {
+                "weight": 1,
+                "price": 1.5
+            },
+            "medium": {
+                "weight": 2,
+                "price": 2.5
+            },
+            "large": {
+                "weight": 3,
+                "price": 3.5
+            }
+        },
+        "Pink Lady": {
+            "small": {
+                "weight": 1
+            },
+            "medium": {
+                "weight": 2
+            },
+            "large": {
+                "weight": 3
+            }
+        }
+    }
+}
