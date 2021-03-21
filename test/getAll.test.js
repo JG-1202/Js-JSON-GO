@@ -167,4 +167,13 @@ describe('Test getAll function wit regular expressions', () => {
     const result = getAll(inputFixture, 'stores[{$.storeName ? $.storeName}].storeName');
     expect(result).toStrictEqual([]);
   });
+  it('If invalid regular expression, throw error', () => {
+    let result = null;
+    try {
+      getAll(inputFixture, 'stores[{$.storeName ? $RegExp(\\w+)}].storeName');
+    } catch(err){
+      result = err.message;
+    }
+    expect(result).toStrictEqual('Invalid regular expression, missing / at beginning and beteen pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
+  });
 });
