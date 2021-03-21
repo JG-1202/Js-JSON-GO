@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.1.3] - 2021-03-21
+### Added
+- support for regular expressions with RegExp() on set/get/translate
+- missing JSDoc in get/set functions
+
+
 ## [0.1.2] - 2021-03-14
 ### Changed
 - README.md documentation

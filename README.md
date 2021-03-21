@@ -44,23 +44,21 @@ The following syntax can be used (note that this table is reflecting priority, m
 
 Each query may exist out of either one, or two elements seperated by an operator. In case only one element is provided a !falsy check will be performed.
 
-| Query Element Syntax          | Description                                                                                   |
-| :---------------------------- | :-------------------------------------------------------------------------------------------- |
-| `null`                        | null not surrounded by quotes is considered `null`                                            |
-| `undefined`                   | undefined not surrounded by quotes is considered `undefined`                                  |
-| `true`                        | true not surrounded by quotes is considered `true`                                            |
-| `false`                       | false not surrounded by quotes is considered `false`                                          |
-| `number`                      | a number not surrounded by quotes is considered to be of type number                          |
-| `"`string`"`                  | Element is considered a to be a string                                                        |
-| `'`string`'`                  | Element is considered a to be a string                                                        |
-| `$`path                       | Element relates to JSON location. `$` followed by a path is considered to have its origin at  |
-|                               | the root of the object                                                                        |
-| `$.`path                      | Element relates to JSON location. `$.` followed by a path is considered to have its origin at |
-|                               | the current depth within object                                                               |
-| `$..`path                     | Element relates to JSON location. `$..` followed by a path is considered to have its origin   | 
-|                               | at the parent of the current depth within object (each additional dot relates to the parent   |
-|                               | of the corresponding element)                                                                 |
-| `$JSON(`stringified JSON`)`   | Element is considered to be a JSON.                                                           |
+| Query Element Syntax            | Description                                                                                      	 																	|
+| :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 	|
+| `null`                          | null not surrounded by quotes is considered `null`                                                																		|
+| `undefined`                     | undefined not surrounded by quotes is considered `undefined`                                     																	 	|
+| `true`                          | true not surrounded by quotes is considered `true`                                                																		|
+| `false`                         | false not surrounded by quotes is considered `false`                                              																		|
+| `number`                        | a number not surrounded by quotes is considered to be of type number                              																		|
+| `"`string`"`                    | Element is considered a to be a string                                                            																		|
+| `'`string`'`                    | Element is considered a to be a string                                                            																		|
+| `$`path                         | Element relates to JSON location. `$` followed by a path is considered to have its origin at the root of the object                                                                            				|
+| `$.`path                        | Element relates to JSON location. `$.` followed by a path is considered to have its origin at the current depth within object                                                                   				|
+| `$..`path                       | Element relates to JSON location. `$..` followed by a path is considered to have its origin at the parent of the current depth within object (each additional dot relates to the parent of the corresponding element) 	|
+| `$JSON(`stringified JSON`)`     | Element is considered to be a JSON.                                                               																		|
+| `$RegExp(`regular rexpression`)`| Element is considered to be a Regular Expression (be aware some chars need to be escaped using `\`).																		|
+
 
 | Query Operators | Description                                                             |
 | :-------------- | :---------------------------------------------------------------------- |
@@ -72,6 +70,7 @@ Each query may exist out of either one, or two elements seperated by an operator
 | `<`             | validates whether first element smaller than second element             |
 | `∈` or `@`      | validates whether first element is in subset of second element          |
 | `∉` or `!@`     | validates whether first element is in subset of second element          |
+| `?`             | test element against regular expression                                 |
 
 ### Examples
 Usage will be demonstrated with an example "inputFixture" json file:
@@ -164,6 +163,8 @@ const result3 = JsonGo.getAll('stores[{$.items[{$.name = "Pink Lady large bag"}]
 const result4 = JsonGo.getAll('stores[{$.items[{Pink ∈ $.name}]}].storeName'); //['Berlin', 'Amsterdam'] -> get storeName of store that has an item with Pink in its name
 const result5 = JsonGo.getAll('stores[{$.items[{Fuji ∈ $.name}]}].items[{medium ∉ $.name}].name'); //["Granny Smith small bag", "Granny Smith large bag", "Fuji small bag", "Pink Lady small bag"] -> get al item names that do not have 'medium' in its name from stores that have items with 'Fuji' in its name.
 const result6 = JsonGo.getAll(`stores[{$.storeName ∈ $JSON(${JSON.stringify(['Berlin', 'Barcelona'])})}].storeName`); //['Berlin'] -> get storeNames of store that has storename in ['Berlin', 'Barcelona']
+const result7 = JsonGo.getAll('stores[{$.storeName ? $RegExp(/.*AMS.*/i)}].storeName'); //['Amsterdam'] -> get storeNames containing case insensitive AMS in its storeName using a regular expression
+
 
 
 /*
@@ -259,7 +260,7 @@ Tests can be ran using the following command:
 ```bash
 npm run test
 ```
-Current code coverage (14 suites, 147 tests) is about 99%.
+Current code coverage (14 suites, 154 tests) is about 99%.
 
 ## Contributing
 Pull requests are welcome.

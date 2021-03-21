@@ -1,6 +1,6 @@
 {
   "name": "js-json-go",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Js-JSON-Go is a Javascript library intending to make it easier to handle (and query) JSON messages, especially to grap (get) and update (set) parts of a larger JSON message, and translate (map) these to another path.",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,11 @@
   ],
   "author": "JG-1202",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JG-1202/Js-JSON-GO.git"
+  },
+  "homepage": "https://github.com/JG-1202/Js-JSON-GO",
   "devDependencies": {
     "eslint": "^7.18.0",
     "eslint-config-airbnb-base": "^14.2.1",

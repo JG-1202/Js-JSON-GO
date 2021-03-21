@@ -1,3 +1,5 @@
+const createRegExpFromString = require('./createRegExpFromString');
+
 const specials = ['null', 'undefined', 'true', 'false'];
 
 // eslint-disable-next-line complexity
@@ -38,9 +40,14 @@ const isStringString = (element) => {
 const checkIfFirstCharIsDollarSign = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.charAt(0) === '$');
 
 /**
- * Logical check on whether string starts with a dollar sign
+ * Logical check on whether string starts with $JSON
  */
 const checkIfJSON = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.substring(0, 6) === '$JSON(');
+
+ /**
+ * Logical check on whether string starts with $RegExp
+ */
+const checkIfRegExp = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.substring(0, 8) === '$RegExp(');
 
 /**
  * Logical check on whether string starts with a dot
@@ -88,6 +95,14 @@ const handleJson = (element) => {
 };
 
 /**
+ * Removes indicators that element is RegExp and returns a new RegExp
+ */
+ const handleRegExp = (element) => {
+  const remainingElement = element.substr(8, element.length - 9);
+  return { value: { regex: createRegExpFromString(remainingElement) } };
+};
+
+/**
  * Determines whether string indicates an absolute or relative path, returns object
  * with keyName the type of path (absolute, or relative) and keyValue the value of element
  */
@@ -129,6 +144,9 @@ const queryElementTransformer = (element) => {
   if (checkIfFirstCharIsDollarSign(element)) {
     if (checkIfJSON(element)) {
       return handleJson(element);
+    }
+    if (checkIfRegExp(element)) {
+      return handleRegExp(element);
     }
     return handlePaths(element);
   }

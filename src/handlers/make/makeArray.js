@@ -1,5 +1,8 @@
 const parse = require('../basic/parse.js');
 
+/**
+ * Check whether value exists and is an array
+ */
 const isArray = (value) => (value && Array.isArray(value));
 
 /**

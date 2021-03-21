@@ -1,5 +1,8 @@
 const parse = require('../basic/parse.js');
 
+/**
+ * Check whether value exists and is of type object
+ */
 const isJson = (value) => (value && typeof value === 'object');
 
 /**
