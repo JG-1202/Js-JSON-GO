@@ -1,5 +1,8 @@
 const parse = require('../basic/parse.js');
 
+/**
+ * Check whether value exists and is an object
+ */
 const isObject = (value) => (value && typeof value === 'object' && !Array.isArray(value));
 
 /**

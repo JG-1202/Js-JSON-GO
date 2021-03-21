@@ -1,4 +1,3 @@
-// const unlink = require('../basic/unlink.js');
 const pathTransformer = require('../../helpers/pathTransformer');
 const getPathElement = require('../../helpers/pathElements/getSingle');
 const getFirstKeyFromArray = require('../../helpers/pathElements/getKeys/getFirstKeyFromArray');
