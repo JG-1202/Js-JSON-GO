@@ -3,7 +3,7 @@ const queryElementTransformer = require('./queryElementTransformer.js');
 
 const transformCache = {};
 
-const operators = ['=', '<', '>', '!', '∈', '∉', '@'];
+const operators = ['=', '<', '>', '!', '∈', '∉', '@', '?'];
 
 /**
  * Validate if length of result is either 1 or 3, otherwise throw error

@@ -1,4 +1,3 @@
-// const unlink = require('../basic/unlink.js');
 const JsonGo = require('../../../index');
 const pathTransformer = require('../../helpers/pathTransformer');
 const stringify = require('../basic/stringify');
@@ -11,6 +10,9 @@ const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKe
 
 const getCache = {};
 
+/**
+ * Handle wildcard, checks for each key whether remaining path is found and returns first key that matches
+ */
 const getFirstKey = (tempObject, arrayPath, getType, index, obj, priorPath) => {
   const keys = getType === 'number' ? getAllKeysFromArray(tempObject) : getAllKeysFromObject(tempObject);
   let result;
@@ -31,6 +33,9 @@ const getFirstKey = (tempObject, arrayPath, getType, index, obj, priorPath) => {
   return result;
 };
 
+/**
+ * Get name of element either from wildcard or from other type of element
+ */
 const getPathElement = (element, obj, tempObject, getType, priorPath, arrayPath, index) => {
   if (element.wildcard) {
     return getFirstKey(tempObject, arrayPath, getType, index, obj, priorPath);

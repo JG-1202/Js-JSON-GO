@@ -11,6 +11,9 @@ const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKe
 
 const getCache = {};
 
+/**
+ * Get names of elements either from wildcard or from other type of elements
+ */
 const getPathElements = (element, obj, tempObject, getType, priorPath) => {
   if (element.wildcard) {
     if (getType === 'number') {

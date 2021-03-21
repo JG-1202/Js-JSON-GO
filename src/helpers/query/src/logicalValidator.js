@@ -33,6 +33,15 @@ const logicalValidator = (value, operator, checkValue) => {
   if (operator === '∉' || operator === '!@') {
     return (checkValue.indexOf(value) === -1);
   }
+  if (operator === '?') {
+    if(checkValue.regex) {
+      return checkValue.regex.test(value);
+    }
+    if(value.regex){
+      return value.regex.test(checkValue);
+    }
+    return false;
+  }
   return !!value;
 };
 

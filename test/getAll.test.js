@@ -9,7 +9,6 @@ const testObject = {
     },
   },
 };
-// const inputFixtureObject = require('./fixtures/inputFixtureObject.json');
 
 describe('Test getAll function', () => {
   it('Get from array if number 1', () => {
@@ -23,6 +22,10 @@ describe('Test getAll function', () => {
   it('Get all storeNamesfrom object', () => {
     const result = getAll(testObject, 'stores[*].storeName');
     expect(result).toStrictEqual(['Berlin']);
+  });
+  it('Get all storeNames with a storeName', () => {
+    const result = getAll(inputFixture, 'stores[{$.storeName}].storeName');
+    expect(result).toStrictEqual(['Berlin', 'Amsterdam', 'Barcelona', 'Rome']);
   });
   it('Get from array if number 2', () => {
     const result = getAll(inputFixture, [{ string: 'stores' }, { number: 0 }, { string: 'storeName' }]);
@@ -139,6 +142,29 @@ describe('Test getAll function', () => {
   });
   it('Use of wildcard if there is nothing to retreive returns empty array', () => {
     const result = getAll(testObject, 'stores["0"].storeName[*]');
+    expect(result).toStrictEqual([]);
+  });
+});
+
+describe('Test getAll function wit regular expressions', () => {
+  it('Testing basic regular expression', () => {
+    const result = getAll(inputFixture, 'stores[{$.storeName ? $RegExp(/\\w+/)}].storeName');
+    expect(result).toStrictEqual(['Berlin', 'Amsterdam', 'Barcelona', 'Rome']);
+  });
+  it('Testing regular expression without flags', () => {
+    const result = getAll(inputFixture, 'stores[{$.storeName ? $RegExp(/.*AMS.*/)}].storeName');
+    expect(result).toStrictEqual([]);
+  });
+  it('Testing regular expression with flags', () => {
+    const result = getAll(inputFixture, 'stores[{$.storeName ? $RegExp(/.*AMS.*/i)}].storeName');
+    expect(result).toStrictEqual(['Amsterdam']);
+  });
+  it('Testing regular expression with flags as first part of query', () => {
+    const result = getAll(inputFixture, 'stores[{$RegExp(/.*AMS.*/i) ? $.storeName}].storeName');
+    expect(result).toStrictEqual(['Amsterdam']);
+  });
+  it('If operator is ? but no RegExp is found, return no results', () => {
+    const result = getAll(inputFixture, 'stores[{$.storeName ? $.storeName}].storeName');
     expect(result).toStrictEqual([]);
   });
 });
