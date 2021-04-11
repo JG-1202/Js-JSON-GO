@@ -33,8 +33,8 @@ const getElementValue = (element) => {
  * @returns {object} object with newly set path in case that multiple logical checks
  * satisfy the first element will be set.
  */
-const setAll = (obj, path, val, fatalError) => {
-  const arrayPath = pathTransformer(path);
+const setAll = (obj, path, val, fatalError, functions) => {
+  const arrayPath = pathTransformer(path, functions);
   const priorPath = [];
   let tempObject = obj;
 

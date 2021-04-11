@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const createRegExpFromString = require('../src/helpers/pathTransformer/src/createRegexpFromString');
+const createRegExpFromString = require('../src/helpers/pathTransformer/src/queryElementTransformHelpers/createRegexpFromString');
 
 describe('Test to create regular expression from string', () => {
   it('regex without flags', () => {
@@ -13,9 +13,9 @@ describe('Test to create regular expression from string', () => {
   it('Invalid regex (missing /)', () => {
     let result = null;
     try {
-        createRegExpFromString('\\w+');
-    } catch(err){
-        result = err.message;
+      createRegExpFromString('\\w+');
+    } catch (err) {
+      result = err.message;
     }
     expect(result).toStrictEqual('Invalid regular expression, missing / at beginning and beteen pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
   });

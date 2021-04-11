@@ -1,5 +1,8 @@
 const Json = require('./json.js');
 const makeObject = require('./src/handlers/make/makeObject.js');
+const mergeFunctions = require('./src/helpers/mergeFunctions');
+const loadDefaultSettings = require('./src/helpers/loadDefaultSettings');
+const validateReponseAndPassDefault = require('./src/helpers/validateReponseAndPassDefault');
 
 const isArrayNotEmpty = (value) => (Array.isArray(value) && value.length > 0);
 const isNoArray = (value) => (value !== undefined && !Array.isArray(value));
@@ -12,13 +15,14 @@ class Map {
    * @param {Object} destination - destination object, to where data should be mapped
    * @param {Object} settings object, currently only support for fatalErrorOnCreate,
    * if true, an arror will be thrown on translation if query is not met.
+   * @param {Object} functions object of functions that can be called within query.
+
    */
-  constructor(origin, destination, settings) {
-    const setting = makeObject(settings);
-    this.originObject = new Json(origin);
-    this.destinationObject = new Json(destination);
-    this.fatalErrorOnCreate = setting.fatalErrorOnCreate;
-    this.mapIfNotFound = setting.mapIfNotFound;
+  constructor(origin, destination, settings, functions) {
+    this.settings = loadDefaultSettings(makeObject(settings));
+    this.originObject = new Json(origin, settings);
+    this.destinationObject = new Json(destination, settings);
+    this.functions = makeObject(functions);
   }
 
   /**
@@ -26,11 +30,17 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
+   * @param {Object} functions object of functions that can be called within query.
    */
-  translate(originPath, destinationPath) {
-    const value = this.originObject.get(originPath);
-    if (this.mapIfNotFound || value !== undefined) {
-      this.destinationObject.set(destinationPath, value, this.fatalErrorOnSet);
+  translate(originPath, destinationPath, functions) {
+    const funcs = mergeFunctions(functions, this.functions);
+    const value = this.originObject.get(originPath, funcs);
+    if (this.settings.mapIfNotFound || value !== undefined) {
+      this.destinationObject.set(
+        destinationPath,
+        validateReponseAndPassDefault(value, undefined, this.settings.defaultGetResponse),
+        this.settings.fatalErrorOnCreate, funcs,
+      );
     }
   }
 
@@ -40,11 +50,18 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
+   * @param {Object} functions object of functions that can be called within query.
    */
-  translateAll(originPath, destinationPath) {
-    const values = this.originObject.getAll(originPath);
-    if (this.mapIfNotFound || validateValue(values)) {
-      this.destinationObject.setAll(destinationPath, values, this.fatalErrorOnSet);
+  translateAll(originPath, destinationPath, functions) {
+    const funcs = mergeFunctions(functions, this.functions);
+    const values = this.originObject.getAll(originPath, funcs);
+    if (this.settings.mapIfNotFound || validateValue(values)) {
+      this.destinationObject.setAll(
+        destinationPath,
+        validateReponseAndPassDefault(values, [], this.settings.defaultGetAllResponse),
+        this.settings.fatalErrorOnCreate,
+        funcs,
+      );
     }
   }
 
@@ -54,11 +71,18 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
+   * @param {Object} functions object of functions that can be called within query.
    */
-  translateOneToAll(originPath, destinationPath) {
-    const value = this.originObject.get(originPath);
-    if (this.mapIfNotFound || value !== undefined) {
-      this.destinationObject.setAll(destinationPath, value, this.fatalErrorOnSet);
+  translateOneToAll(originPath, destinationPath, functions) {
+    const funcs = mergeFunctions(functions, this.functions);
+    const value = this.originObject.get(originPath, funcs);
+    if (this.settings.mapIfNotFound || value !== undefined) {
+      this.destinationObject.setAll(
+        destinationPath,
+        validateReponseAndPassDefault(value, undefined, this.settings.defaultGetResponse),
+        this.settings.fatalErrorOnCreate,
+        funcs,
+      );
     }
   }
 
@@ -68,11 +92,18 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
+   * @param {Object} functions object of functions that can be called within query.
    */
-  translateAllToOne(originPath, destinationPath) {
-    const values = this.originObject.getAll(originPath);
-    if (this.mapIfNotFound || validateValue(values)) {
-      this.destinationObject.set(destinationPath, values, this.fatalErrorOnSet);
+  translateAllToOne(originPath, destinationPath, functions) {
+    const funcs = mergeFunctions(functions, this.functions);
+    const values = this.originObject.getAll(originPath, funcs);
+    if (this.settings.mapIfNotFound || validateValue(values)) {
+      this.destinationObject.set(
+        destinationPath,
+        validateReponseAndPassDefault(values, [], this.settings.defaultGetAllResponse),
+        this.settings.fatalErrorOnCreate,
+        funcs,
+      );
     }
   }
 

@@ -8,7 +8,7 @@ const stringify = require('../../../handlers/basic/stringify');
  * @returns {Boolean} - true if it complies, false otherwise
  */
 // eslint-disable-next-line complexity
-const logicalValidator = (value, operator, checkValue) => {
+const logicalValidator = (value, operator, checkValue, element) => {
   if (operator === '=') {
     return (stringify(value) === stringify(checkValue));
   }
@@ -34,13 +34,16 @@ const logicalValidator = (value, operator, checkValue) => {
     return (checkValue.indexOf(value) === -1);
   }
   if (operator === '?') {
-    if(checkValue.regex) {
+    if (checkValue.regex) {
       return checkValue.regex.test(value);
     }
-    if(value.regex){
+    if (value.regex) {
       return value.regex.test(checkValue);
     }
     return false;
+  }
+  if (value && value.function) {
+    return value.function(element);
   }
   return !!value;
 };

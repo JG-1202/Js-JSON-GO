@@ -58,6 +58,7 @@ Each query may exist out of either one, or two elements seperated by an operator
 | `$..`path                       | Element relates to JSON location. `$..` followed by a path is considered to have its origin at the parent of the current depth within object (each additional dot relates to the parent of the corresponding element) 	|
 | `$JSON(`stringified JSON`)`     | Element is considered to be a JSON.                                                               																		|
 | `$RegExp(`regular rexpression`)`| Element is considered to be a Regular Expression (be aware some chars need to be escaped using `\`).																		|
+| `$Function(`functionName`)`.    | Element is considered to be a function (function name needs to match key of input function object).																		|
 
 
 | Query Operators | Description                                                             |
@@ -71,6 +72,10 @@ Each query may exist out of either one, or two elements seperated by an operator
 | `∈` or `@`      | validates whether first element is in subset of second element          |
 | `∉` or `!@`     | validates whether first element is in subset of second element          |
 | `?`             | test element against regular expression                                 |
+
+#### Use of custom functions
+Functions can be passed as additional input in the Json or Map constructor, and/or as input for the specific query on get/set/translate. The input is expected to be an object with functions. The keyName of the function can be called from the query by `$Function(`keyName`)`. The function is called for each element at the corresponding depth. Input for the function is the element that is found, the output is expected to be a boolean, return `true` for elements that are found of interest, for elements that can be neglected return `false`.
+
 
 ### Examples
 Usage will be demonstrated with an example "inputFixture" json file:
@@ -164,7 +169,15 @@ const result4 = JsonGo.getAll('stores[{$.items[{Pink ∈ $.name}]}].storeName');
 const result5 = JsonGo.getAll('stores[{$.items[{Fuji ∈ $.name}]}].items[{medium ∉ $.name}].name'); //["Granny Smith small bag", "Granny Smith large bag", "Fuji small bag", "Pink Lady small bag"] -> get al item names that do not have 'medium' in its name from stores that have items with 'Fuji' in its name.
 const result6 = JsonGo.getAll(`stores[{$.storeName ∈ $JSON(${JSON.stringify(['Berlin', 'Barcelona'])})}].storeName`); //['Berlin'] -> get storeNames of store that has storename in ['Berlin', 'Barcelona']
 const result7 = JsonGo.getAll('stores[{$.storeName ? $RegExp(/.*AMS.*/i)}].storeName'); //['Amsterdam'] -> get storeNames containing case insensitive AMS in its storeName using a regular expression
-
+const functions = {
+    customFunction: (element) => {
+        if(['Amsterdam', 'Rome'].indexOf(element.storeName) > -1){
+            return true;
+        }
+        return false;
+    }
+};
+const result8 = JsonGo.getAll('stores[{$Function(customFunction)}].storeName', functions); //['Amsterdam', 'Rome'] -> get storeNames for all elements where customFunction(element) returns true
 
 
 /*
@@ -213,7 +226,7 @@ Shallow: `features[*].properties`
 Deep: `features[*].properties.BLOCK_NUM`
 Conditional: `features[{$.properties.STREET = UNKNOWN}].properties.BLOCK_NUM`
 
-Summary (tested with Js-JSON-Go version 0.1.1 on 2,9 GHz Dual-Core Intel Core i5):
+Summary (tested with Js-JSON-Go version 0.2.0 on 2,9 GHz Dual-Core Intel Core i5):
 
 
 smallCityLots
@@ -227,7 +240,7 @@ smallCityLots
 |       oboe        |      3.9998       |      4.0888       |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0258       |      0.0344       |      0.2548       |
+|      Js-JSON-Go   |      0.0355       |      0.0295       |      0.1348       |
 
 mediumCityLots
 |      (index)      |      shallow      |       deep        |    conditional    |
@@ -239,7 +252,7 @@ mediumCityLots
 |       oboe        |      7.3801       |       9.511       |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0436       |      0.0439       |       0.485       |
+|      Js-JSON-Go   |      0.0419       |      0.0428       |       0.1806       |
 
 largeCityLots
 
@@ -252,7 +265,7 @@ largeCityLots
 |       oboe        |      25.7974      |      26.1859      |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0835       |      0.0932       |      1.1237       |
+|      Js-JSON-Go   |      0.0626       |      0.0707       |      0.4204       |
 
 
 ## Testing
@@ -260,7 +273,7 @@ Tests can be ran using the following command:
 ```bash
 npm run test
 ```
-Current code coverage (14 suites, 154 tests) is about 99%.
+Current code coverage (15 suites, 171 tests) is about 99%.
 
 ## Contributing
 Pull requests are welcome.

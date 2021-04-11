@@ -1,4 +1,5 @@
-const createRegExpFromString = require('./createRegExpFromString');
+const createRegExpFromString = require('./queryElementTransformHelpers/createRegexpFromString');
+const addFunctionToQuery = require('./queryElementTransformHelpers/addFunctionToQuery');
 
 const specials = ['null', 'undefined', 'true', 'false'];
 
@@ -44,7 +45,12 @@ const checkIfFirstCharIsDollarSign = (queryElement) => (queryElement && typeof q
  */
 const checkIfJSON = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.substring(0, 6) === '$JSON(');
 
- /**
+/**
+ * Logical check on whether string starts with $Function
+ */
+const checkIfFunction = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.substring(0, 10) === '$Function(');
+
+/**
  * Logical check on whether string starts with $RegExp
  */
 const checkIfRegExp = (queryElement) => (queryElement && typeof queryElement === 'string' && queryElement.substring(0, 8) === '$RegExp(');
@@ -95,9 +101,17 @@ const handleJson = (element) => {
 };
 
 /**
+ * Removes indicators that element is Function and returns the function itself
+ */
+const handleFunctions = (element, funcs) => {
+  const remainingElement = element.substr(10, element.length - 11);
+  return { value: { function: addFunctionToQuery(remainingElement, funcs) } };
+};
+
+/**
  * Removes indicators that element is RegExp and returns a new RegExp
  */
- const handleRegExp = (element) => {
+const handleRegExp = (element) => {
   const remainingElement = element.substr(8, element.length - 9);
   return { value: { regex: createRegExpFromString(remainingElement) } };
 };
@@ -127,10 +141,11 @@ const handlePaths = (element) => {
 /**
  * Transforms each element of query into workable object representation
  * @param {String} element - string representation of query element
+ * @param {Object} funcs - object with functions provided by the user that may be part of the query
  * @returns {Object} - object with keyName the type of element and keyValue the value of element
  */
 // eslint-disable-next-line complexity
-const queryElementTransformer = (element) => {
+const queryElementTransformer = (element, funcs) => {
   validateElement(element);
   if (specials.indexOf(element) > -1) {
     return { value: handleSpecials(element) };
@@ -147,6 +162,9 @@ const queryElementTransformer = (element) => {
     }
     if (checkIfRegExp(element)) {
       return handleRegExp(element);
+    }
+    if (checkIfFunction(element)) {
+      return handleFunctions(element, funcs);
     }
     return handlePaths(element);
   }

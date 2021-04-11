@@ -58,10 +58,12 @@ const isOperationToAppend = (query) => query[0] && query[0].custom === 'append';
 /**
  * checks each element of object/array whether it matches query
  */
-const checkLogic = (firstPart, operator, secondPart, results, continueAfterFirstMatch, i, type) => {
+const checkLogic = (
+  firstPart, operator, secondPart, results, continueAfterFirstMatch, i, type, element,
+) => {
   let newResults = results;
   let nextIterationDesired = true;
-  if (logicalValidator(firstPart, operator, secondPart)) {
+  if (logicalValidator(firstPart, operator, secondPart, element)) {
     const toReturn = {};
     toReturn[type] = i;
     if (!continueAfterFirstMatch) {
@@ -115,7 +117,7 @@ const handleArray = (query, object, tempObject, continueAfterFirstMatch, priorPa
     const operator = getValue(query[1], object, { number: i }, priorPath);
     const secondPart = getValue(query[2], object, { number: i }, priorPath);
     const { newResults, nextIterationDesired } = checkLogic(
-      firstPart, operator, secondPart, results, continueAfterFirstMatch, i, 'number',
+      firstPart, operator, secondPart, results, continueAfterFirstMatch, i, 'number', element,
     );
     results = newResults;
     return nextIterationDesired;
