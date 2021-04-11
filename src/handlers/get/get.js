@@ -1,6 +1,5 @@
 const JsonGo = require('../../../index');
 const pathTransformer = require('../../helpers/pathTransformer');
-const stringify = require('../basic/stringify');
 const getSinglePathElement = require('../../helpers/pathElements/getSingle');
 const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');
 const simpleGet = require('./src/simpleGet');
@@ -8,10 +7,9 @@ const validateOutput = require('./src/validateOutput');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
 
-const getCache = {};
-
 /**
- * Handle wildcard, checks for each key whether remaining path is found and returns first key that matches
+ * Handle wildcard, checks for each key whether remaining path is found and returns first key that
+ * matches
  */
 const getFirstKey = (tempObject, arrayPath, getType, index, obj, priorPath) => {
   const keys = getType === 'number' ? getAllKeysFromArray(tempObject) : getAllKeysFromObject(tempObject);
@@ -44,30 +42,14 @@ const getPathElement = (element, obj, tempObject, getType, priorPath, arrayPath,
 };
 
 /**
- * Store result into cache so that it can be reused
- */
-const setCache = (stringifiedPath, obj, tempObject) => {
-  getCache[stringifiedPath] = { object: obj, result: tempObject };
-};
-
-/**
- * Validate if cache is for the right object
- */
-const validateCache = (cache, obj) => cache && cache.object === obj;
-
-/**
  * Retreives single value from objects specified path
  * @param {Object} obj - object/array from which value should be retreived.
  * @param {any} path - string or array representation of path to set.
  * @returns {any} returns value found at specified path, in case that multiple logical checks
  * satisfy the first element will be returned
  */
-const get = (obj, path) => {
-  const stringifiedPath = stringify(path);
-  if (validateCache(getCache[stringifiedPath], obj)) {
-    return getCache[stringifiedPath].result;
-  }
-  const arrayPath = pathTransformer(path);
+const get = (obj, path, functions) => {
+  const arrayPath = pathTransformer(path, functions);
   if (!doesPathIndicateComplexity(arrayPath)) {
     return simpleGet(obj, arrayPath);
   }
@@ -91,7 +73,6 @@ const get = (obj, path) => {
     tempObject = newTempObject;
     return shouldItContinue;
   });
-  setCache(stringifiedPath, obj, tempObject);
   return tempObject;
 };
 

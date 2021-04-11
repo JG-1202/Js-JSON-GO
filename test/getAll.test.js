@@ -146,7 +146,7 @@ describe('Test getAll function', () => {
   });
 });
 
-describe('Test getAll function wit regular expressions', () => {
+describe('Test getAll function with regular expressions', () => {
   it('Testing basic regular expression', () => {
     const result = getAll(inputFixture, 'stores[{$.storeName ? $RegExp(/\\w+/)}].storeName');
     expect(result).toStrictEqual(['Berlin', 'Amsterdam', 'Barcelona', 'Rome']);
@@ -171,7 +171,7 @@ describe('Test getAll function wit regular expressions', () => {
     let result = null;
     try {
       getAll(inputFixture, 'stores[{$.storeName ? $RegExp(\\w+)}].storeName');
-    } catch(err){
+    } catch (err) {
       result = err.message;
     }
     expect(result).toStrictEqual('Invalid regular expression, missing / at beginning and beteen pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');

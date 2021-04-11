@@ -1,6 +1,17 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.2.0] - 2021-04-11
+### Added
+- support for custom functions on get/set/translate
+- unlinkInputObject setting
+- defaultGetResponse setting
+- defaultGetAllResponse setting
+
+### Changed
+- removed unnecessary caching to improve predictability and performance of library
+
+
 ## [0.1.3] - 2021-03-21
 ### Added
 - support for regular expressions with RegExp() on set/get/translate

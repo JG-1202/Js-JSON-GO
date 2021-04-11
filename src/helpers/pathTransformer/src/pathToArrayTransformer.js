@@ -1,18 +1,18 @@
-const queriesCache = {};
-const unlink = require('../../../handlers/basic/unlink.js');
 const elementTransformer = require('./elementTransformer.js');
+
+let functionsCache = {};
 
 /**
  * Updates counter on opening bracket, if counter is 0 push to path representation
  */
-const handleOpeningBracket = (char, actionVariables) => {
+const handleOpeningBracket = (char, actionVariables, funcs) => {
   let { counter } = actionVariables;
   let { part } = actionVariables;
   const { arrayPath } = actionVariables;
 
   if (counter === 0) {
     if (part) {
-      arrayPath.push(elementTransformer(part, arrayPath));
+      arrayPath.push(elementTransformer(part, funcs));
       part = '';
     }
   } else {
@@ -25,14 +25,14 @@ const handleOpeningBracket = (char, actionVariables) => {
 /**
  * Handling dot separator, if counter is 0, push to path representation
  */
-const handleDot = (char, actionVariables) => {
+const handleDot = (char, actionVariables, funcs) => {
   const { counter } = actionVariables;
   let { part } = actionVariables;
   const { arrayPath } = actionVariables;
 
   if (counter === 0) {
     if (part) {
-      arrayPath.push(elementTransformer(actionVariables.part, arrayPath));
+      arrayPath.push(elementTransformer(actionVariables.part, funcs));
       part = '';
     }
   } else {
@@ -44,14 +44,14 @@ const handleDot = (char, actionVariables) => {
 /**
  * Updates counter on closing bracket, if counter is 0 push to path representation
  */
-const handleClosingBracket = (char, actionVariables) => {
+const handleClosingBracket = (char, actionVariables, funcs) => {
   let { counter } = actionVariables;
   let { part } = actionVariables;
   const { arrayPath } = actionVariables;
   counter += -1;
   if (counter === 0) {
     if (part) {
-      arrayPath.push(elementTransformer(part, arrayPath));
+      arrayPath.push(elementTransformer(part, funcs));
       part = '';
     }
   } else {
@@ -63,20 +63,20 @@ const handleClosingBracket = (char, actionVariables) => {
 /**
  * Handling path separators [, ], .
  */
-const handleSeperators = (char, actionVariables) => {
+const handleSeperators = (char, actionVariables, funcs) => {
   if (char === '[') {
-    return handleOpeningBracket(char, actionVariables);
+    return handleOpeningBracket(char, actionVariables, funcs);
   }
   if (char === ']') {
-    return handleClosingBracket(char, actionVariables);
+    return handleClosingBracket(char, actionVariables, funcs);
   }
-  return handleDot(char, actionVariables);
+  return handleDot(char, actionVariables, funcs);
 };
 
 /**
  * Handle each character and returns array with one element per key of path
  */
-const charactersToArray = (characters) => {
+const charactersToArray = (characters, funcs) => {
   let actionVariables = {
     arrayPath: [],
     part: '',
@@ -84,31 +84,40 @@ const charactersToArray = (characters) => {
   };
   characters.forEach((char) => {
     if (['[', ']', '.'].indexOf(char) > -1) {
-      actionVariables = handleSeperators(char, actionVariables);
+      actionVariables = handleSeperators(char, actionVariables, funcs);
     } else {
       actionVariables.part += char;
     }
   });
   if (actionVariables.part) {
     actionVariables.arrayPath.push(elementTransformer(
-      actionVariables.part, actionVariables.arrayPath,
+      actionVariables.part, funcs,
     ));
   }
   return actionVariables.arrayPath;
 };
 
 /**
+ * remember functions in cache so that these can be used for next query (query-in-query support)
+ */
+const handleFunctionsCache = (funcs) => {
+  if (funcs) {
+    functionsCache = funcs;
+    return funcs;
+  }
+  return functionsCache;
+};
+
+/**
  * Transforms string representation of path into workable array representation
  * @param {String} query - string representation of path
+ * @param {Object} funcs - object with functions provided by the user that may be part of the query
  * @returns {Array} - workable array representation of path
  */
-const pathToArrayTransformer = (path) => {
-  if (queriesCache[path]) {
-    return unlink(queriesCache[path]);
-  }
+const pathToArrayTransformer = (path, funcs) => {
+  const functions = handleFunctionsCache(funcs);
   const characters = path.split('');
-  const arrayPath = charactersToArray(characters);
-  queriesCache[path] = unlink(arrayPath);
+  const arrayPath = charactersToArray(characters, functions);
   return arrayPath;
 };
 

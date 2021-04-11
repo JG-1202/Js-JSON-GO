@@ -1,15 +1,12 @@
 const JG = require('../../../index.js');
 
 const pathTransformer = require('../../helpers/pathTransformer');
-const stringify = require('../basic/stringify');
 const getMultiplePathElements = require('../../helpers/pathElements/getMultiple');
 const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');
 const simpleGet = require('./src/simpleGet');
 const validateOutput = require('./src/validateOutput');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
-
-const getCache = {};
 
 /**
  * Get names of elements either from wildcard or from other type of elements
@@ -112,29 +109,13 @@ const returnArray = (element) => {
 };
 
 /**
- * Store result into cache so that it can be reused
- */
-const setCache = (stringifiedPath, obj, tempObject) => {
-  getCache[stringifiedPath] = { object: obj, result: tempObject };
-};
-
-/**
- * Validate if cache is for the right object
- */
-const validateCache = (cache, obj) => cache && cache.object === obj;
-
-/**
  * Retreives all values from objects specified path
  * @param {Object} obj - object/array from which value should be retreived.
  * @param {any} path - string or array representation of path to set.
  * @returns {Array} returns array of values that match the specified path with logical checks
  */
-const getAll = (obj, path) => {
-  const stringifiedPath = stringify(path);
-  if (validateCache(getCache[stringifiedPath], obj)) {
-    return getCache[stringifiedPath].result;
-  }
-  const arrayPath = pathTransformer(path);
+const getAll = (obj, path, functions) => {
+  const arrayPath = pathTransformer(path, functions);
   if (!doesPathIndicateComplexity(arrayPath)) {
     return returnArray(simpleGet(obj, arrayPath));
   }
@@ -162,7 +143,6 @@ const getAll = (obj, path) => {
     return shouldItContinue;
   });
   results = addFinalTempToResults(results, tempObject);
-  setCache(stringifiedPath, obj, results);
   return results;
 };
 

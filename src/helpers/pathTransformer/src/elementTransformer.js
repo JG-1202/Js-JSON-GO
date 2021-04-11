@@ -41,10 +41,11 @@ const removeOpeningClosingChars = (element) => element.substr(1, element.length 
 /**
  * Transforms each element of path into workable object representation
  * @param {String} element - string representation of path element
+ * @param {Object} funcs - object with functions provided by the user that may be part of the query
  * @returns {Object} - object with keyName the type of element and keyValue the value of element
  */
 // eslint-disable-next-line complexity
-const elementTransformer = (element) => {
+const elementTransformer = (element, funcs) => {
   if (isElementWildcard(element)) {
     return { wildcard: true };
   }
@@ -55,7 +56,7 @@ const elementTransformer = (element) => {
     return { number: Number(element) };
   }
   if (isElementString(element) && isQueryQuery(element)) {
-    return { query: queryTransformer(removeOpeningClosingChars(element)) };
+    return { query: queryTransformer(removeOpeningClosingChars(element), funcs) };
   }
 
   return { string: element };
