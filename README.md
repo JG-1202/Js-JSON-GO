@@ -1,6 +1,8 @@
 # Js-JSON-Go
 
-Js-JSON-Go is a Javascript library intending to make it easier to handle (and query) JSON messages, especially to grap (get) and update (set) parts of a larger JSON message, and translate (map) these to another path. Moreover, it is designed to make commonly performed operations, especially for event-based/internet-of-things applications (when the incomming the event is not complying to a fixed contract), easier.
+Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects. Moreover, the combined effort of getting and setting values on a conditional JSON path allows for translation from a value of one JSON object into another JSON object. Js-JSON-GO offers queries and nested queries with support for simple boolean logic, regular expressions and custom functions.
+
+Try on [RunKit](https://npm.runkit.com/js-json-go) (Node)
 
 ## Installation
 
@@ -10,20 +12,68 @@ Use npm to install Js-JSON-Go.
 npm install js-json-go
 ```
 
-## Purpose
-The development aim of this library is to make it easier to read, build and transform JSON structures with single lines of codes. The library was in particular designed for event-based use cases where the application receives a payload, applies some logic, and returns a new payload, even when the incomming event is not following a complete or known contract. Besides, the library allows to query JSON and get a single, or all matching elements and simply return these elements or set a new value at the described path (even when the path is non-exitent). This library also supports query in query, allowing for more complex JSON queries.
-
 ## Usage
 All main functions of this library are exported and can be used according to its JSDocs definition.
 Besided two constructors are made available: (1) Json and (2) Map.
 Use the Json constructor for (multiple) operations on the same JSON Object/Array.
 Use the Map constructor to translate one JSON Object/Array into another JSON Object/Array.
 
-### Get vs Set
-Get may be used to retreive an element from a defined path, whereas set may be used to place an element on the specified path. This can be from a fully defined path, from a path that meets given conditions, or a tree of paths. Set/get refer to a single element while setAll/getAll refers to all elements that match the specified path. 
+```javascript
+const JG = require('js-json-go');
+const json = JG.Json(object, settings, functions);
+const map = JG.Map(origin, destination, settings, functions);
+```
 
-### Path notation
-Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, within bracket notated childs Js-JSON-Go allows to query over all childs/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query parents and childs, but also parents and childs that contain their own query.
+
+### new JG.Json(object, settings, functions) 
+Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` and custom `functions` that are made available for all actions on that JSON `object`.
+
+#### json.get(path, functions)
+Retreives single value from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the `path`.
+
+#### json.getAll(path, functions)
+Retreives all values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elemets that match the `path`.
+
+#### json.set(path, value, functions)
+Sets single `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets the first element that matches the `path`.
+
+#### json.setAll(path, value, functions)
+Sets `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets all elements that matches the `path`.
+
+#### json.chop(chopSize)
+Chops an array or object into smaller pieces with a maximum size of `chopSize`.
+
+#### json.export
+Returns the (modified) JSON `object`.
+
+### new JG.Map(origin, destination, settings, functions)
+Construct a new JS-JSON-Go Map to map the result of the `origin` object into the `destination` object. Customize it with `settings` and custom `functions` that are made available for all actions on the map.
+
+#### map.translate(originPath, destinationPath, functions)
+Translate a single value from `originPath` into destination object at `destinationPath`. Pass an object with custom `functions` to make these available for this query. Translation will stop after first match.
+
+#### map.translateAll(originPath, destinationPath, functions)
+Translate all values into destination object at `destinationPath`. Destination will be an array with all results from `originPath`. Pass an object with custom `functions` to make these available for this query.
+
+#### map.translateOneToAll(originPath, destinationPath, functions)
+Translate single value from `originPath` into destination at `destinationPath`. Pass an object with custom `functions` to make these available for this query. Destination will be the first query result from `originPath`, mapped into all results from `destinationPath` query.
+
+#### map.translateAllToOne(originPath, destinationPath, functions)
+Translate all results from `originPath` into first destination object result at `destinationPath`. The single destination will be filled with an array filled with all results from the `originPath` query. Pass an object with custom `functions` to make these available for this query.
+
+#### map.export
+Returns the (modified) JSON `destination` object.
+
+### settings for Json and Map constructor
+The following `settings` can be passed into the `settings` object:
+`unlinkInputObject`: if set to `true`, the origin `object` will not be altered by any of the operations, default value is `false`.
+`defaultGetResponse`: default response in case query did not return any matches, by default get returns `undefined` 
+`defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
+`fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
+`mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
+
+### Js-JSON-Go Path Syntax
+Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.
 
 The following syntax can be used (note that this table is reflecting priority, meaning that the upper syntax is dominant over lower syntax):
 
@@ -42,7 +92,7 @@ The following syntax can be used (note that this table is reflecting priority, m
 | `[{$append}]`                  | May be used on set to indicate a new element in array   |
 
 
-Each query may exist out of either one, or two elements seperated by an operator. In case only one element is provided a !falsy check will be performed.
+A query is considered a logical test of two `path`s or `elements` seperated by an `operator`, or a single path / element which will then be tested as `!falsy`. `$Function()` Queries are considered special. Instead of defining a logical test within the query, a function refers to a `functionName`. The corresponding function (passed in the `functions` object of the Json/Map constructor or regarding query (get, set, translate)) is then expected to return a boolean response as result of a custom logical test.
 
 | Query Element Syntax            | Description                                                                                      	 																	|
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 	|
@@ -74,7 +124,7 @@ Each query may exist out of either one, or two elements seperated by an operator
 | `?`             | test element against regular expression                                 |
 
 #### Use of custom functions
-Functions can be passed as additional input in the Json or Map constructor, and/or as input for the specific query on get/set/translate. The input is expected to be an object with functions. The keyName of the function can be called from the query by `$Function(`keyName`)`. The function is called for each element at the corresponding depth. Input for the function is the element that is found, the output is expected to be a boolean, return `true` for elements that are found of interest, for elements that can be neglected return `false`.
+Functions can be passed as additional input in the Json or Map constructor, and/or as input for the specific query on get/set/translate. The input is expected to be an object with functions. The keyName of the function can be called from the query by `$Function(`keyName`)`. The function is called for each element at the corresponding depth. Input for the function is the element that is found, the output is expected to be a boolean, return `true` if the query should be considered a match, or `false` otherwise.
 
 
 ### Examples

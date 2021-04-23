@@ -1,18 +1,23 @@
 {
   "name": "js-json-go",
-  "version": "0.2.0",
-  "description": "Js-JSON-Go is a Javascript library intending to make it easier to handle (and query) JSON messages, especially to grap (get) and update (set) parts of a larger JSON message, and translate (map) these to another path.",
+  "version": "0.2.1",
+  "description": "Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects.",
   "main": "index.js",
   "scripts": {
     "test": "jest --collect-coverage"
   },
   "keywords": [
     "json",
+    "query",
+    "build",
     "get",
     "set",
     "map",
-    "event-based",
-    "internet-of-things"
+    "grap",
+    "construct",
+    "json go",
+    "json-go",
+    "jsjsongo"
   ],
   "author": "JG-1202",
   "license": "MIT",
