@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.2.1] - 2021-04-23
+### Changed
+- npmignore, not publishing unnecessary files
+- README.md, documentation
+
 ## [0.2.0] - 2021-04-11
 ### Added
 - support for custom functions on get/set/translate
