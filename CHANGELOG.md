@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [0.3.0] - 2021-05-15
+## [0.3.0] - 2021-05-16
 ### Added
 - settings property on set
 - settings property on parse
