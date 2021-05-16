@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.3.1] - 2021-05-16
+### Changed
+- bugfix: testing equality of JSON objects
+
 ## [0.3.0] - 2021-05-16
 ### Added
 - settings property on set

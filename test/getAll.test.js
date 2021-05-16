@@ -152,6 +152,11 @@ describe('Testing JSON equality', () => {
     const result = getAll(inputFixture, `stores[{$.items = $JSON(${JSON.stringify(itemsFromAmsterdam)})}].storeName`);
     expect(result).toStrictEqual(['Amsterdam']);
   });
+  it('Testing equality', () => {
+    const input = [{ test: [1, 2, 3] }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
+    expect(result).toStrictEqual([[1, 2, 3]]);
+  });
   it('Testing equality of arrays', () => {
     const input = [{ test: [1, 2, 3] }];
     const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
@@ -162,6 +167,16 @@ describe('Testing JSON equality', () => {
     const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
     expect(result).toStrictEqual([]);
   });
+  it('Testing inequality of arrays 2', () => {
+    const input = [{ test: [1, 2, 3, 4] }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
+    expect(result).toStrictEqual([]);
+  });
+  it('Testing inequality of arrays 3', () => {
+    const input = [{ test: [1, 2, 3] }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3, 4])})}].test`);
+    expect(result).toStrictEqual([]);
+  });
   it('Testing equality of objects', () => {
     const input = [{ test: { a: true, b: true, c: true } }];
     const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({ b: true, a: true, c: true })})}].test`);
@@ -170,6 +185,22 @@ describe('Testing JSON equality', () => {
   it('Testing inequality of objects', () => {
     const input = [{ test: { a: true, b: true, c: true } }];
     const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({ b: true, a: false, c: true })})}].test`);
+    expect(result).toStrictEqual([]);
+  });
+  it('Testing inequality of objects 2', () => {
+    const input = [{
+      test: {
+        a: true, b: true, c: true, d: true,
+      },
+    }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({ b: true, a: false, c: true })})}].test`);
+    expect(result).toStrictEqual([]);
+  });
+  it('Testing inequality of objects 3', () => {
+    const input = [{ test: { a: true, b: true, c: true } }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({
+      b: true, a: true, c: true, d: true,
+    })})}].test`);
     expect(result).toStrictEqual([]);
   });
 });
