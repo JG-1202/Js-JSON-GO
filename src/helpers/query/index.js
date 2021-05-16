@@ -5,14 +5,16 @@ const getAbsolutePath = require('./src/getAbsolutePath');
 /**
  * returns value from provided path
  */
-const getValueFromTransformedQuery = (element, object, currentElement, priorPath) => {
+const getValueFromTransformedQuery = (
+  element, object, currentElement, priorPath, functions, settings,
+) => {
   if (element && element.relativePath) {
-    const result = object.get([
+    const result = JsonGo.get(object, [
       ...priorPath, currentElement, ...element.relativePath,
-    ]);
+    ], functions, settings);
     return result;
   }
-  return object.get(element.path);
+  return JsonGo.get(object, element.path);
 };
 
 /**
@@ -34,13 +36,15 @@ const doesElementHaveValue = (element) => (element && element.value !== undefine
  * get value for each of the query elements, either from provided value key or from objects
  * specified path
  */
-const getValue = (element, object, currentElement, priorPath) => {
+const getValue = (element, object, currentElement, priorPath, functions, settings) => {
   if (doesElementHaveValue(element)) {
     return element.value;
   }
   if (doesElementHaveAbsoluteOrRelativePath(element)) {
-    const transformedPath = getAbsolutePath(priorPath, element);
-    return getValueFromTransformedQuery(transformedPath, object, currentElement, priorPath);
+    const transformedPath = getAbsolutePath(priorPath, element, functions);
+    return getValueFromTransformedQuery(
+      transformedPath, object, currentElement, priorPath, functions, settings,
+    );
   }
   return undefined;
 };
@@ -103,7 +107,9 @@ const getElementToAppend = (tempObject, continueAfterFirstMatch) => {
 /**
  * performs query for arrays
  */
-const handleArray = (query, object, tempObject, continueAfterFirstMatch, priorPath) => {
+const handleArray = (
+  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings,
+) => {
   let results = [];
   if (isOperationToGetEnd(query)) {
     return getEndOfArray(tempObject, continueAfterFirstMatch);
@@ -113,9 +119,9 @@ const handleArray = (query, object, tempObject, continueAfterFirstMatch, priorPa
   }
 
   tempObject.every((element, i) => {
-    const firstPart = getValue(query[0], object, { number: i }, priorPath);
+    const firstPart = getValue(query[0], object, { number: i }, priorPath, functions, settings);
     const operator = getValue(query[1], object, { number: i }, priorPath);
-    const secondPart = getValue(query[2], object, { number: i }, priorPath);
+    const secondPart = getValue(query[2], object, { number: i }, priorPath, functions, settings);
     const { newResults, nextIterationDesired } = checkLogic(
       firstPart, operator, secondPart, results, continueAfterFirstMatch, i, 'number', element,
     );
@@ -128,12 +134,18 @@ const handleArray = (query, object, tempObject, continueAfterFirstMatch, priorPa
 /**
  * performs query for objects
  */
-const handleObject = (query, object, tempObject, continueAfterFirstMatch, priorPath) => {
+const handleObject = (
+  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings,
+) => {
   let results = [];
   Object.keys(tempObject).every((element) => {
-    const firstPart = getValue(query[0], object, { string: element }, priorPath);
+    const firstPart = getValue(
+      query[0], object, { string: element }, priorPath, functions, settings,
+    );
     const operator = getValue(query[1], object, { string: element }, priorPath);
-    const secondPart = getValue(query[2], object, { string: element }, priorPath);
+    const secondPart = getValue(
+      query[2], object, { string: element }, priorPath, functions, settings,
+    );
     const { newResults, nextIterationDesired } = checkLogic(
       firstPart, operator, secondPart, results, continueAfterFirstMatch, element, 'string',
     );
@@ -151,15 +163,16 @@ const handleObject = (query, object, tempObject, continueAfterFirstMatch, priorP
  * @param {Boolean} continueAfterFirstMatch - indicator whether multiple outputs are desired
  * @param {Array} priorPath - array representation of current path
  * (relates to prior path where to find tempObject)
+ * @param {Object} functions - object with functions.
+ * @param {Object} settings - object with settings.
  * @returns {Any} - either object with first element that matches query requirement,
  * or an array of these objects in case of continueAfterFirstMatch
  */
-const query = (q, obj, tempObject, continueAfterFirstMatch, priorPath) => {
-  const object = new JsonGo.Json(obj);
+const query = (q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings) => {
   if (Array.isArray(tempObject)) {
-    return handleArray(q, object, tempObject, continueAfterFirstMatch, priorPath);
+    return handleArray(q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings);
   }
-  return handleObject(q, object, tempObject, continueAfterFirstMatch, priorPath);
+  return handleObject(q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings);
 };
 
 module.exports = query;

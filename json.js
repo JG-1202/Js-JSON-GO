@@ -1,80 +1,75 @@
-const set = require('./src/handlers/set/set.js');
-const setAll = require('./src/handlers/set/setAll.js');
-const get = require('./src/handlers/get/get.js');
-const chop = require('./src/handlers/basic/chop.js');
-const getAll = require('./src/handlers/get/getAll.js');
-const makeJson = require('./src/handlers/make/makeJson.js');
-const makeObject = require('./src/handlers/make/makeObject.js');
-const mergeFunctions = require('./src/helpers/mergeFunctions');
-const loadDefaultSettings = require('./src/helpers/loadDefaultSettings');
-const validateReponseAndPassDefault = require('./src/helpers/validateReponseAndPassDefault');
+const makeJson = require('./src/handlers/make/makeJson');
+const makeObject = require('./src/handlers/make/makeObject');
 const unlink = require('./src/handlers/basic/unlink');
+
+const getAllService = require('./src/services/getAll');
+const getService = require('./src/services/get/index.js');
+const setService = require('./src/services/set/index.js');
+const setAllService = require('./src/services/setAll/index.js');
+const chopService = require('./src/services/chop/index.js');
+
+const loadDefaultSettings = require('./src/settings/loadDefaultSettings');
 
 class Json {
   /**
    * Construct Json
    * @param {any} object - input bject/array
-   * @param {Object} settings object, currently only support for fatalErrorOnCreate,
-   * if true, an arror will be thrown on set if query is not met.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} settings - object with settings
+   * @param {Object} functions - object of functions that can be called within query.
    */
   constructor(object, settings, functions) {
-    this.settings = loadDefaultSettings(makeObject(settings));
-    this.object = this.settings.unlinkInputObject ? unlink(makeJson(object)) : makeJson(object);
+    this.settings = loadDefaultSettings(settings);
+    if (this.settings.unlinkInputObject) {
+      this.object = unlink(makeJson(object, this.settings));
+    } else {
+      this.object = makeJson(object, this.settings);
+    }
     this.functions = makeObject(functions);
   }
 
   /**
    * Retreives single value from objects specified path
    * @param {any} path - string or array representation of path to set.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    * @returns {any} returns value found at specified path, in case that multiple logical checks
    * satisfy the first element will be returned
    */
   get(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return validateReponseAndPassDefault(
-      get(this.object, path, funcs), undefined, this.settings.defaultGetResponse,
-    );
+    return getService(this.object, path, functions, this);
   }
 
   /**
    * Retreives all values from objects specified path
    * @param {any} path - string or array representation of path to set.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   getAll(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return validateReponseAndPassDefault(
-      getAll(this.object, path, funcs), [], this.settings.defaultGetAllResponse,
-    );
+    return getAllService(this.object, path, functions, this);
   }
 
   /**
    * Sets single value on specified path
    * @param {any} path - string or array representation of path to set.
    * @param {any} val - value to be set at specified path.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
   set(path, val, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return set(this.object, path, val, this.settings.fatalErrorOnCreate, funcs);
+    return setService(this.object, path, val, functions, this);
   }
 
   /**
    * Sets all values on specified path
    * @param {any} path - string or array representation of path to set.
    * @param {any} val - value to be set at specified path.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
   setAll(path, val, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return setAll(this.object, path, val, this.settings.fatalErrorOnCreate, funcs);
+    return setAllService(this.object, path, val, functions, this);
   }
 
   /**
@@ -83,7 +78,9 @@ class Json {
    * @param {number} chopSize - size of pieces.
    * @returns {Array} array of chopped pieces.
    */
-  chop(chopSize) { return chop(this.object, chopSize); }
+  chop(chopSize) {
+    return chopService(this.object, chopSize);
+  }
 
   /**
    * Exports the object

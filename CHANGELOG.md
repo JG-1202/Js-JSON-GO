@@ -1,6 +1,23 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.3.0] - 2021-05-15
+### Added
+- settings property on set
+- settings property on parse
+
+### Changed
+- fix: parse, not parsing stringified numbers
+- fix: loading default settings
+- fix: testing equality of JSON objects
+- README.md, documentation
+- fatalErrorOnCreate as direct input for set/setAll will be deprecated on further versions (added backward compatability until version 1.0.0), using settings object instead
+- not creating a new Json instance for every query, but rather use get/getAll directly
+- settings architecture passing settings throughout all relevant functions
+- functions architecture passing functions object throughout all relevant functions
+- Json and Map architecture, added get, set, chop and translate services
+- logical validator architecture, seperate files per check.
+
 ## [0.2.1] - 2021-04-23
 ### Changed
 - npmignore, not publishing unnecessary files

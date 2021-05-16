@@ -66,11 +66,11 @@ Returns the (modified) JSON `destination` object.
 
 ### settings for Json and Map constructor
 The following `settings` can be passed into the `settings` object:
-`unlinkInputObject`: if set to `true`, the origin `object` will not be altered by any of the operations, default value is `false`.
-`defaultGetResponse`: default response in case query did not return any matches, by default get returns `undefined` 
-`defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
-`fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
-`mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
+* `unlinkInputObject`: if set to `true`, the origin `object` will not be altered by any of the operations, default value is `false`.
+* `defaultGetResponse`: default response in case query did not return any matches, by default get returns `undefined` 
+* `defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
+* `fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
+* `mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
 
 ### Js-JSON-Go Path Syntax
 Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.
@@ -276,46 +276,46 @@ Shallow: `features[*].properties`
 Deep: `features[*].properties.BLOCK_NUM`
 Conditional: `features[{$.properties.STREET = UNKNOWN}].properties.BLOCK_NUM`
 
-Summary (tested with Js-JSON-Go version 0.2.0 on 2,9 GHz Dual-Core Intel Core i5):
+Summary (tested with Js-JSON-Go version 0.3.0 on 2,9 GHz Dual-Core Intel Core i5):
 
 
 smallCityLots
 
 |      (index)      |      shallow      |       deep        |    conditional    |
 | :---------------- | :---------------- | :---------------- | :---------------- |
-|    json-query     |      0.1387       |      0.0156       |      0.0192       |
-|   jsonpath-plus   |      0.4361       |      0.4222       |       0.34        |
-|     jsonpath      |      1.1121       |      9.4446       |      0.0254       |
-|    JSONStream     |      3.0592       |      3.1946       |  'not possible'   |
-|       oboe        |      3.9998       |      4.0888       |  'not possible'   |
+|    json-query     |      0.0565       |      0.0331       |      0.0224       |
+|   jsonpath-plus   |      0.4868       |      0.4694       |       0.336       |
+|     jsonpath      |      1.0957       |      9.1355       |      0.025        |
+|    JSONStream     |      2.6089       |      3.1946       |  'not possible'   |
+|       oboe        |      4.1765       |      4.572        |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0355       |      0.0295       |      0.1348       |
+|      Js-JSON-Go   |      0.0272       |      0.0293       |      0.1454       |
 
 mediumCityLots
 |      (index)      |      shallow      |       deep        |    conditional    |
 | :---------------- | :---------------- | :---------------- | :---------------- |
-|    json-query     |      0.0153       |      0.0277       |      0.0234       |
-|   jsonpath-plus   |      0.8707       |       0.927       |      0.7166       |
-|     jsonpath      |      2.3789       |      38.9381      |      0.0429       |
-|    JSONStream     |      5.8548       |      5.7983       |  'not possible'   |
-|       oboe        |      7.3801       |       9.511       |  'not possible'   |
+|    json-query     |      0.1343       |      0.1762       |      0.0313       |
+|   jsonpath-plus   |      1.0605       |       1.1023      |      0.6654       |
+|     jsonpath      |      2.4596       |      43.0488      |      0.0473       |
+|    JSONStream     |      5.666        |      6.2801       |  'not possible'   |
+|       oboe        |      9.2975       |       10.13       |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0419       |      0.0428       |       0.1806       |
+|      Js-JSON-Go   |      0.0377       |      0.0366       |       0.2099      |
 
 largeCityLots
 
 |      (index)      |      shallow      |       deep        |    conditional    |
 | :---------------- | :---------------- | :---------------- | :---------------- |
 |    json-query     |     'failed'      |     'failed'      |     'failed'      |
-|   jsonpath-plus   |      2.6469       |      2.8833       |      1.4851       |
-|     jsonpath      |      6.5647       |     170.5683      |      0.1361       |
-|    JSONStream     |      16.5264      |      17.3589      |  'not possible'   |
-|       oboe        |      25.7974      |      26.1859      |  'not possible'   |
+|   jsonpath-plus   |      4.0735       |      3.6754       |      1.4249       |
+|     jsonpath      |      7.1256       |     194.5057      |      0.3965       |
+|    JSONStream     |      17.6207      |      18.6713      |  'not possible'   |
+|       oboe        |      26.9838      |      34.7853      |  'not possible'   |
 | map-filter-reduce | 'not implemented' | 'not implemented' | 'not implemented' |
 |                   |                   |                   |                   |
-|      Js-JSON-Go   |      0.0626       |      0.0707       |      0.4204       |
+|      Js-JSON-Go   |      0.0646       |      0.0686       |      0.4097       |
 
 
 ## Testing
@@ -323,7 +323,7 @@ Tests can be ran using the following command:
 ```bash
 npm run test
 ```
-Current code coverage (15 suites, 171 tests) is about 99%.
+Current code coverage (20 suites, 183 tests) is about 99%.
 
 ## Contributing
 Pull requests are welcome.

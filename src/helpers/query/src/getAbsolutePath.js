@@ -37,13 +37,14 @@ const setNewElementFromRelativePath = (priorPath, element) => {
  * @param {Array} priorPath - priorPath up to origin of tempObject
  * @param {Object} element - element containing absolute or relative
  * (starting from origin of tempObject) path
+ * @param {Object} functions - object with functions.
  * @returns {Array} - full path from origin of object
  */
-const getAbsolutePath = (priorPath, element) => {
+const getAbsolutePath = (priorPath, element, functions) => {
   let newElement = element;
   if (newElement.absolutePath) {
     newElement = {
-      path: pathTransformer(newElement.absolutePath),
+      path: pathTransformer(newElement.absolutePath, functions),
     };
   } else if (newElement.relativePath) {
     newElement = setNewElementFromRelativePath(priorPath, element);

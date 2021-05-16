@@ -1,4 +1,3 @@
-// const unlink = require('../handlers/basic/unlink.js');
 const queryElementTransformer = require('./queryElementTransformer.js');
 
 const operators = ['=', '<', '>', '!', '∈', '∉', '@', '?'];

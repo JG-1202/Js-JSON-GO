@@ -1,19 +1,20 @@
-const unlink = require('../basic/unlink.js');
 const pathTransformer = require('../../helpers/pathTransformer');
 const getPathElements = require('../../helpers/pathElements/getMultiple');
 const setElement = require('./src/setElement');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
+const backwardCompatability = require('./src/backwardCompatability');
+const returnObject = require('../../helpers/returnObject');
 
 /**
  * Get key values of all elements that need to be set
  */
 // eslint-disable-next-line complexity
-const getElementValues = (element, obj, tempObject, priorPath, fatalError) => {
+const getElementValues = (element, obj, tempObject, priorPath, functions, settings) => {
   if (Array.isArray(tempObject)) {
-    return element.wildcard ? getAllKeysFromArray(tempObject, fatalError) : getPathElements(element, unlink(obj), tempObject, 'number', priorPath, fatalError);
+    return element.wildcard ? getAllKeysFromArray(tempObject, settings) : getPathElements(element, obj, tempObject, 'number', priorPath, functions, settings);
   }
-  return element.wildcard ? getAllKeysFromObject(tempObject, fatalError) : getPathElements(element, unlink(obj), tempObject, 'string', priorPath, fatalError);
+  return element.wildcard ? getAllKeysFromObject(tempObject, settings) : getPathElements(element, obj, tempObject, 'string', priorPath, functions, settings);
 };
 
 /**
@@ -29,17 +30,23 @@ const getElementValue = (element) => {
  * @param {object} obj - object
  * @param {any} path - string or array representation of path to set.
  * @param {any} val - value to be set at specified path.
- * @param {boolean} fatalError - true if fatal error is desired if logical check is not satisfied.
+ * @param {Object} functions - object of functions that can be called within query.
+ * @param {Object} settings - object with settings.
  * @returns {object} object with newly set path in case that multiple logical checks
  * satisfy the first element will be set.
  */
-const setAll = (obj, path, val, fatalError, functions) => {
-  const arrayPath = pathTransformer(path, functions);
+const setAll = (obj, path, val, functions, settings) => {
+  const backwardCompatabilityObject = backwardCompatability(functions, settings);
+  const { functionsObject } = backwardCompatabilityObject;
+  const settingsObject = returnObject(backwardCompatabilityObject.settingsObject);
+  const arrayPath = pathTransformer(path, functionsObject);
   const priorPath = [];
   let tempObject = obj;
 
   arrayPath.every((element, index) => {
-    const elementValues = getElementValues(element, obj, tempObject, priorPath, fatalError);
+    const elementValues = getElementValues(
+      element, obj, tempObject, priorPath, functions, settingsObject,
+    );
     if (elementValues.length === 1) {
       const elementValue = getElementValue(elementValues[0]);
       tempObject = setElement(
@@ -54,7 +61,7 @@ const setAll = (obj, path, val, fatalError, functions) => {
         const newPath = [
           ...arrayPath.slice(0, index), elementValue, ...arrayPath.slice(index + 1),
         ];
-        return setAll(obj, newPath, val, fatalError);
+        return setAll(obj, newPath, val, functionsObject, settingsObject);
       });
       return false;
     }

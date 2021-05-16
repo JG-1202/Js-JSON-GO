@@ -1,27 +1,26 @@
 const Json = require('./json.js');
-const makeObject = require('./src/handlers/make/makeObject.js');
-const mergeFunctions = require('./src/helpers/mergeFunctions');
-const loadDefaultSettings = require('./src/helpers/loadDefaultSettings');
-const validateReponseAndPassDefault = require('./src/helpers/validateReponseAndPassDefault');
+const makeObject = require('./src/handlers/make/makeObject');
 
-const isArrayNotEmpty = (value) => (Array.isArray(value) && value.length > 0);
-const isNoArray = (value) => (value !== undefined && !Array.isArray(value));
-const validateValue = (value) => (isNoArray(value) || isArrayNotEmpty(value));
+const translateService = require('./src/services/translate');
+const translateAllService = require('./src/services/translateAll');
+const translateOneToAllService = require('./src/services/translateOneToAll');
+const translateAllToOneService = require('./src/services/translateAllToOne');
+
+const loadDefaultSettings = require('./src/settings/loadDefaultSettings');
 
 class Map {
   /**
    * Construct a map containing origin object, destination object and settings
-   * @param {Object} origin - origin object, from where data should be obtained
-   * @param {Object} destination - destination object, to where data should be mapped
-   * @param {Object} settings object, currently only support for fatalErrorOnCreate,
-   * if true, an arror will be thrown on translation if query is not met.
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} originObject - origin object, from where data should be obtained
+   * @param {Object} destinationObject - destination object, to where data should be mapped
+   * @param {Object} settings - object with settings
+   * @param {Object} functions - object of functions that can be called within query.
 
    */
-  constructor(origin, destination, settings, functions) {
-    this.settings = loadDefaultSettings(makeObject(settings));
-    this.originObject = new Json(origin, settings);
-    this.destinationObject = new Json(destination, settings);
+  constructor(originObject, destinationObject, settings, functions) {
+    this.settings = loadDefaultSettings(settings);
+    this.originObject = new Json(originObject, settings, functions);
+    this.destinationObject = new Json(destinationObject, settings, functions);
     this.functions = makeObject(functions);
   }
 
@@ -30,18 +29,10 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    */
   translate(originPath, destinationPath, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    const value = this.originObject.get(originPath, funcs);
-    if (this.settings.mapIfNotFound || value !== undefined) {
-      this.destinationObject.set(
-        destinationPath,
-        validateReponseAndPassDefault(value, undefined, this.settings.defaultGetResponse),
-        this.settings.fatalErrorOnCreate, funcs,
-      );
-    }
+    return translateService(originPath, destinationPath, functions, this);
   }
 
   /**
@@ -50,19 +41,10 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    */
   translateAll(originPath, destinationPath, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    const values = this.originObject.getAll(originPath, funcs);
-    if (this.settings.mapIfNotFound || validateValue(values)) {
-      this.destinationObject.setAll(
-        destinationPath,
-        validateReponseAndPassDefault(values, [], this.settings.defaultGetAllResponse),
-        this.settings.fatalErrorOnCreate,
-        funcs,
-      );
-    }
+    return translateAllService(originPath, destinationPath, functions, this);
   }
 
   /**
@@ -71,19 +53,10 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    */
   translateOneToAll(originPath, destinationPath, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    const value = this.originObject.get(originPath, funcs);
-    if (this.settings.mapIfNotFound || value !== undefined) {
-      this.destinationObject.setAll(
-        destinationPath,
-        validateReponseAndPassDefault(value, undefined, this.settings.defaultGetResponse),
-        this.settings.fatalErrorOnCreate,
-        funcs,
-      );
-    }
+    return translateOneToAllService(originPath, destinationPath, functions, this);
   }
 
   /**
@@ -92,19 +65,10 @@ class Map {
    * @param {String} originPath - path from where data should be obtained from origin object
    * @param {originPath} destinationPath - path to where data should be mapped into destination
    * object
-   * @param {Object} functions object of functions that can be called within query.
+   * @param {Object} functions - object of functions that can be called within query.
    */
   translateAllToOne(originPath, destinationPath, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    const values = this.originObject.getAll(originPath, funcs);
-    if (this.settings.mapIfNotFound || validateValue(values)) {
-      this.destinationObject.set(
-        destinationPath,
-        validateReponseAndPassDefault(values, [], this.settings.defaultGetAllResponse),
-        this.settings.fatalErrorOnCreate,
-        funcs,
-      );
-    }
+    return translateAllToOneService(originPath, destinationPath, functions, this);
   }
 
   /**
