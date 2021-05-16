@@ -1,4 +1,4 @@
-/* eslint complexity: ["error", 4] */
+/* eslint complexity: ["error", 8] */
 
 /**
  * Check whether both variableA and variableB are truthy
@@ -39,6 +39,12 @@ const isEqual = (variableA, variableB) => {
   }
   if (areBothVariablesObjects(variableA, variableB)) {
     let result = false;
+    if (Object.keys(variableA).length !== Object.keys(variableB).length) {
+      return false;
+    }
+    if (Object.keys(variableA).length === 0) {
+      return true;
+    }
     Object.keys(variableA).every((keyA) => {
       result = isEqual(variableA[keyA], variableB[keyA]);
       return result;
@@ -47,6 +53,12 @@ const isEqual = (variableA, variableB) => {
   }
   if (areBothVariablesArrays(variableA, variableB)) {
     let result = false;
+    if (variableA.length !== variableB.length) {
+      return false;
+    }
+    if (variableA.length === 0) {
+      return true;
+    }
     variableA.every((valueA, index) => {
       result = isEqual(valueA, variableB[index]);
       return result;
