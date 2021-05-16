@@ -146,6 +146,34 @@ describe('Test getAll function', () => {
   });
 });
 
+describe('Testing JSON equality', () => {
+  it('Get stores that sells exactely the same items as the store from query', () => {
+    const itemsFromAmsterdam = inputFixture.stores[1].items;
+    const result = getAll(inputFixture, `stores[{$.items = $JSON(${JSON.stringify(itemsFromAmsterdam)})}].storeName`);
+    expect(result).toStrictEqual(['Amsterdam']);
+  });
+  it('Testing equality of arrays', () => {
+    const input = [{ test: [1, 2, 3] }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
+    expect(result).toStrictEqual([[1, 2, 3]]);
+  });
+  it('Testing inequality of arrays', () => {
+    const input = [{ test: [2, 1, 3] }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify([1, 2, 3])})}].test`);
+    expect(result).toStrictEqual([]);
+  });
+  it('Testing equality of objects', () => {
+    const input = [{ test: { a: true, b: true, c: true } }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({ b: true, a: true, c: true })})}].test`);
+    expect(result).toStrictEqual([{ a: true, b: true, c: true }]);
+  });
+  it('Testing inequality of objects', () => {
+    const input = [{ test: { a: true, b: true, c: true } }];
+    const result = getAll(input, `[{$.test = $JSON(${JSON.stringify({ b: true, a: false, c: true })})}].test`);
+    expect(result).toStrictEqual([]);
+  });
+});
+
 describe('Test getAll function with regular expressions', () => {
   it('Testing basic regular expression', () => {
     const result = getAll(inputFixture, 'stores[{$.storeName ? $RegExp(/\\w+/)}].storeName');

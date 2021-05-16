@@ -6,21 +6,24 @@ const simpleGet = require('./src/simpleGet');
 const validateOutput = require('./src/validateOutput');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
+const returnObject = require('../../helpers/returnObject');
 
 /**
  * Handle wildcard, checks for each key whether remaining path is found and returns first key that
  * matches
  */
-const getFirstKey = (tempObject, arrayPath, getType, index, obj, priorPath) => {
-  const keys = getType === 'number' ? getAllKeysFromArray(tempObject) : getAllKeysFromObject(tempObject);
+const getFirstKey = (
+  tempObject, arrayPath, getType, index, obj, priorPath, functions, settings,
+) => {
+  const keys = getType === 'number' ? getAllKeysFromArray(tempObject, settings) : getAllKeysFromObject(tempObject, settings);
   let result;
   keys.some((key) => {
     let iterationResult;
     const remainingPath = arrayPath.slice(index + 1);
     if (doesPathIndicateComplexity(remainingPath)) {
-      iterationResult = new JsonGo.Json(obj).get([...priorPath, key, ...remainingPath]);
+      iterationResult = JsonGo.get(obj, [...priorPath, key, ...remainingPath], functions, settings);
     } else {
-      iterationResult = simpleGet(tempObject, [key, ...remainingPath]);
+      iterationResult = simpleGet(tempObject, [key, ...remainingPath], settings);
     }
     if (iterationResult !== undefined) {
       result = key[getType];
@@ -34,21 +37,26 @@ const getFirstKey = (tempObject, arrayPath, getType, index, obj, priorPath) => {
 /**
  * Get name of element either from wildcard or from other type of element
  */
-const getPathElement = (element, obj, tempObject, getType, priorPath, arrayPath, index) => {
+const getPathElement = (
+  element, obj, tempObject, getType, priorPath, arrayPath, index, functions, settings,
+) => {
   if (element.wildcard) {
-    return getFirstKey(tempObject, arrayPath, getType, index, obj, priorPath);
+    return getFirstKey(tempObject, arrayPath, getType, index, obj, priorPath, functions, settings);
   }
-  return getSinglePathElement(element, obj, tempObject, getType, priorPath);
+  return getSinglePathElement(element, obj, tempObject, getType, priorPath, functions, settings);
 };
 
 /**
  * Retreives single value from objects specified path
  * @param {Object} obj - object/array from which value should be retreived.
  * @param {any} path - string or array representation of path to set.
+ * @param {Object} functions - object of functions that can be called within query.
+ * @param {Object} settings - object with settings.
  * @returns {any} returns value found at specified path, in case that multiple logical checks
  * satisfy the first element will be returned
  */
-const get = (obj, path, functions) => {
+const get = (obj, path, functions, settings) => {
+  const settingsObject = returnObject(settings);
   const arrayPath = pathTransformer(path, functions);
   if (!doesPathIndicateComplexity(arrayPath)) {
     return simpleGet(obj, arrayPath);
@@ -57,12 +65,12 @@ const get = (obj, path, functions) => {
   let tempObject = obj;
   arrayPath.every((element, index) => {
     if (Array.isArray(tempObject)) {
-      const elementValue = getPathElement(element, obj, tempObject, 'number', priorPath, arrayPath, index);
+      const elementValue = getPathElement(element, obj, tempObject, 'number', priorPath, arrayPath, index, functions, settingsObject);
       tempObject = tempObject[elementValue];
       arrayPath[index] = elementValue;
       priorPath.push({ number: elementValue });
     } else {
-      const elementValue = getPathElement(element, obj, tempObject, 'string', priorPath, arrayPath, index);
+      const elementValue = getPathElement(element, obj, tempObject, 'string', priorPath, arrayPath, index, functions, settingsObject);
       tempObject = tempObject[elementValue];
       arrayPath[index] = elementValue;
       priorPath.push({ string: elementValue });

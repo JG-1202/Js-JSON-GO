@@ -1,7 +1,5 @@
 const elementTransformer = require('./elementTransformer.js');
 
-let functionsCache = {};
-
 /**
  * Updates counter on opening bracket, if counter is 0 push to path representation
  */
@@ -98,26 +96,14 @@ const charactersToArray = (characters, funcs) => {
 };
 
 /**
- * remember functions in cache so that these can be used for next query (query-in-query support)
- */
-const handleFunctionsCache = (funcs) => {
-  if (funcs) {
-    functionsCache = funcs;
-    return funcs;
-  }
-  return functionsCache;
-};
-
-/**
  * Transforms string representation of path into workable array representation
  * @param {String} query - string representation of path
  * @param {Object} funcs - object with functions provided by the user that may be part of the query
  * @returns {Array} - workable array representation of path
  */
 const pathToArrayTransformer = (path, funcs) => {
-  const functions = handleFunctionsCache(funcs);
   const characters = path.split('');
-  const arrayPath = charactersToArray(characters, functions);
+  const arrayPath = charactersToArray(characters, funcs);
   return arrayPath;
 };
 

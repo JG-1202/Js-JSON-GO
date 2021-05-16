@@ -1,49 +1,44 @@
-const stringify = require('../../../handlers/basic/stringify');
+/* eslint complexity: ["error", 7] */
+
+const checkEquality = require('./logicalChecks/checkEquality');
+const checkFunctions = require('./logicalChecks/checkFunctions');
+const checkGreaterThan = require('./logicalChecks/checkGreaterThan');
+const checkInSubsetOf = require('./logicalChecks/checkInSubsetOf');
+const checkLowerThan = require('./logicalChecks/checkLowerThan');
+const checkRegularExpression = require('./logicalChecks/checkRegularExpression');
 
 /**
  * Checks value with checkValue depending on operator
  * @param {Array} value - input value to check
  * @param {String} operator - operator
  * @param {Any} checkValue - other input value to check agains value
+ * @param {Any} element - element to be checked
  * @returns {Boolean} - true if it complies, false otherwise
  */
-// eslint-disable-next-line complexity
 const logicalValidator = (value, operator, checkValue, element) => {
-  if (operator === '=') {
-    return (stringify(value) === stringify(checkValue));
+  const equalityResult = checkEquality(value, checkValue, operator);
+  if (equalityResult.stop) {
+    return equalityResult.result;
   }
-  if (operator === '!=') {
-    return (stringify(value) !== stringify(checkValue));
+  const greaterThanResult = checkGreaterThan(value, checkValue, operator);
+  if (greaterThanResult.stop) {
+    return greaterThanResult.result;
   }
-  if (operator === '>=') {
-    return (value >= checkValue);
+  const lowerThanResult = checkLowerThan(value, checkValue, operator);
+  if (lowerThanResult.stop) {
+    return lowerThanResult.result;
   }
-  if (operator === '>') {
-    return (value > checkValue);
+  const subsetResult = checkInSubsetOf(value, checkValue, operator);
+  if (subsetResult.stop) {
+    return subsetResult.result;
   }
-  if (operator === '<=') {
-    return (value <= checkValue);
+  const regularExpressionResult = checkRegularExpression(value, checkValue, operator);
+  if (regularExpressionResult.stop) {
+    return regularExpressionResult.result;
   }
-  if (operator === '<') {
-    return (value < checkValue);
-  }
-  if (operator === '∈' || operator === '@') {
-    return (checkValue.indexOf(value) > -1);
-  }
-  if (operator === '∉' || operator === '!@') {
-    return (checkValue.indexOf(value) === -1);
-  }
-  if (operator === '?') {
-    if (checkValue.regex) {
-      return checkValue.regex.test(value);
-    }
-    if (value.regex) {
-      return value.regex.test(checkValue);
-    }
-    return false;
-  }
-  if (value && value.function) {
-    return value.function(element);
+  const functionResult = checkFunctions(value, element);
+  if (functionResult.stop) {
+    return functionResult.result;
   }
   return !!value;
 };

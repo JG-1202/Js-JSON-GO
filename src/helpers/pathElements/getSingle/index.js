@@ -3,11 +3,11 @@ const query = require('../../query');
 /**
  * Return result of provided getType, throw error if no results are found and fatalError is true
  */
-const checkQueryResult = (queryResult, getType, element, fatalError) => {
+const checkQueryResult = (queryResult, getType, element, settings) => {
   if (queryResult[getType] !== undefined) {
     return queryResult[getType];
   }
-  if (fatalError) {
+  if (settings.fatalErrorOnCreate) {
     throw new Error(`No results found for provided query ${JSON.stringify(element.query)}.`);
   }
   return undefined;
@@ -23,15 +23,21 @@ const checkQueryResult = (queryResult, getType, element, fatalError) => {
  * (path at current iteration)
  * @param {Boolean} fatalError - boolean indicating if fatalError should be thrown
  * if no match is found for query
+ * @param {Object} functions - object with functions.
+ * @param {Object} settings - object with settings.
  * @returns {Any} - element of provided getType, or undefined if not found
  */
-const getSinglePathElement = (element, obj, tempObject, getType, priorPath, fatalError) => {
+const getSinglePathElement = (
+  element, obj, tempObject, getType, priorPath, functions, settings,
+) => {
   if (element[getType] !== undefined) {
     return element[getType];
   }
   if (element.query) {
-    const queryResult = query(element.query, obj, tempObject, false, priorPath);
-    return checkQueryResult(queryResult, getType, element, fatalError);
+    const queryResult = query(
+      element.query, obj, tempObject, false, priorPath, functions, settings,
+    );
+    return checkQueryResult(queryResult, getType, element, settings);
   }
   return undefined;
 };

@@ -18,7 +18,6 @@ const testObject = {
     },
   },
 };
-// const inputFixtureObject = require('./fixtures/inputFixtureObject.json');
 
 describe('Test get function', () => {
   it('Get from array if number 1', () => {
@@ -142,5 +141,9 @@ describe('Test get function', () => {
   it('Get an expensive items for a something', () => {
     const result = get(inputFixture, '[*][*].items[{$.price >= $..expensive}].name');
     expect(result).toStrictEqual('Granny Smith medium bag');
+  });
+  it('Get an item that is cheaper than 3.50 for something', () => {
+    const result = get(inputFixture, '[*][*].items[{$.price < 3.50}].name');
+    expect(result).toStrictEqual('Granny Smith small bag');
   });
 });
