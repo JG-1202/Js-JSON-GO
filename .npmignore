@@ -1,0 +1,6 @@
+/coverage
+/test
+/node_modules
+/img
+.eslintrc.js
+jest.config.js
