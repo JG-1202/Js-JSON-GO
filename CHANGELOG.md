@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.3.2] - 2021-05-23
+### changed
+- compatability fix: chop functionality is now also supported for Node 10.x (prior version supported 12.x and above)
+
 ## [0.3.1] - 2021-05-16
 ### Changed
 - bugfix: testing equality of JSON objects

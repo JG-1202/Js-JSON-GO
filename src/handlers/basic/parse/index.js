@@ -20,7 +20,8 @@ const goParse = (value, safeParse) => (safeParse ? attemptToParse(value) : JSON.
 /**
  * check whether there is possible parsable input
  */
-const isThereSomethingToParse = (value) => value && typeof value === 'string' && Number.isNaN(Number(value));
+// eslint-disable-next-line no-restricted-globals
+const isThereSomethingToParse = (value) => value && typeof value === 'string' && isNaN(value);
 
 /**
  * Parses input value if it is stringified
