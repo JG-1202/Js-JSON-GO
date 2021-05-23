@@ -1,5 +1,10 @@
 ![Js-JSON-Go banner](https://raw.githubusercontent.com/JG-1202/Js-JSON-GO/main/img/banner.png)
 
+![Codefactor](https://img.shields.io/codefactor/grade/github/JG-1202/JS-JSON-Go?color=2e7dcc&style=for-the-badge)
+![NPMSize](https://img.shields.io/bundlephobia/min/js-json-go?color=2e7dcc&style=for-the-badge)
+![Codecov](https://img.shields.io/codecov/c/github/JG-1202/Js-JSON-GO?color=2e7dcc&logo=codecov&logoColor=ffffff&style=for-the-badge&token=OFQFOTBOZY)
+![Downloads](https://img.shields.io/npm/dw/js-json-go?color=2e7dcc&style=for-the-badge)
+
 Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects. Moreover, the combined effort of getting and setting values on a conditional JSON path allows for translation from a value of one JSON object into another JSON object. Js-JSON-GO offers queries and nested queries with support for simple boolean logic, regular expressions and custom functions.
 
 Try on [RunKit](https://npm.runkit.com/js-json-go) (Node)
@@ -323,7 +328,7 @@ Tests can be ran using the following command:
 ```bash
 npm run test
 ```
-Current code coverage (20 suites, 183 tests) is about 99%.
+Current code coverage (20 suites, 183 tests) is about 95-100%.
 
 ## Contributing
 Pull requests are welcome.
