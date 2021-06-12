@@ -5,8 +5,6 @@ const checkForExistenceOfArrayElementOne = (array) => (array && array[1]);
 
 /**
  * Create a regular expression from string using JS new RegExp
- * @param {String} string - string representation of regex
- * @returns {Regexp} - Regular expression derived from string
  */
 const createRegExpFromString = (string) => {
   const matchedFlags = string.match(/.*\/([gimy]*)$/);
@@ -22,4 +20,14 @@ const createRegExpFromString = (string) => {
   throw new Error('Invalid regular expression, missing / at beginning and beteen pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
 };
 
-module.exports = createRegExpFromString;
+/**
+ * Handle elements that indicate a regular expression and return new RegExp
+ * @param {String} element - element to convert to regex
+ * @returns {Regexp} - Regular expression derived from string
+ */
+const handleRegExp = (element) => {
+  const remainingElement = element.substr(8, element.length - 9);
+  return { value: { regex: createRegExpFromString(remainingElement) } };
+};
+
+module.exports = handleRegExp;

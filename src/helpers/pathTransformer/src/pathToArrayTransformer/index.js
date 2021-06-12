@@ -1,4 +1,4 @@
-const elementTransformer = require('./elementTransformer.js');
+const elementTransformer = require('../elementTransformer');
 
 /**
  * Updates counter on opening bracket, if counter is 0 push to path representation

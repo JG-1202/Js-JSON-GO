@@ -17,12 +17,12 @@ const doesOperatorIndicateNotInSubsetOf = (operator) => (operator === '∉' || o
  */
 const checkInSubsetOf = (variableA, variableB, operator) => {
   if (doesOperatorIndicateInSubsetOf(operator)) {
-    return { stop: true, result: (variableB.indexOf(variableA) > -1) };
+    return variableB.indexOf(variableA) > -1;
   }
   if (doesOperatorIndicateNotInSubsetOf(operator)) {
-    return { stop: true, result: (variableB.indexOf(variableA) === -1) };
+    return variableB.indexOf(variableA) === -1;
   }
-  return { stop: false };
+  return null;
 };
 
 module.exports = checkInSubsetOf;

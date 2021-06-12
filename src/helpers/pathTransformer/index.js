@@ -1,5 +1,5 @@
-const pathToArrayTransformer = require('./src/pathToArrayTransformer.js');
-const pathValidator = require('./src/pathValidator.js');
+const pathToArrayTransformer = require('./src/pathToArrayTransformer');
+const pathValidator = require('./src/pathValidator');
 
 /**
  * Transforms string representation of path into workable array representation

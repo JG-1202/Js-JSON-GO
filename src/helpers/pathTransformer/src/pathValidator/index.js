@@ -1,4 +1,4 @@
-const stringify = require('../../../handlers/basic/stringify');
+const stringify = require('../../../../handlers/basic/stringify');
 
 /**
  * Check if input is existent and an array

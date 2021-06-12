@@ -1,4 +1,4 @@
-const queryElementTransformer = require('./queryElementTransformer.js');
+const queryElementTransformer = require('../queryElementTransformer');
 
 const operators = ['=', '<', '>', '!', '∈', '∉', '@', '?'];
 

@@ -20,9 +20,9 @@ const testExpression = (variableA, variableB) => {
  */
 const checkRegularExpression = (variableA, variableB, operator) => {
   if (operator === '?') {
-    return { stop: true, result: testExpression(variableA, variableB) };
+    return testExpression(variableA, variableB);
   }
-  return { stop: false };
+  return null;
 };
 
 module.exports = checkRegularExpression;
