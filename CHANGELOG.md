@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [0.3.3] - 2021-05-23
+## [0.3.3] - 2021-06-16
 ### changed
 - links to shields in readme.md
 - folder structure of helper pathTransformer
