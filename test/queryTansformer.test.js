@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const transform = require('../src/helpers/pathTransformer/src/queryTransformer.js');
+const transform = require('../src/helpers/pathTransformer/src/queryTransformer');
 
 describe('Test different queries to transform from string to array', () => {
   it('1 = 1', () => {

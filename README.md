@@ -1,9 +1,11 @@
 ![Js-JSON-Go banner](https://raw.githubusercontent.com/JG-1202/Js-JSON-GO/main/img/banner.png)
 
-![Codefactor](https://img.shields.io/codefactor/grade/github/JG-1202/JS-JSON-Go?color=2e7dcc&style=for-the-badge)
-![NPMSize](https://img.shields.io/bundlephobia/min/js-json-go?color=2e7dcc&style=for-the-badge)
-![Codecov](https://img.shields.io/codecov/c/github/JG-1202/Js-JSON-GO?color=2e7dcc&logo=codecov&logoColor=ffffff&style=for-the-badge&token=OFQFOTBOZY)
-![Downloads](https://img.shields.io/npm/dw/js-json-go?color=2e7dcc&style=for-the-badge)
+[![codefactor](https://img.shields.io/codefactor/grade/github/JG-1202/Js-Json-Go?color=2e7dcc&logo=codefactor&logoColor=ffffff&style=for-the-badge)](https://www.codefactor.io/repository/github/jg-1202/js-json-go)
+[![npmSize](https://img.shields.io/bundlephobia/min/js-json-go?color=2e7dcc&style=for-the-badge)](https://bundlephobia.com/result?p=js-json-go)
+[![codecov](https://img.shields.io/codecov/c/github/JG-1202/Js-JSON-GO?color=2e7dcc&logo=codecov&logoColor=ffffff&style=for-the-badge&token=OFQFOTBOZY)](https://codecov.io/gh/JG-1202/Js-JSON-GO)
+[![downloads](https://img.shields.io/npm/dw/js-json-go?color=2e7dcc&style=for-the-badge)](https://www.npmjs.com/package/js-json-go)
+[![maintainability](https://img.shields.io/codeclimate/maintainability/JG-1202/Js-JSON-GO?color=2e7dcc&logo=code-climate&logoColor=ffffff&style=for-the-badge)](https://codeclimate.com/github/JG-1202/Js-JSON-GO)
+
 
 Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects. Moreover, the combined effort of getting and setting values on a conditional JSON path allows for translation from a value of one JSON object into another JSON object. Js-JSON-GO offers queries and nested queries with support for simple boolean logic, regular expressions and custom functions.
 

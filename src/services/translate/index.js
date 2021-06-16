@@ -9,18 +9,18 @@ const validateReponseAndPassDefault = require('../../helpers/validateReponseAndP
  * @returns translate response
  */
 const translateSerivce = (originPath, destinationPath, functions, constructorsObject) => {
-  const value = constructorsObject.originObject.get(originPath, functions);
-  if (constructorsObject.settings.mapIfNotFound || value !== undefined) {
+  const getResponse = constructorsObject.originObject.get(originPath, functions);
+  if (constructorsObject.settings.mapIfNotFound || getResponse !== undefined) {
     constructorsObject.destinationObject.set(
       destinationPath,
       validateReponseAndPassDefault(
-        value, undefined, constructorsObject.settings.defaultGetResponse,
+        getResponse, undefined, constructorsObject.settings.defaultGetResponse,
       ),
       functions,
       constructorsObject.settings,
     );
   }
-  return value;
+  return getResponse;
 };
 
 module.exports = translateSerivce;

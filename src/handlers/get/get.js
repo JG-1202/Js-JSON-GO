@@ -1,12 +1,12 @@
 const JsonGo = require('../../../index');
-const pathTransformer = require('../../helpers/pathTransformer');
 const getSinglePathElement = require('../../helpers/pathElements/getSingle');
 const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');
 const simpleGet = require('./src/simpleGet');
 const validateOutput = require('./src/validateOutput');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
-const returnObject = require('../../helpers/returnObject');
+const getTypeFromTempObject = require('./src/getTypeFromTempObject');
+const initializeGetHandler = require('./src/initializeGetHandler');
 
 /**
  * Handle wildcard, checks for each key whether remaining path is found and returns first key that
@@ -47,6 +47,26 @@ const getPathElement = (
 };
 
 /**
+ * For each element of the array path, get its element and return whether a next
+ * iterations is desired
+ */
+const getIteration = (
+  element, obj, tempObject, type, priorPath, arrayPath, index, functions, settingsObject,
+) => {
+  let tempObj = tempObject;
+  const arrPath = arrayPath;
+  const elementValue = getPathElement(
+    element, obj, tempObject, type, priorPath, arrayPath, index, functions, settingsObject,
+  );
+  tempObj = tempObj[elementValue];
+  arrPath[index] = elementValue;
+  const priorPathElement = {};
+  priorPathElement[type] = elementValue;
+  priorPath.push(priorPathElement);
+  return validateOutput(tempObj, arrPath.length - 1 === index);
+};
+
+/**
  * Retreives single value from objects specified path
  * @param {Object} obj - object/array from which value should be retreived.
  * @param {any} path - string or array representation of path to set.
@@ -56,28 +76,16 @@ const getPathElement = (
  * satisfy the first element will be returned
  */
 const get = (obj, path, functions, settings) => {
-  const settingsObject = returnObject(settings);
-  const arrayPath = pathTransformer(path, functions);
+  const { settingsObject, arrayPath, priorPath } = initializeGetHandler(path, functions, settings);
   if (!doesPathIndicateComplexity(arrayPath)) {
     return simpleGet(obj, arrayPath);
   }
-  const priorPath = [];
   let tempObject = obj;
   arrayPath.every((element, index) => {
-    if (Array.isArray(tempObject)) {
-      const elementValue = getPathElement(element, obj, tempObject, 'number', priorPath, arrayPath, index, functions, settingsObject);
-      tempObject = tempObject[elementValue];
-      arrayPath[index] = elementValue;
-      priorPath.push({ number: elementValue });
-    } else {
-      const elementValue = getPathElement(element, obj, tempObject, 'string', priorPath, arrayPath, index, functions, settingsObject);
-      tempObject = tempObject[elementValue];
-      arrayPath[index] = elementValue;
-      priorPath.push({ string: elementValue });
-    }
-    const {
-      shouldItContinue, newTempObject,
-    } = validateOutput(tempObject, arrayPath.length - 1 === index);
+    const type = getTypeFromTempObject(tempObject);
+    const { shouldItContinue, newTempObject } = getIteration(
+      element, obj, tempObject, type, priorPath, arrayPath, index, functions, settingsObject,
+    );
     tempObject = newTempObject;
     return shouldItContinue;
   });

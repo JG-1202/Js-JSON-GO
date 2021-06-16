@@ -12,13 +12,11 @@ const simpleGet = (obj, path) => {
   const arrayPath = path;
   let tempObject = obj;
   arrayPath.every((element, index) => {
+    let elementValue = element.string;
     if (Array.isArray(tempObject)) {
-      const elementValue = element.number;
-      tempObject = tempObject[elementValue];
-    } else {
-      const elementValue = element.string;
-      tempObject = tempObject[elementValue];
+      elementValue = element.number;
     }
+    tempObject = tempObject[elementValue];
     const {
       shouldItContinue, newTempObject,
     } = validateOutput(tempObject, arrayPath.length - 1 === index);

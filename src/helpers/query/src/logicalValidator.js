@@ -1,11 +1,14 @@
-/* eslint complexity: ["error", 7] */
-
 const checkEquality = require('./logicalChecks/checkEquality');
 const checkFunctions = require('./logicalChecks/checkFunctions');
 const checkGreaterThan = require('./logicalChecks/checkGreaterThan');
 const checkInSubsetOf = require('./logicalChecks/checkInSubsetOf');
 const checkLowerThan = require('./logicalChecks/checkLowerThan');
 const checkRegularExpression = require('./logicalChecks/checkRegularExpression');
+
+/**
+ * Default check (!!value) will return boolean from value input
+ */
+const defaultCheck = (value) => !!value;
 
 /**
  * Checks value with checkValue depending on operator
@@ -16,31 +19,27 @@ const checkRegularExpression = require('./logicalChecks/checkRegularExpression')
  * @returns {Boolean} - true if it complies, false otherwise
  */
 const logicalValidator = (value, operator, checkValue, element) => {
-  const equalityResult = checkEquality(value, checkValue, operator);
-  if (equalityResult.stop) {
-    return equalityResult.result;
-  }
-  const greaterThanResult = checkGreaterThan(value, checkValue, operator);
-  if (greaterThanResult.stop) {
-    return greaterThanResult.result;
-  }
-  const lowerThanResult = checkLowerThan(value, checkValue, operator);
-  if (lowerThanResult.stop) {
-    return lowerThanResult.result;
-  }
-  const subsetResult = checkInSubsetOf(value, checkValue, operator);
-  if (subsetResult.stop) {
-    return subsetResult.result;
-  }
-  const regularExpressionResult = checkRegularExpression(value, checkValue, operator);
-  if (regularExpressionResult.stop) {
-    return regularExpressionResult.result;
-  }
-  const functionResult = checkFunctions(value, element);
-  if (functionResult.stop) {
-    return functionResult.result;
-  }
-  return !!value;
+  const checks = [
+    checkEquality,
+    checkGreaterThan,
+    checkLowerThan,
+    checkInSubsetOf,
+    checkRegularExpression,
+    checkFunctions,
+    defaultCheck,
+  ];
+  let result;
+  checks.some((check) => {
+    const functionOutput = check(
+      value, checkValue, operator, element,
+    );
+    if (typeof functionOutput === 'boolean') {
+      result = functionOutput;
+      return true;
+    }
+    return false;
+  });
+  return result;
 };
 
 module.exports = logicalValidator;

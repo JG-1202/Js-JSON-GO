@@ -1,4 +1,4 @@
-const queryElementTransformer = require('./queryElementTransformer.js');
+const queryElementTransformer = require('../queryElementTransformer');
 
 const operators = ['=', '<', '>', '!', '∈', '∉', '@', '?'];
 
@@ -55,12 +55,11 @@ const defaultCharHandler = (char, actionVariables, funcs) => {
 /**
  * Handles quotes to set isString key of actionVariables
  */
-// eslint-disable-next-line complexity
 const handleQuotes = (char, actionVariables, funcs) => {
   let newActionVariables = actionVariables;
   if (!newActionVariables.isString) {
     newActionVariables.isString = char;
-  } else if (newActionVariables.isString && char === newActionVariables.isString) {
+  } else if (char === newActionVariables.isString) {
     newActionVariables.isString = null;
   }
   newActionVariables = defaultCharHandler(char, newActionVariables, funcs);
@@ -88,29 +87,62 @@ const handleOperators = (char, actionVariables, funcs) => {
 };
 
 /**
- * Handles each character of string and redirects to specific handlers
+ * Check whether all parameters in params array are falsy
  */
-// eslint-disable-next-line complexity
-const handleCharacters = (char, actionVariables, funcs) => {
-  let newActionVariables = actionVariables;
-  if (char === ' ' && !newActionVariables.arrayCounter && !newActionVariables.isString) {
-    return newActionVariables;
-  }
-  if (['[', ']'].indexOf(char) > -1) {
-    newActionVariables = handleBrackets(char, newActionVariables);
-  } else if (newActionVariables.arrayCounter > 0) {
-    newActionVariables.part += char;
-  } else if (['"', "'"].indexOf(char) > -1) {
-    newActionVariables = handleQuotes(char, newActionVariables, funcs);
-  } else if (newActionVariables.isString) {
-    newActionVariables.part += char;
-  } else if (operators.indexOf(char) > -1) {
-    newActionVariables = handleOperators(char, newActionVariables, funcs);
-  } else {
-    newActionVariables = defaultCharHandler(char, newActionVariables, funcs);
-  }
-  return newActionVariables;
-};
+const areAllFalsy = (params) => params.every((element) => !element);
+
+/**
+ * Array of sequential checks to determine what action needs to be taken with each character
+ */
+const characterChecks = [
+  function charMayBeIgnored(char, actionVariables) {
+    if (char === ' ' && areAllFalsy([actionVariables.arrayCounter, actionVariables.isString])) {
+      return true;
+    }
+    return false;
+  },
+  function charIsBracket(char, actionVariables) {
+    if (['[', ']'].indexOf(char) > -1) {
+      handleBrackets(char, actionVariables);
+      return true;
+    }
+    return false;
+  },
+  function arrayCounterHigherThanOne(char, actionVariables) {
+    const newActionVariables = actionVariables;
+    if (newActionVariables.arrayCounter > 0) {
+      newActionVariables.part += char;
+      return true;
+    }
+    return false;
+  },
+  function charIsQuote(char, actionVariables, funcs) {
+    if (['"', "'"].indexOf(char) > -1) {
+      handleQuotes(char, actionVariables, funcs);
+      return true;
+    }
+    return false;
+  },
+  function partIsString(char, actionVariables) {
+    const newActionVariables = actionVariables;
+    if (newActionVariables.isString) {
+      newActionVariables.part += char;
+      return true;
+    }
+    return false;
+  },
+  function charIsOperator(char, actionVariables, funcs) {
+    if (operators.indexOf(char) > -1) {
+      handleOperators(char, actionVariables, funcs);
+      return true;
+    }
+    return false;
+  },
+  function defaultHandling(char, actionVariables, funcs) {
+    defaultCharHandler(char, actionVariables, funcs);
+    return true;
+  },
+];
 
 /**
  * Push remaining parts into results
@@ -131,14 +163,14 @@ const addFinalResult = (actionVariables, funcs) => {
  */
 const queryTransformer = (query, funcs) => {
   const substractedQuery = query.split('');
-  let actionVariables = {
+  const actionVariables = {
     result: [],
     isString: null,
     part: '',
     arrayCounter: 0,
   };
   substractedQuery.forEach((char) => {
-    actionVariables = handleCharacters(char, actionVariables, funcs);
+    characterChecks.some((check) => check(char, actionVariables, funcs));
   });
   addFinalResult(actionVariables, funcs);
   validateResult(actionVariables.result, query);

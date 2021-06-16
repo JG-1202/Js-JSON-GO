@@ -1,13 +1,13 @@
 const JG = require('../../../index.js');
 
-const pathTransformer = require('../../helpers/pathTransformer');
 const getMultiplePathElements = require('../../helpers/pathElements/getMultiple');
 const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');
 const simpleGet = require('./src/simpleGet');
 const validateOutput = require('./src/validateOutput');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
-const returnObject = require('../../helpers/returnObject');
+const getTypeFromTempObject = require('./src/getTypeFromTempObject');
+const initializeGetHandler = require('./src/initializeGetHandler');
 
 /**
  * Get names of elements either from wildcard or from other type of elements
@@ -114,6 +114,28 @@ const returnArray = (element) => {
 };
 
 /**
+ * For each element of the array path, get its element and return whether a next
+ * iterations is desired
+ */
+const getAllIteration = (
+  element, obj, tempObject, type, priorPath, functions, settingsObject, results, index, arrayPath,
+) => {
+  let tempResults = results;
+  let tempObj = tempObject;
+  const arrPath = arrayPath;
+  const elementValues = getPathElements(
+    element, obj, tempObject, type, priorPath, functions, settingsObject,
+  );
+  tempResults = addToResults(
+    results, elementValues, index, obj, arrayPath, tempObject, functions, settingsObject,
+  );
+  tempObj = setTempObjectNewIteration(elementValues, tempObj, type);
+  arrPath[index] = setArrayPathIndex(elementValues, arrPath[index]);
+  priorPath.push(arrPath[index]);
+  return { tempResults, ...validateOutput(tempObj, arrPath.length - 1 === index) };
+};
+
+/**
  * Retreives all values from objects specified path
  * @param {Object} obj - object/array from which value should be retreived.
  * @param {any} path - string or array representation of path to set.
@@ -122,35 +144,18 @@ const returnArray = (element) => {
  * @returns {Array} returns array of values that match the specified path with logical checks
  */
 const getAll = (obj, path, functions, settings) => {
-  const settingsObject = returnObject(settings);
-  const arrayPath = pathTransformer(path, functions);
+  const { settingsObject, arrayPath, priorPath } = initializeGetHandler(path, functions, settings);
   if (!doesPathIndicateComplexity(arrayPath)) {
     return returnArray(simpleGet(obj, arrayPath));
   }
-  const priorPath = [];
   let results = [];
   let tempObject = obj;
-  arrayPath.every((singleElement, index) => {
-    const element = (singleElement);
-    if (Array.isArray(tempObject)) {
-      const elementValues = getPathElements(element, obj, tempObject, 'number', priorPath, functions, settingsObject);
-      results = addToResults(
-        results, elementValues, index, obj, arrayPath, tempObject, functions, settingsObject,
-      );
-      tempObject = setTempObjectNewIteration(elementValues, tempObject, 'number');
-      arrayPath[index] = setArrayPathIndex(elementValues, arrayPath[index]);
-    } else {
-      const elementValues = getPathElements(element, obj, tempObject, 'string', priorPath, functions, settingsObject);
-      results = addToResults(
-        results, elementValues, index, obj, arrayPath, tempObject, functions, settingsObject,
-      );
-      tempObject = setTempObjectNewIteration(elementValues, tempObject, 'string');
-      arrayPath[index] = setArrayPathIndex(elementValues, arrayPath[index]);
-    }
-    priorPath.push(arrayPath[index]);
-    const {
-      shouldItContinue, newTempObject,
-    } = validateOutput(tempObject, arrayPath.length - 1 === index);
+  arrayPath.every((element, i) => {
+    const type = getTypeFromTempObject(tempObject);
+    const { shouldItContinue, newTempObject, tempResults } = getAllIteration(
+      element, obj, tempObject, type, priorPath, functions, settingsObject, results, i, arrayPath,
+    );
+    results = tempResults;
     tempObject = newTempObject;
     return shouldItContinue;
   });

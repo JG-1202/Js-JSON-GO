@@ -1,19 +1,19 @@
 /* eslint-disable no-undef */
-const createRegExpFromString = require('../src/helpers/pathTransformer/src/queryElementTransformHelpers/createRegexpFromString');
+const createRegExpFromString = require('../src/helpers/pathTransformer/src/queryElementTransformer/src/handlers/regExp');
 
 describe('Test to create regular expression from string', () => {
   it('regex without flags', () => {
-    const result = createRegExpFromString('/\\w+/');
-    expect(result).toStrictEqual(/\w+/);
+    const result = createRegExpFromString('$RegExp(/\\w+/)');
+    expect(result).toStrictEqual({ value: { regex: /\w+/ } });
   });
   it('regex with flags', () => {
-    const result = createRegExpFromString('/\\w+/gi');
-    expect(result).toStrictEqual(/\w+/gi);
+    const result = createRegExpFromString('$RegExp(/\\w+/gi)');
+    expect(result).toStrictEqual({ value: { regex: /\w+/gi } });
   });
   it('Invalid regex (missing /)', () => {
     let result = null;
     try {
-      createRegExpFromString('\\w+');
+      createRegExpFromString('$RegExp(\\w+)');
     } catch (err) {
       result = err.message;
     }

@@ -7,12 +7,12 @@
  */
 const checkLowerThan = (variableA, variableB, operator) => {
   if (operator === '<') {
-    return { stop: true, result: variableA < variableB };
+    return variableA < variableB;
   }
   if (operator === '<=') {
-    return { stop: true, result: variableA <= variableB };
+    return variableA <= variableB;
   }
-  return { stop: false };
+  return null;
 };
 
 module.exports = checkLowerThan;

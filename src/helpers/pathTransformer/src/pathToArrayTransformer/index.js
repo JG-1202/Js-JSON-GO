@@ -1,61 +1,43 @@
-const elementTransformer = require('./elementTransformer.js');
+const elementTransformer = require('../elementTransformer');
+
+/**
+ * Check counter, if counter is at 0 push part into path array, otherwise add character
+ * to part
+ */
+const checkCounter = (char, actionVariables, funcs) => {
+  const newActionVariables = actionVariables;
+  if (newActionVariables.counter === 0) {
+    if (newActionVariables.part) {
+      newActionVariables.arrayPath.push(elementTransformer(newActionVariables.part, funcs));
+      newActionVariables.part = '';
+    }
+  } else {
+    newActionVariables.part += char;
+  }
+  return newActionVariables;
+};
 
 /**
  * Updates counter on opening bracket, if counter is 0 push to path representation
  */
 const handleOpeningBracket = (char, actionVariables, funcs) => {
-  let { counter } = actionVariables;
-  let { part } = actionVariables;
-  const { arrayPath } = actionVariables;
-
-  if (counter === 0) {
-    if (part) {
-      arrayPath.push(elementTransformer(part, funcs));
-      part = '';
-    }
-  } else {
-    part += char;
-  }
-  counter += 1;
-  return { counter, part, arrayPath };
+  const newActionVariables = checkCounter(char, actionVariables, funcs);
+  newActionVariables.counter += 1;
+  return newActionVariables;
 };
 
 /**
  * Handling dot separator, if counter is 0, push to path representation
  */
-const handleDot = (char, actionVariables, funcs) => {
-  const { counter } = actionVariables;
-  let { part } = actionVariables;
-  const { arrayPath } = actionVariables;
-
-  if (counter === 0) {
-    if (part) {
-      arrayPath.push(elementTransformer(actionVariables.part, funcs));
-      part = '';
-    }
-  } else {
-    part += char;
-  }
-  return { counter, part, arrayPath };
-};
+const handleDot = (char, actionVariables, funcs) => checkCounter(char, actionVariables, funcs);
 
 /**
  * Updates counter on closing bracket, if counter is 0 push to path representation
  */
 const handleClosingBracket = (char, actionVariables, funcs) => {
-  let { counter } = actionVariables;
-  let { part } = actionVariables;
-  const { arrayPath } = actionVariables;
-  counter += -1;
-  if (counter === 0) {
-    if (part) {
-      arrayPath.push(elementTransformer(part, funcs));
-      part = '';
-    }
-  } else {
-    part += char;
-  }
-  return { counter, part, arrayPath };
+  const newActionVariables = actionVariables;
+  newActionVariables.counter += -1;
+  return checkCounter(char, actionVariables, funcs);
 };
 
 /**
