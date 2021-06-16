@@ -14,6 +14,16 @@ const checkFunctionsUntilSuccess = require('../../../checkFunctionsUntilSuccess/
 const specials = ['null', 'undefined', 'true', 'false'];
 
 /**
+ * Check whether first n characters of element equal toEqual
+ */
+const firstNCharactersEqual = (n, element, toEqual) => {
+  if (typeof element === 'string') {
+    return element.substring(0, n) === toEqual;
+  }
+  return false;
+};
+
+/**
  * Transform if it entails specials
  */
 const transformSpecials = ({ element }) => {
@@ -37,7 +47,7 @@ const transformNumber = ({ element }) => basicTransformNumber(element, 'value');
  * Transform if it enatails a JSON object
  */
 const transformJSON = ({ element }) => {
-  if (typeof element === 'string' && element.substring(0, 6) === '$JSON(') {
+  if (firstNCharactersEqual(6, element, '$JSON(')) {
     return successfulCheckResponse(handleJson(element));
   }
   return {};
@@ -47,7 +57,7 @@ const transformJSON = ({ element }) => {
  * Transform if it enatails a regular expression
  */
 const transformRegExp = ({ element }) => {
-  if (typeof element === 'string' && element.substring(0, 8) === '$RegExp(') {
+  if (firstNCharactersEqual(8, element, '$RegExp(')) {
     return successfulCheckResponse(handleRegExp(element));
   }
   return {};
@@ -57,7 +67,7 @@ const transformRegExp = ({ element }) => {
  * Transform if it enatails a functions
  */
 const transformFunctions = ({ element, funcs }) => {
-  if (typeof element === 'string' && element.substring(0, 10) === '$Function(') {
+  if (firstNCharactersEqual(10, element, '$Function(')) {
     return successfulCheckResponse(handleFunctions(element, funcs));
   }
   return {};

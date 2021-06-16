@@ -1,4 +1,3 @@
-/* eslint-disable */
 const checkLowerThan = require('../../src/helpers/query/src/logicalChecks/checkLowerThan');
 
 describe('Testing lower than', () => {

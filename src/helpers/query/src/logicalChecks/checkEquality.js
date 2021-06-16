@@ -1,44 +1,29 @@
 /**
- * Check whether both variableA and variableB are truthy
- */
-const doVariablesExist = (variableA, variableB) => (variableA && variableB);
-
-/**
- * Check whether both variableA and variable B are of type object
- */
-const areVariablesOfTypeObject = (variableA, variableB) => (typeof variableA === 'object' && typeof variableB === 'object');
-
-/**
  * Check whether both variableA and variable B are objects
  */
-const areBothVariablesObjects = (variableA, variableB) => {
-  if (doVariablesExist(variableA, variableB) && areVariablesOfTypeObject(variableA, variableB)) {
-    return true;
-  }
-  return false;
+const areBothVariablesObjectsOfEqualLength = (variableA, variableB) => {
+  const checks = [
+    (varA) => !!varA,
+    (varA, varB) => !!varB,
+    (varA) => typeof varA === 'object',
+    (varA, varB) => typeof varB === 'object',
+    (varA) => !Array.isArray(varA),
+    (varA, varB) => !Array.isArray(varB),
+    (varA, varB) => Object.keys(varA).length === Object.keys(varB).length,
+  ];
+  return checks.every((check) => check(variableA, variableB));
 };
 
 /**
  * Check whether both variableA and variable B are arrays
  */
-const areBothVariablesArrays = (variableA, variableB) => {
-  if (Array.isArray(variableA) && Array.isArray(variableB)) {
-    return true;
-  }
-  return false;
-};
-
-/**
- * Check whether variables length indicate equality
- */
-const checkVariablesLength = (variableA, variableB) => {
-  if (variableA.length !== variableB.length) {
-    return false;
-  }
-  if (variableA.length === 0) {
-    return true;
-  }
-  return null;
+const areBothVariablesArraysOfEqualLength = (variableA, variableB) => {
+  const checks = [
+    (varA) => Array.isArray(varA),
+    (varA, varB) => Array.isArray(varB),
+    (varA, varB) => varA.length === varB.length,
+  ];
+  return checks.every((check) => check(variableA, variableB));
 };
 
 const checks = {
@@ -55,31 +40,13 @@ const checks = {
    * Check equality of two JSON variables
    */
   checkJsonEquality(variableA, variableB) {
-    if (areBothVariablesObjects(variableA, variableB)) {
-      return this.checkObjectEquality(variableA, variableB);
+    if (areBothVariablesArraysOfEqualLength(variableA, variableB)) {
+      return variableA.every((valueA, index) => this.isEqual(valueA, variableB[index]));
     }
-    if (areBothVariablesArrays(variableA, variableB)) {
-      return this.checkArrayEquality(variableA, variableB);
+    if (areBothVariablesObjectsOfEqualLength(variableA, variableB)) {
+      return Object.keys(variableA).every((keyA) => this.isEqual(variableA[keyA], variableB[keyA]));
     }
     return false;
-  },
-  /**
-   * Check equality of two objects
-   */
-  checkObjectEquality(objectA, objectB) {
-    const lengthCheck = checkVariablesLength(Object.keys(objectA), Object.keys(objectB));
-    return lengthCheck === null
-      ? Object.keys(objectA).every((keyA) => this.isEqual(objectA[keyA], objectB[keyA]))
-      : lengthCheck;
-  },
-  /**
-   * Check equality of two arrays
-   */
-  checkArrayEquality(arrayA, arrayB) {
-    const lengthCheck = checkVariablesLength(arrayA, arrayB);
-    return lengthCheck === null
-      ? arrayA.every((valueA, index) => this.isEqual(arrayA, arrayB[index]))
-      : lengthCheck;
   },
 };
 

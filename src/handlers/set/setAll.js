@@ -35,6 +35,7 @@ const getElementValue = (element) => {
  * @returns {object} object with newly set path in case that multiple logical checks
  * satisfy the first element will be set.
  */
+// eslint-disable-next-line max-lines-per-function
 const setAll = (obj, path, val, functions, settings) => {
   const backwardCompatabilityObject = backwardCompatability(functions, settings);
   const { functionsObject } = backwardCompatabilityObject;

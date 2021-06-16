@@ -1,4 +1,3 @@
-/* eslint-disable */
 const checkEquality = require('../../src/helpers/query/src/logicalChecks/checkEquality');
 const inputFixture = require('../fixtures/inputFixture.json');
 const unlink = require('../../src/handlers/basic/unlink');
@@ -30,4 +29,9 @@ describe('Testing JSON equality', () => {
     const result = checkEquality(inputFixture, unlink(inputFixture), '!=');
     expect(result).toStrictEqual(false);
   });
+  it('Object is inequal to array', () => {
+    const result = checkEquality({}, [], '=');
+    expect(result).toStrictEqual(false);
+  });
+  
 });

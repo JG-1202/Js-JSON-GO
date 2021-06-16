@@ -10,6 +10,7 @@ All notable changes to this project will be documented here.
 - logicalValidator code improvments to reduce complexity
 - checkEquality code improvments to reduce complexity
 - get and getAll code improvements
+- pathToArrayTransformer code improvements remove duplication
 
 
 ## [0.3.2] - 2021-05-23

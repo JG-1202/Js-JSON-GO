@@ -1,4 +1,3 @@
-/* eslint-disable */
 const checkGreaterThan = require('../../src/helpers/query/src/logicalChecks/checkGreaterThan');
 
 describe('Testing greater than', () => {
