@@ -1,4 +1,5 @@
-const validateReponseAndPassDefault = require('../../helpers/validateReponseAndPassDefault');
+const validateReponseAndPassDefault = require('../../helpers/validators/validateReponseAndPassDefault');
+const mayGetResponseBeMapped = require('../../helpers/validators/mayGetResponseBeMapped');
 
 /**
  * translate service to be called from class
@@ -10,7 +11,7 @@ const validateReponseAndPassDefault = require('../../helpers/validateReponseAndP
  */
 const translateSerivce = (originPath, destinationPath, functions, constructorsObject) => {
   const getResponse = constructorsObject.originObject.get(originPath, functions);
-  if (constructorsObject.settings.mapIfNotFound || getResponse !== undefined) {
+  if (mayGetResponseBeMapped(getResponse, constructorsObject.settings)) {
     constructorsObject.destinationObject.set(
       destinationPath,
       validateReponseAndPassDefault(

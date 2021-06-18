@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.3.4] - 2021-06-18
+### added
+- added ingnoreOnTranslate setting
+
+### changed
+- settings are tested for expected type, if setting is not as expected, set default
+
 ## [0.3.3] - 2021-06-16
 ### changed
 - links to shields in readme.md

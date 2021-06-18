@@ -1,4 +1,6 @@
-const validateReponseAndPassDefault = require('../../helpers/validateReponseAndPassDefault');
+const validateReponseAndPassDefault = require('../../helpers/validators/validateReponseAndPassDefault');
+const mayGetAllResponseBeMapped = require('../../helpers/validators/mayGetAllResponseBeMapped');
+const filterInvalidGetAllResponses = require('../../helpers/validators/filterInvalidGetAllResponses');
 
 /**
  * translateAll service to be called from class
@@ -10,11 +12,14 @@ const validateReponseAndPassDefault = require('../../helpers/validateReponseAndP
  */
 const translateAllSerivce = (originPath, destinationPath, functions, constructorsObject) => {
   const getAllResponse = constructorsObject.originObject.getAll(originPath, functions);
-  if (constructorsObject.settings.mapIfNotFound || getAllResponse.length > 0) {
+  const filteredResponse = filterInvalidGetAllResponses(
+    getAllResponse, constructorsObject.settings,
+  );
+  if (mayGetAllResponseBeMapped(filteredResponse, constructorsObject.settings)) {
     constructorsObject.destinationObject.setAll(
       destinationPath,
       validateReponseAndPassDefault(
-        getAllResponse, [], constructorsObject.settings.defaultGetAllResponse,
+        filteredResponse, [], constructorsObject.settings.defaultGetAllResponse,
       ),
       functions,
       constructorsObject.settings,

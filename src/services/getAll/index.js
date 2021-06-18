@@ -1,6 +1,6 @@
 const getAll = require('../../handlers/get/getAll.js');
 const mergeFunctions = require('../../helpers/mergeFunctions');
-const validateReponseAndPassDefault = require('../../helpers/validateReponseAndPassDefault');
+const validateReponseAndPassDefault = require('../../helpers/validators/validateReponseAndPassDefault');
 
 /**
  * getAll service to be called from class

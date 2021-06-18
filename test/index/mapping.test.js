@@ -42,4 +42,38 @@ describe('Mapping', () => {
       array: [checkObject, startingObject, { test: false }, startingObject],
     });
   });
+  it('Map all items into one except values that are defined in ingnoreOnTranslate', () => {
+    const startingObject = { test: true };
+    const start = { array: [startingObject, startingObject, { test: false }, startingObject] };
+    const JsonGo = new JG.Map(inputFixture, start, { ingnoreOnTranslate: [3,4,5] });
+    JsonGo.translateAllToOne('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
+    const result = JsonGo.export();
+    const checkObject = { test: true, expensive: [6, 4.5] };
+    expect(result).toEqual({
+      array: [checkObject, startingObject, { test: false }, startingObject],
+    });
+  });
+  it('Do not map values defined in ingnoreOnTranslate', () => {
+    const inputObject = {
+      value1: true,
+      value2: null,
+      value3: '',
+      value4: 'true',
+      value5: 'test',
+      value6: false,
+      value7: ''
+    };
+    const JsonGo = new JG.Map(inputObject, {}, { ingnoreOnTranslate: [true, '', null] });
+    JsonGo.translate('value1','value1');
+    JsonGo.translate('value2','value2');
+    JsonGo.translate('value3','value3');
+    JsonGo.translate('value4','value4');
+    JsonGo.translate('value5','value5');
+    JsonGo.translate('value6','value6');
+    expect(JsonGo.export()).toStrictEqual({
+      value4: 'true',
+      value5: 'test',
+      value6: false
+    });
+  });
 });
