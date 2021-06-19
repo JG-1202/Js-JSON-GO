@@ -2,9 +2,6 @@ const Json = require('./json.js');
 const makeObject = require('./src/handlers/make/makeObject');
 
 const translateService = require('./src/services/translate');
-const translateAllService = require('./src/services/translateAll');
-const translateOneToAllService = require('./src/services/translateOneToAll');
-const translateAllToOneService = require('./src/services/translateAllToOne');
 
 const loadDefaultSettings = require('./src/settings/loadDefaultSettings');
 
@@ -32,7 +29,7 @@ class Map {
    * @param {Object} functions - object of functions that can be called within query.
    */
   translate(originPath, destinationPath, functions) {
-    return translateService(originPath, destinationPath, functions, this);
+    return translateService('translateSingle', originPath, destinationPath, functions, this);
   }
 
   /**
@@ -44,7 +41,7 @@ class Map {
    * @param {Object} functions - object of functions that can be called within query.
    */
   translateAll(originPath, destinationPath, functions) {
-    return translateAllService(originPath, destinationPath, functions, this);
+    return translateService('translateAll', originPath, destinationPath, functions, this);
   }
 
   /**
@@ -56,7 +53,7 @@ class Map {
    * @param {Object} functions - object of functions that can be called within query.
    */
   translateOneToAll(originPath, destinationPath, functions) {
-    return translateOneToAllService(originPath, destinationPath, functions, this);
+    return translateService('translateOneToAll', originPath, destinationPath, functions, this);
   }
 
   /**
@@ -68,7 +65,7 @@ class Map {
    * @param {Object} functions - object of functions that can be called within query.
    */
   translateAllToOne(originPath, destinationPath, functions) {
-    return translateAllToOneService(originPath, destinationPath, functions, this);
+    return translateService('translateAllToOne', originPath, destinationPath, functions, this);
   }
 
   /**

@@ -1,12 +1,13 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [0.3.4] - 2021-06-18
+## [0.3.4] - 2021-06-19
 ### added
 - added ingnoreOnTranslate setting
 
 ### changed
 - settings are tested for expected type, if setting is not as expected, set default
+- single translate service instead of separate services for translate, translateAll, translateAllToOne, translateOneToAll
 
 ## [0.3.3] - 2021-06-16
 ### changed
