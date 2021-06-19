@@ -4,7 +4,7 @@ const mayGetAllResponseBeMapped = require('../../helpers/validators/mayGetAllRes
 const filterInvalidGetAllResponses = require('../../helpers/validators/filterInvalidGetAllResponses');
 
 /**
- * select set or setAll based on translateType and call function
+ * call set or setAll function
  */
 const setFunction = (
   translateType, constructorsObject, destinationPath, toBeMapped, functions,
@@ -88,7 +88,7 @@ const translateSerivce = (
       translateType, constructorsObject, destinationPath, toBeMapped, functions,
     );
   }
-  return toBeMapped.originResponse;
+  return toBeMapped.response;
 };
 
 module.exports = translateSerivce;
