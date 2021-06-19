@@ -78,6 +78,7 @@ The following `settings` can be passed into the `settings` object:
 * `defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
 * `fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
 * `mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
+* `ingnoreOnTranslate`: array of responses from originObject that should not be translated within Map constructors translate functions into destinationObject. Default is `[]`.
 
 ### Js-JSON-Go Path Syntax
 Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.

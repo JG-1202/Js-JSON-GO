@@ -1,12 +1,27 @@
 const returnObject = require('../../helpers/returnObject');
 
 /**
- * If setting is found, do not change it, otherwise set defaultSetting as setting property
+ * logical checks on whether settings are defined as expected
+ */
+const settingsValidator = {
+  fatalErrorOnCreate: (setting) => typeof setting === 'boolean',
+  mapIfNotFound: (setting) => typeof setting === 'boolean',
+  ingnoreOnTranslate: (setting) => Array.isArray(setting),
+  unlinkInputObject: (setting) => typeof setting === 'boolean',
+  defaultGetResponse: () => true,
+  defaultGetAllResponse: () => true,
+};
+
+/**
+ * If setting is found and is valid, do not change it,
+ * otherwise set defaultSetting as setting property
 */
-const setDefault = (settings, setting, defaultSetting) => {
+const setDefault = (settings, settingName, defaultSetting) => {
   const settingsObject = settings;
-  if (settingsObject[setting] === undefined) {
-    settingsObject[setting] = defaultSetting;
+  if (settingsObject[settingName] === undefined
+    || !settingsValidator[settingName](settingsObject[settingName])
+  ) {
+    settingsObject[settingName] = defaultSetting;
   }
   return settingsObject;
 };
@@ -20,6 +35,7 @@ const loadDefaultSettings = (settings) => {
   const settingsObject = returnObject(settings);
   setDefault(settingsObject, 'fatalErrorOnCreate', false);
   setDefault(settingsObject, 'mapIfNotFound', false);
+  setDefault(settingsObject, 'ingnoreOnTranslate', []);
   setDefault(settingsObject, 'unlinkInputObject', false);
   setDefault(settingsObject, 'defaultGetResponse', undefined);
   setDefault(settingsObject, 'defaultGetAllResponse', []);
