@@ -21,7 +21,7 @@ npm install js-json-go
 
 ## Usage
 All main functions of this library are exported and can be used according to its JSDocs definition.
-Besided two constructors are made available: (1) Json and (2) Map.
+Besides, two constructors are made available: (1) Json and (2) Map.
 Use the Json constructor for (multiple) operations on the same JSON Object/Array.
 Use the Map constructor to translate one JSON Object/Array into another JSON Object/Array.
 
@@ -36,10 +36,10 @@ const map = JG.Map(origin, destination, settings, functions);
 Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` and custom `functions` that are made available for all actions on that JSON `object`.
 
 #### json.get(path, functions)
-Retreives single value from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the `path`.
+Retrieves single value from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the `path`.
 
 #### json.getAll(path, functions)
-Retreives all values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elemets that match the `path`.
+Retrieves all values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the `path`.
 
 #### json.set(path, value, functions)
 Sets single `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets the first element that matches the `path`.
@@ -78,7 +78,7 @@ The following `settings` can be passed into the `settings` object:
 * `defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
 * `fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
 * `mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
-* `ingnoreOnTranslate`: array of responses from originObject that should not be translated within Map constructors translate functions into destinationObject. Default is `[]`.
+* `ignoreOnTranslate`: array of responses from originObject that should not be translated within Map constructors translate functions into destinationObject. Default is `[]`.
 
 ### Js-JSON-Go Path Syntax
 Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.
@@ -95,12 +95,12 @@ The following syntax can be used (note that this table is reflecting priority, m
 
 | Custom Syntax                  | Description                                             |
 | :----------------------------- | :------------------------------------------------------ |
-| `[*]` or `[{*}]` or `[{$all}]` | Wildcard, relates to existing, but unkown element(s)    |
+| `[*]` or `[{*}]` or `[{$all}]` | Wildcard, relates to existing, but unknown element(s)   |
 | `[{$end}]`                     | Refers to last element in array                         |
 | `[{$append}]`                  | May be used on set to indicate a new element in array   |
 
 
-A query is considered a logical test of two `path`s or `elements` seperated by an `operator`, or a single path / element which will then be tested as `!falsy`. `$Function()` Queries are considered special. Instead of defining a logical test within the query, a function refers to a `functionName`. The corresponding function (passed in the `functions` object of the Json/Map constructor or regarding query (get, set, translate)) is then expected to return a boolean response as result of a custom logical test.
+A query is considered a logical test of two `path`s or `elements` separated by an `operator`, or a single path / element which will then be tested as `!falsy`. `$Function()` Queries are considered special. Instead of defining a logical test within the query, a function refers to a `functionName`. The corresponding function (passed in the `functions` object of the Json/Map constructor or regarding query (get, set, translate)) is then expected to return a boolean response as result of a custom logical test.
 
 | Query Element Syntax            | Description                                                                                      	 																	|
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 	|
@@ -115,7 +115,7 @@ A query is considered a logical test of two `path`s or `elements` seperated by a
 | `$.`path                        | Element relates to JSON location. `$.` followed by a path is considered to have its origin at the current depth within object                                                                   				|
 | `$..`path                       | Element relates to JSON location. `$..` followed by a path is considered to have its origin at the parent of the current depth within object (each additional dot relates to the parent of the corresponding element) 	|
 | `$JSON(`stringified JSON`)`     | Element is considered to be a JSON.                                                               																		|
-| `$RegExp(`regular rexpression`)`| Element is considered to be a Regular Expression (be aware some chars need to be escaped using `\`).																		|
+| `$RegExp(`regular expression`)` | Element is considered to be a Regular Expression (be aware some chars need to be escaped using `\`).																		|
 | `$Function(`functionName`)`.    | Element is considered to be a function (function name needs to match key of input function object).																		|
 
 
@@ -206,8 +206,8 @@ const inputFixture = require('./fixtures/inputFixture.json');
 -- use of get will return a single output (first result that complies with input query)
 */
 const JsonGo = new JG.Json(inputFixture);
-const result1 = JsonGo.get('stores[0].storeName'); //'Berlin' -> get storename from stores with element 0 
-const result2 = JsonGo.get('stores["0"].storeName'); //undefined -> get storename from stores with element '0', undefined because stores is not an object wity key '0'
+const result1 = JsonGo.get('stores[0].storeName'); //'Berlin' -> get storeName from stores with element 0 
+const result2 = JsonGo.get('stores["0"].storeName'); //undefined -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
 const result3 = JsonGo.get('stores[{$end}].storeName'); //'Rome' -> get storeName of last store from stores
 const result4 = JsonGo.get('stores[{$.storeName = $mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from origin of object)
 const result5 = JsonGo.get('stores[{$.storeName = $..mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from relative location)
@@ -220,8 +220,8 @@ const result8 = JsonGo.get('stores[{$.items[{$.expensive = "true"}]}].storeName'
 -- use of getAll will return all things that comply to the query
 */
 const JsonGo = new JG.Json(inputFixture);
-const result1 = JsonGo.getAll('stores[0].storeName'); //['Berlin'] -> get storename from stores with element 0 
-const result2 = JsonGo.getAll('stores["0"].storeName'); //[] -> get storename from stores with element '0', undefined because stores is not an object wity key '0'
+const result1 = JsonGo.getAll('stores[0].storeName'); //['Berlin'] -> get storeName from stores with element 0 
+const result2 = JsonGo.getAll('stores["0"].storeName'); //[] -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
 const result3 = JsonGo.getAll('stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName'); //['Amsterdam'] -> get storeName of store that has an item with name Pink Lady large bag
 const result4 = JsonGo.getAll('stores[{$.items[{Pink ∈ $.name}]}].storeName'); //['Berlin', 'Amsterdam'] -> get storeName of store that has an item with Pink in its name
 const result5 = JsonGo.getAll('stores[{$.items[{Fuji ∈ $.name}]}].items[{medium ∉ $.name}].name'); //["Granny Smith small bag", "Granny Smith large bag", "Fuji small bag", "Pink Lady small bag"] -> get al item names that do not have 'medium' in its name from stores that have items with 'Fuji' in its name.
@@ -265,7 +265,7 @@ JsonGo.set('stores[{$append}].storeName', 'Rome');
 JsonGo.set('stores[{$end}].expensive', null);
 JsonGo.set('stores[{$end}].items', []);
 JsonGo.setAll(`stores[{1 = 1}].items[{$.name ∈ $JSON(${JSON.stringify(['Pink Lady medium bag', 'Pink Lady small bag'])})}].price`, 8); //sets price = 8 for all items in all stores where items name is in ['Pink Lady medium bag', 'Pink Lady small bag']
-JsonGo.setAll('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].expensive', true); // sets expensive key/value where price >= expensive field of mainstore
+JsonGo.setAll('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].expensive', true); // sets expensive key/value where price >= expensive field of mainStore
 const result = JsonGo.export();
 
 

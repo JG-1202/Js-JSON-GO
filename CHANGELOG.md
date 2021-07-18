@@ -1,9 +1,15 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.3.5] - 2021-07-18
+### changed
+- ingnoreOnTranslate settings property is changed to ignoreOnTranslate property
+- use of ingnoreOnTranslate setting property will log deprecation warning onto console, but will still function until release of v1.0.0
+
+
 ## [0.3.4] - 2021-06-19
 ### added
-- added ingnoreOnTranslate setting
+- added ignoreOnTranslate setting
 
 ### changed
 - settings are tested for expected type, if setting is not as expected, set default
