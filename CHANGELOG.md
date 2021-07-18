@@ -9,7 +9,7 @@ All notable changes to this project will be documented here.
 
 ## [0.3.4] - 2021-06-19
 ### added
-- added ignoreOnTranslate setting
+- added ingnoreOnTranslate setting
 
 ### changed
 - settings are tested for expected type, if setting is not as expected, set default
