@@ -1,7 +1,7 @@
 {
   "name": "js-json-go",
-  "version": "0.3.4",
-  "description": "Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects.",
+  "version": "0.3.5",
+  "description": "Retrieves and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects.",
   "main": "index.js",
   "scripts": {
     "test": "jest --collect-coverage"
@@ -14,7 +14,7 @@
     "translate",
     "set",
     "map",
-    "grap",
+    "grab",
     "construct",
     "jsongo",
     "jsjsongo"

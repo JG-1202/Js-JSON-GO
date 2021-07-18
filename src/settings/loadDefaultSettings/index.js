@@ -1,12 +1,26 @@
 const returnObject = require('../../helpers/returnObject');
 
 /**
+ * Support for deprecated ingnoreOnTranslate.
+ */
+const backWardCompatabilityIngnore = (settings) => {
+  const settingsObject = settings;
+  if (settingsObject.ingnoreOnTranslate) {
+    console.warn('Deprecation warning: The use of ingnoreOnTranslate as settings property is deprecated and will be removed from version 1.0.0 onwards. Use ignoreOnTranslate instead.');
+    if (!settingsObject.ignoreOnTranslate) {
+      settingsObject.ignoreOnTranslate = settingsObject.ingnoreOnTranslate;
+    }
+    delete settingsObject.ingnoreOnTranslate;
+  }
+};
+
+/**
  * logical checks on whether settings are defined as expected
  */
 const settingsValidator = {
   fatalErrorOnCreate: (setting) => typeof setting === 'boolean',
   mapIfNotFound: (setting) => typeof setting === 'boolean',
-  ingnoreOnTranslate: (setting) => Array.isArray(setting),
+  ignoreOnTranslate: (setting) => Array.isArray(setting),
   unlinkInputObject: (setting) => typeof setting === 'boolean',
   defaultGetResponse: () => true,
   defaultGetAllResponse: () => true,
@@ -33,9 +47,10 @@ const setDefault = (settings, settingName, defaultSetting) => {
  */
 const loadDefaultSettings = (settings) => {
   const settingsObject = returnObject(settings);
+  backWardCompatabilityIngnore(settingsObject);
   setDefault(settingsObject, 'fatalErrorOnCreate', false);
   setDefault(settingsObject, 'mapIfNotFound', false);
-  setDefault(settingsObject, 'ingnoreOnTranslate', []);
+  setDefault(settingsObject, 'ignoreOnTranslate', []);
   setDefault(settingsObject, 'unlinkInputObject', false);
   setDefault(settingsObject, 'defaultGetResponse', undefined);
   setDefault(settingsObject, 'defaultGetAllResponse', []);

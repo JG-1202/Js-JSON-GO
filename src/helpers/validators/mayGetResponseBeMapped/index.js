@@ -1,8 +1,8 @@
 /**
- * Filter invalid responses (defined in ingnoreOnTranslate setting).
+ * Filter invalid responses (defined in ignoreOnTranslate setting).
  */
 const filterInvalidResponses = (getResponse, settings) => {
-  if (settings.ingnoreOnTranslate.indexOf(getResponse) === -1) {
+  if (settings.ignoreOnTranslate.indexOf(getResponse) === -1) {
     return getResponse;
   }
   return undefined;

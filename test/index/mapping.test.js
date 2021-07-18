@@ -42,10 +42,10 @@ describe('Mapping', () => {
       array: [checkObject, startingObject, { test: false }, startingObject],
     });
   });
-  it('Map all items into one except values that are defined in ingnoreOnTranslate', () => {
+  it('Map all items into one except values that are defined in ignoreOnTranslate', () => {
     const startingObject = { test: true };
     const start = { array: [startingObject, startingObject, { test: false }, startingObject] };
-    const JsonGo = new JG.Map(inputFixture, start, { ingnoreOnTranslate: [3,4,5] });
+    const JsonGo = new JG.Map(inputFixture, start, { ignoreOnTranslate: [3,4,5] });
     JsonGo.translateAllToOne('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
     const result = JsonGo.export();
     const checkObject = { test: true, expensive: [6, 4.5] };
@@ -53,7 +53,7 @@ describe('Mapping', () => {
       array: [checkObject, startingObject, { test: false }, startingObject],
     });
   });
-  it('Do not map values defined in ingnoreOnTranslate', () => {
+  it('Do not map values defined in ignoreOnTranslate', () => {
     const inputObject = {
       value1: true,
       value2: null,
@@ -63,7 +63,7 @@ describe('Mapping', () => {
       value6: false,
       value7: ''
     };
-    const JsonGo = new JG.Map(inputObject, {}, { ingnoreOnTranslate: [true, '', null] });
+    const JsonGo = new JG.Map(inputObject, {}, { ignoreOnTranslate: [true, '', null] });
     JsonGo.translate('value1','value1');
     JsonGo.translate('value2','value2');
     JsonGo.translate('value3','value3');
