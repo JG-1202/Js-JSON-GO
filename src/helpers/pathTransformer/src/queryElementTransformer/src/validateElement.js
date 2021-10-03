@@ -3,7 +3,7 @@
  * @param {Any} element element to validate
  */
 const validateElement = (element) => {
-  if (!element) {
+  if (!element || typeof element !== 'string') {
     throw new Error('Query element is invalid.');
   }
 };

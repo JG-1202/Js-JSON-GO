@@ -1,22 +1,24 @@
-const getAll = require('../../handlers/get/getAll.js');
-const mergeFunctions = require('../../helpers/mergeFunctions');
-const validateReponseAndPassDefault = require('../../helpers/validators/validateReponseAndPassDefault');
+const resolveAll = require('../../handlers/get/resolveAll');
+const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
+const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
- * getAll service to be called from class
- * @param {Object} object Object to get from
- * @param {String} path Path to get from
- * @param {Object} functions Custom functions for this query
- * @param {Object} constructorsObject this constructors object
- * @returns getAll response
+ * Retrieves all values from objects specified path
+ * @param {Object} obj - object/array from which value should be retrieved.
+ * @param {any} path - string or array representation of path to set.
+ * @param {Object} functions - object of functions that can be called within query.
+ * @param {Object} settings - object with settings.
+ * @returns {Array} returns array of values
+ * that match the specified path with logical checks
  */
-const getAllService = (object, path, functions, constructorsObject) => {
-  const funcs = mergeFunctions(functions, constructorsObject.functions);
-  return validateReponseAndPassDefault(
-    getAll(object, path, funcs, constructorsObject.settings),
+const getAll = (object, path, functions, settings) => {
+  const settingsToUse = loadDefaultSettings(settings);
+  const resolved = resolveAll(object, path, functions, settingsToUse);
+  return validateResponseAndPassDefault(
+    resolved.map((resolvedElement) => resolvedElement.value),
     [],
-    constructorsObject.settings.defaultGetAllResponse,
+    settingsToUse.defaultGetAllResponse,
   );
 };
 
-module.exports = getAllService;
+module.exports = getAll;

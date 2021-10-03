@@ -1,4 +1,5 @@
 const checkForError = require('./src/checkForError');
+const isObject = require('./src/isObject');
 
 /**
  * Get first key of object, with string key
@@ -7,7 +8,7 @@ const checkForError = require('./src/checkForError');
  * @returns {String} first key if input is indeed object
  */
 const getFirstKeyFromObject = (object, settings) => {
-  if (typeof object === 'object') {
+  if (isObject(object)) {
     const element = Object.keys(object)[0];
     if (element !== undefined) {
       return element;

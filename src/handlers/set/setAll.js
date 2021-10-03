@@ -26,7 +26,7 @@ const getElementValue = (element) => {
 };
 
 /**
- * Sets single value on specified path
+ * Sets all values on specified path
  * @param {object} obj - object
  * @param {any} path - string or array representation of path to set.
  * @param {any} val - value to be set at specified path.

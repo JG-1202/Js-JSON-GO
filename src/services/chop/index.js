@@ -1,11 +1,11 @@
-const chop = require('../../handlers/basic/chop');
+const chopHandler = require('../../handlers/basic/chop');
 
 /**
- * chop service to be called from class
- * @param {Object} object Object to chop
- * @param {Number} chopSize Chop size
- * @returns {Array} Array with elements of specified chopSize
+ * Chops an array or object into smaller pieces
+ * @param {object} value - object or array
+ * @param {number} chopSize - size of pieces.
+ * @returns {Array} array of chopped pieces.
  */
-const chopService = (object, chopSize) => chop(object, chopSize);
+const chop = (object, chopSize) => chopHandler(object, chopSize);
 
-module.exports = chopService;
+module.exports = chop;

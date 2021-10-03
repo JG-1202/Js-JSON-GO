@@ -1,0 +1,16 @@
+{
+  "stores": {
+    "0": {
+      "storeName": "Berlin"
+    },
+    "$end": {
+      "storeName": "Amsterdam"
+    },
+    "test": {
+      "storeName": "Barcelona",
+      "properties": {
+        "size": 100
+      }
+    }
+  }
+}

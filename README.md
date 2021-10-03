@@ -7,7 +7,7 @@
 [![maintainability](https://img.shields.io/codeclimate/maintainability/JG-1202/Js-JSON-GO?color=2e7dcc&logo=code-climate&logoColor=ffffff&style=for-the-badge)](https://codeclimate.com/github/JG-1202/Js-JSON-GO)
 
 
-Retreives and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects. Moreover, the combined effort of getting and setting values on a conditional JSON path allows for translation from a value of one JSON object into another JSON object. Js-JSON-GO offers queries and nested queries with support for simple boolean logic, regular expressions and custom functions.
+Retrieves and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects. Moreover, the combined effort of getting and setting values on a conditional JSON path allows for translation from a value of one JSON object into another JSON object. Js-JSON-GO offers queries and nested queries with support for simple boolean logic, regular expressions and custom functions.
 
 Try on [RunKit](https://npm.runkit.com/js-json-go) (Node)
 
@@ -40,6 +40,18 @@ Retrieves single value from objects specified `path`. Pass an object with custom
 
 #### json.getAll(path, functions)
 Retrieves all values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the `path`.
+
+#### json.getPath(path, functions)
+Similar to `json.get`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`.
+
+#### json.getPaths(path, functions)
+Similar to `json.getAll`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`.
+
+#### json.find(path, functions)
+Combining `json.get` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+
+#### json.findAll(path, functions)
+Combining `json.getAll` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
 
 #### json.set(path, value, functions)
 Sets single `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets the first element that matches the `path`.

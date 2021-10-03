@@ -1,6 +1,24 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.4.0] - 2021-10-03
+### Added
+- getPath, returns first resolved path from input path
+- getPaths, returns all resolved paths from input path
+- find, returns first elements resolved path and value that matches input path
+- findAll, returns all resolved elements paths and values that match input path
+- exported helpers, these helpers are called from within query and resolveAll to facilitate querying
+
+### Changed
+- load default settings once when one of the exported modules is called
+- name of test folder to ___tests___
+- use babel (default) for codeCoverage instead of v8
+- fix typo to validateResponseAndPassDefault
+- using resolve & resolveAll to facilitate get/getPath/find and getAll/getPaths/findAll
+- removing redundant code in queryElementTransformer, queryTransformer
+- validateElement check on type is string
+- typos from changeLog
+
 ## [0.3.5] - 2021-07-18
 ### changed
 - ingnoreOnTranslate settings property is changed to ignoreOnTranslate property
@@ -19,17 +37,17 @@ All notable changes to this project will be documented here.
 ### changed
 - links to shields in readme.md
 - folder structure of helper pathTransformer
-- queryElementTransformer code improvments to reduce complexity
-- elementTransformer code improvments to reduce complexity
-- logicalValidator code improvments to reduce complexity
-- checkEquality code improvments to reduce complexity
+- queryElementTransformer code improvements to reduce complexity
+- elementTransformer code improvements to reduce complexity
+- logicalValidator code improvements to reduce complexity
+- checkEquality code improvements to reduce complexity
 - get and getAll code improvements
 - pathToArrayTransformer code improvements remove duplication
 
 
 ## [0.3.2] - 2021-05-23
 ### changed
-- compatability fix: chop functionality is now also supported for Node 10.x (prior version supported 12.x and above)
+- compatibility fix: chop functionality is now also supported for Node 10.x (prior version supported 12.x and above)
 - removed unnecessary files from repository
 
 ## [0.3.1] - 2021-05-16
@@ -46,12 +64,12 @@ All notable changes to this project will be documented here.
 - fix: loading default settings
 - fix: testing equality of JSON objects
 - README.md, documentation
-- fatalErrorOnCreate as direct input for set/setAll will be deprecated on further versions (added backward compatability until version 1.0.0), using settings object instead
+- fatalErrorOnCreate as direct input for set/setAll will be deprecated on further versions (added backward compatibility until version 1.0.0), using settings object instead
 - not creating a new Json instance for every query, but rather use get/getAll directly
 - settings architecture passing settings throughout all relevant functions
 - functions architecture passing functions object throughout all relevant functions
 - Json and Map architecture, added get, set, chop and translate services
-- logical validator architecture, seperate files per check.
+- logical validator architecture, separate files per check.
 
 ## [0.2.1] - 2021-04-23
 ### Changed
@@ -90,8 +108,8 @@ All notable changes to this project will be documented here.
 - Parse: Parses input value if it is stringified
 - Stringify: Stringifies input value if it is an object
 - Unlink: Unlinks object, removes reference to other object
-- Get: Retreives single value from objects specified path
-- GetAll: Retreives all values from objects specified path
+- Get: Retrieves single value from objects specified path
+- GetAll: Retrieves all values from objects specified path
 - Set: Sets single value on specified path
 - SetAll: Sets all values on specified path
 - MakeArray: Makes an array, parses input value if stringified, if no array is found as input, it returns an empty array.
