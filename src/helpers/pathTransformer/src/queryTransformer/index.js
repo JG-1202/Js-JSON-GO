@@ -20,7 +20,7 @@ const handleBrackets = (char, actionVariables) => {
   if (char === '[') {
     newActionVariables.part += char;
     newActionVariables.arrayCounter += 1;
-  } else if (char === ']') {
+  } else {
     newActionVariables.part += char;
     newActionVariables.arrayCounter += -1;
   }

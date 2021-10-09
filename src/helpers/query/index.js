@@ -1,5 +1,5 @@
-const JsonGo = require('../../../index.js');
-const logicalValidator = require('./src/logicalValidator.js');
+const JG = require('../../../JsonGo');
+const logicalValidator = require('./src/logicalValidator');
 const getAbsolutePath = require('./src/getAbsolutePath');
 
 /**
@@ -9,12 +9,12 @@ const getValueFromTransformedQuery = (
   element, object, currentElement, priorPath, functions, settings,
 ) => {
   if (element && element.relativePath) {
-    const result = JsonGo.get(object, [
+    const result = JG.helpers.resolve(object, [
       ...priorPath, currentElement, ...element.relativePath,
-    ], functions, settings);
+    ], functions, settings).value;
     return result;
   }
-  return JsonGo.get(object, element.path);
+  return JG.helpers.resolve(object, element.path).value;
 };
 
 /**

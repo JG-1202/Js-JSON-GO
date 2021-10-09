@@ -1,10 +1,8 @@
-const pathTransformer = require('../../helpers/pathTransformer');
 const getPathElement = require('../../helpers/pathElements/getSingle');
 const getFirstKeyFromArray = require('../../helpers/pathElements/getKeys/getFirstKeyFromArray');
 const getFirstKeyFromObject = require('../../helpers/pathElements/getKeys/getFirstKeyFromObject');
 const setElement = require('./src/setElement');
-const backwardCompatability = require('./src/backwardCompatability');
-const returnObject = require('../../helpers/returnObject');
+const defineConstants = require('./src/defineConstants');
 
 /**
  * Get key value of element to be set
@@ -32,11 +30,9 @@ const getElementValue = (element, obj, tempObject, priorPath, functions, setting
  * satisfy the first element will be set.
  */
 const set = (obj, path, val, functions, settings) => {
-  const backwardCompatabilityObject = backwardCompatability(functions, settings);
-  const { functionsObject } = backwardCompatabilityObject;
-  const settingsObject = returnObject(backwardCompatabilityObject.settingsObject);
-  const arrayPath = pathTransformer(path, functionsObject);
-  const priorPath = [];
+  const {
+    settingsObject, arrayPath, priorPath,
+  } = defineConstants(path, functions, settings);
   let tempObject = obj;
   let elementValue;
 

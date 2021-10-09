@@ -17,7 +17,7 @@ const createRegExpFromString = (string) => {
   if (checkForExistenceOfArrayElementOne(matchedPattern)) {
     return new RegExp(matchedPattern[1], flags);
   }
-  throw new Error('Invalid regular expression, missing / at beginning and beteen pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
+  throw new Error('Invalid regular expression, missing / at beginning and between pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
 };
 
 /**

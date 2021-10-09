@@ -16,12 +16,7 @@ const specials = ['null', 'undefined', 'true', 'false'];
 /**
  * Check whether first n characters of element equal toEqual
  */
-const firstNCharactersEqual = (n, element, toEqual) => {
-  if (typeof element === 'string') {
-    return element.substring(0, n) === toEqual;
-  }
-  return false;
-};
+const firstNCharactersEqual = (n, element, toEqual) => element.substring(0, n) === toEqual;
 
 /**
  * Transform if it entails specials

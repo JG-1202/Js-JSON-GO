@@ -1,18 +1,19 @@
-const set = require('../../handlers/set/set.js');
-const mergeFunctions = require('../../helpers/mergeFunctions');
+const setHandler = require('../../handlers/set/set');
+const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
- * set service to be called from class
- * @param {Object} object Object to set to
- * @param {String} path Path to set to
- * @param {Any} value Value to set
- * @param {Object} functions Custom functions for this query
- * @param {Object} constructorsObject this constructors object
- * @returns getAll response
+ * Sets single value on specified path
+ * @param {object} obj - object
+ * @param {any} path - string or array representation of path to set.
+ * @param {any} val - value to be set at specified path.
+ * @param {Object} functions - object of functions that can be called within query.
+ * @param {Object} settings - object with settings.
+ * @returns {object} object with newly set path in case that multiple logical checks
+ * satisfy the first element will be set.
  */
-const setSerivce = (object, path, value, functions, constructorsObject) => {
-  const funcs = mergeFunctions(functions, constructorsObject.functions);
-  return set(object, path, value, funcs, constructorsObject.settings);
+const set = (object, path, value, functions, settings) => {
+  const settingsToUse = loadDefaultSettings(settings);
+  return setHandler(object, path, value, functions, settingsToUse);
 };
 
-module.exports = setSerivce;
+module.exports = set;

@@ -41,11 +41,19 @@ const setDefault = (settings, settingName, defaultSetting) => {
 };
 
 /**
+ * Check whether default settings were already loaded.
+ */
+const areDefaultSettingsAlreadyLoaded = (settings) => settings && settings.defaultSettingsLoaded;
+
+/**
  * Load default settings
  * @param {Object} settings - settings object
  * @returns {Object} input settings object supplemented by default settings
  */
 const loadDefaultSettings = (settings) => {
+  if (areDefaultSettingsAlreadyLoaded(settings)) {
+    return settings;
+  }
   const settingsObject = returnObject(settings);
   backWardCompatabilityIngnore(settingsObject);
   setDefault(settingsObject, 'fatalErrorOnCreate', false);
@@ -54,6 +62,7 @@ const loadDefaultSettings = (settings) => {
   setDefault(settingsObject, 'unlinkInputObject', false);
   setDefault(settingsObject, 'defaultGetResponse', undefined);
   setDefault(settingsObject, 'defaultGetAllResponse', []);
+  settingsObject.defaultSettingsLoaded = true;
   return settingsObject;
 };
 
