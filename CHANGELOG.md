@@ -20,7 +20,6 @@ All notable changes to this project will be documented here.
 - validateElement check on type is string
 - typos from changeLog
 - use function defineConstants on set / setAll to re-use functionality
-- use callService within json service to re-use functionality
 
 ## [0.3.5] - 2021-07-18
 ### changed
