@@ -4,6 +4,6 @@
 /img
 .eslintrc.js
 .eslintignore
-.codeclimate
+.codeclimate.yml
 jest.config.js
 /.github

@@ -1,3 +1,2 @@
 exclude_patterns:
 - "___tests___/"
-- "src/services/json"
