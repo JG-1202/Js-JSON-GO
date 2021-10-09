@@ -1,13 +1,14 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [0.4.0] - 2021-10-03
+## [0.4.0] - 2021-10-09
 ### Added
 - getPath, returns first resolved path from input path
 - getPaths, returns all resolved paths from input path
 - find, returns first elements resolved path and value that matches input path
 - findAll, returns all resolved elements paths and values that match input path
 - exported helpers, these helpers are called from within query and resolveAll to facilitate querying
+- full code coverage on unit tests
 
 ### Changed
 - load default settings once when one of the exported modules is called
@@ -18,6 +19,8 @@ All notable changes to this project will be documented here.
 - removing redundant code in queryElementTransformer, queryTransformer
 - validateElement check on type is string
 - typos from changeLog
+- use function defineConstants on set / setAll to re-use functionality
+- use callService within json service to re-use functionality
 
 ## [0.3.5] - 2021-07-18
 ### changed

@@ -1,4 +1,4 @@
-const JG = require('../../../index');
+const JG = require('../../../JsonGo');
 const logicalValidator = require('./src/logicalValidator');
 const getAbsolutePath = require('./src/getAbsolutePath');
 

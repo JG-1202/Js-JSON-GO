@@ -8,6 +8,8 @@ const getSinglePathElement = require('../src/helpers/pathElements/getSingle');
 const getAbsolutePath = require('../src/helpers/query/src/getAbsolutePath');
 const validateResponseAndPassDefault = require('../src/helpers/validators/validateResponseAndPassDefault');
 
+const inputFixture = require('./fixtures/inputFixture.json');
+
 describe('ValidateResponseAndPassDefault', () => {
   it('Found vs default are not both arrays', () => {
     const result = validateResponseAndPassDefault([], '[]', [null]);
@@ -30,6 +32,28 @@ describe('pathElements', () => {
   it('Safety check: returns undefined on invalid getType on getMultiplePathElements', () => {
     const result = getMultiplePathElements({ string: '123' }, {}, {}, 'number');
     expect(result).toStrictEqual([]);
+  });
+  it('Safety check: returns value based on getType on getMultiplePathElements while querying', () => {
+    const resultA = getMultiplePathElements(
+      {"query":[{"value":1},{"value":"="},{"value":1}]},
+      inputFixture,
+      inputFixture.stores,
+      'number',
+      [{"string":"stores"}],
+      {},
+      {}
+    );
+    const resultB = getMultiplePathElements(
+      {"query":[{"value":1},{"value":"="},{"value":1}]},
+      inputFixture,
+      inputFixture.stores,
+      'string',
+      [{"string":"stores"}],
+      {},
+      {}
+    );
+    expect(resultA).toStrictEqual([{ number: 0 }, { number: 1 }, { number: 2 }, { number: 3 }]);
+    expect(resultB).toStrictEqual([]);
   });
   it('getAllKeysFromArray if no array', () => {
     const result = getAllKeysFromArray({}, {});

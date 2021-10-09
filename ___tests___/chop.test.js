@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const JG = require('../index');
-const choppedArray = require('./fixtures/choppedArray');
-const choppedObject = require('./fixtures/choppedObject');
+const choppedArray = require('./fixtures/choppedArray.json');
+const choppedObject = require('./fixtures/choppedObject.json');
 const largeArray = require('./fixtures/largeArray');
 const largeObject = require('./fixtures/largeObject');
 

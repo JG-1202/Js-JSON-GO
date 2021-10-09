@@ -1,10 +1,8 @@
-const pathTransformer = require('../../helpers/pathTransformer');
 const getPathElements = require('../../helpers/pathElements/getMultiple');
 const setElement = require('./src/setElement');
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
 const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
-const backwardCompatability = require('./src/backwardCompatability');
-const returnObject = require('../../helpers/returnObject');
+const defineConstants = require('./src/defineConstants');
 
 /**
  * Get key values of all elements that need to be set
@@ -37,13 +35,10 @@ const getElementValue = (element) => {
  */
 // eslint-disable-next-line max-lines-per-function
 const setAll = (obj, path, val, functions, settings) => {
-  const backwardCompatabilityObject = backwardCompatability(functions, settings);
-  const { functionsObject } = backwardCompatabilityObject;
-  const settingsObject = returnObject(backwardCompatabilityObject.settingsObject);
-  const arrayPath = pathTransformer(path, functionsObject);
-  const priorPath = [];
+  const {
+    settingsObject, arrayPath, priorPath, functionsObject,
+  } = defineConstants(path, functions, settings);
   let tempObject = obj;
-
   arrayPath.every((element, index) => {
     const elementValues = getElementValues(
       element, obj, tempObject, priorPath, functions, settingsObject,
@@ -59,9 +54,7 @@ const setAll = (obj, path, val, functions, settings) => {
       return true;
     } if (elementValues.length > 1) {
       elementValues.forEach((elementValue) => {
-        const newPath = [
-          ...arrayPath.slice(0, index), elementValue, ...arrayPath.slice(index + 1),
-        ];
+        const newPath = [...arrayPath.slice(0, index), elementValue, ...arrayPath.slice(index + 1)];
         return setAll(obj, newPath, val, functionsObject, settingsObject);
       });
       return false;

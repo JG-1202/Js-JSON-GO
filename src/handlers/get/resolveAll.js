@@ -1,4 +1,4 @@
-const JG = require('../../../index');
+const JG = require('../../../JsonGo');
 
 const getMultiplePathElements = require('../../helpers/pathElements/getMultiple');
 const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');

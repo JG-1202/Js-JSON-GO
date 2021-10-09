@@ -1,8 +1,9 @@
 /coverage
-/test
+/___tests___
 /node_modules
 /img
 .eslintrc.js
 .eslintignore
+.codeclimate
 jest.config.js
 /.github

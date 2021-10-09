@@ -2,18 +2,9 @@ const makeJson = require('../../handlers/make/makeJson');
 const makeObject = require('../../handlers/make/makeObject');
 const unlink = require('../../handlers/basic/unlink');
 
-const getAllService = require('../getAll');
-const getService = require('../get');
-const getPathService = require('../getPath');
-const getPathsService = require('../getPaths');
-const findAllService = require('../findAll');
-const findService = require('../find');
-const setService = require('../set');
-const setAllService = require('../setAll');
-const chopService = require('../chop');
+const callService = require('./src/callService');
 
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
-const mergeFunctions = require('../../helpers/mergeFunctions');
 
 class Json {
   /**
@@ -40,8 +31,14 @@ class Json {
    * satisfy the first element will be returned
    */
   get(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return getService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'get',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
@@ -52,20 +49,32 @@ class Json {
    * in case that multiple logical checks satisfy the first element will be returned
    */
   find(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return findService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'find',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
    * Retrieves resolved path from objects specified path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
-   * @returns {any} rreturns resolved path found at specified path,
+   * @returns {any} returns resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
   getPath(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return getPathService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'getPath',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
@@ -75,8 +84,14 @@ class Json {
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   getAll(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return getAllService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'getAll',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
@@ -87,8 +102,14 @@ class Json {
    * that match the specified path with logical checks
    */
   findAll(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return findAllService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'findAll',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
@@ -98,8 +119,14 @@ class Json {
    * @returns {Array} returns array of paths that match the specified path with logical checks
    */
   getPaths(path, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return getPathsService(this.object, path, funcs, this.settings);
+    return callService({
+      service: 'getPaths',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+    });
   }
 
   /**
@@ -111,8 +138,15 @@ class Json {
    * satisfy the first element will be set.
    */
   set(path, val, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return setService(this.object, path, val, funcs, this.settings);
+    return callService({
+      service: 'set',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+      value: val,
+    });
   }
 
   /**
@@ -124,8 +158,15 @@ class Json {
    * satisfy the first element will be set.
    */
   setAll(path, val, functions) {
-    const funcs = mergeFunctions(functions, this.functions);
-    return setAllService(this.object, path, val, funcs, this.settings);
+    return callService({
+      service: 'setAll',
+      object: this.object,
+      constructorsFunctions: this.functions,
+      settings: this.settings,
+      functions,
+      path,
+      value: val,
+    });
   }
 
   /**
@@ -135,7 +176,11 @@ class Json {
    * @returns {Array} array of chopped pieces.
    */
   chop(chopSize) {
-    return chopService(this.object, chopSize);
+    return callService({
+      object: this.object,
+      service: 'chop',
+      chopSize,
+    });
   }
 
   /**
