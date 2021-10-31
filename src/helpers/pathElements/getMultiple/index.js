@@ -22,16 +22,19 @@ const validateResults = (results, settings, element) => {
  * if no match is found for query
  * @param {Object} functions - object with functions.
  * @param {Object} settings - object with settings.
+ * @param {Object} refObject - object with (resolved) references.
  * @returns {Array} - elements of provided getType, or empty array if not found
  */
 const getMultiplePathElements = (
-  element, obj, tempObject, getType, priorPath, functions, settings,
+  element, obj, tempObject, getType, priorPath, functions, settings, refObject,
 ) => {
   const results = [];
   if (element[getType] !== undefined) {
     results.push(element);
   } else if (element.query) {
-    const queryResult = query(element.query, obj, tempObject, true, priorPath, functions, settings);
+    const queryResult = query(
+      element.query, obj, tempObject, true, priorPath, functions, settings, refObject,
+    );
     queryResult.forEach((result) => {
       if (result[getType] !== undefined) {
         results.push(result);

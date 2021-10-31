@@ -8,18 +8,24 @@ const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllK
 const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
 const getTypeFromTempObject = require('./src/getTypeFromTempObject');
 const initializeGetHandler = require('./src/initializeGetHandler');
+const updateReferences = require('./src/updateReferences');
+const makeObject = require('../make/makeObject');
 
 /**
  * Get names of elements either from wildcard or from other type of elements
  */
-const getPathElements = (element, obj, tempObject, getType, priorPath, functions, settings) => {
+const getPathElements = (
+  element, obj, tempObject, getType, priorPath, functions, settings, refObject,
+) => {
   if (element.wildcard) {
     if (getType === 'number') {
       return getAllKeysFromArray(tempObject, settings);
     }
     return getAllKeysFromObject(tempObject, settings);
   }
-  return getMultiplePathElements(element, obj, tempObject, getType, priorPath, functions, settings);
+  return getMultiplePathElements(
+    element, obj, tempObject, getType, priorPath, functions, settings, refObject,
+  );
 };
 
 /**
@@ -36,9 +42,9 @@ const setTempObjectNewIteration = (elementValues, tempObject, getType) => {
 /**
  * If there is a remaining tempObject, add it to results.
  */
-const addFinalTempToResults = (results, tempObject, priorPath) => {
+const addFinalTempToResults = (results, tempObject, priorPath, references) => {
   if (tempObject !== undefined) {
-    results.push({ path: priorPath, value: tempObject });
+    results.push({ path: priorPath, value: tempObject, references });
   }
   return results;
 };
@@ -65,13 +71,19 @@ const addMultipleResults = (
  * Get all results that can be retrieved with get function
  */
 const addSingleResults = (
-  elementValues, tempObject, remainingPath, newResults, settings, priorPath,
+  elementValues, tempObject, remainingPath, newResults, settings, priorPath, refObject, element,
 ) => {
   elementValues.forEach((elementValue) => {
     const singleResult = simpleGet(tempObject, [elementValue, ...remainingPath], settings);
     if (singleResult !== undefined) {
+      const references = { ...refObject };
+      updateReferences(references, singleResult, element, elementValue);
       newResults.push(
-        { value: singleResult, path: [...priorPath, elementValue, ...remainingPath] },
+        {
+          value: singleResult,
+          path: [...priorPath, elementValue, ...remainingPath],
+          references,
+        },
       );
     }
   });
@@ -82,6 +94,7 @@ const addSingleResults = (
  */
 const addToResults = (
   results, elementValues, index, obj, arrayPath, tempObject, functions, settings, priorPath,
+  refObject, element,
 ) => {
   let newResults = results;
   if (elementValues.length > 1) {
@@ -91,7 +104,8 @@ const addToResults = (
         arrayPath, index, elementValues, remainingPath, obj, newResults, functions, settings,
       );
     } else {
-      addSingleResults(elementValues, tempObject, remainingPath, newResults, settings, priorPath);
+      addSingleResults(elementValues, tempObject, remainingPath, newResults, settings,
+        priorPath, refObject, element);
     }
   }
   return newResults;
@@ -100,8 +114,9 @@ const addToResults = (
 /**
  * Update arrayPath with resolved element
  */
-const setArrayPathIndex = (elementValues, currentPath) => {
+const setArrayPathIndex = (elementValues, currentPath, refObject, tempObj, element) => {
   if (elementValues.length === 1 && typeof elementValues[0] === 'object') {
+    updateReferences(refObject, tempObj, element, elementValues[0]);
     return elementValues[0];
   }
   return currentPath;
@@ -122,19 +137,21 @@ const returnArray = (element) => {
  * iterations is desired
  */
 const getAllIteration = (
-  element, obj, tempObject, type, priorPath, functions, settingsObject, results, index, arrayPath,
+  element, obj, tempObject, type, priorPath, functions, settingsObject, results, index,
+  arrayPath, refObject,
 ) => {
   let tempResults = results;
   let tempObj = tempObject;
   const arrPath = arrayPath;
   const elementValues = getPathElements(
-    element, obj, tempObject, type, priorPath, functions, settingsObject,
+    element, obj, tempObject, type, priorPath, functions, settingsObject, refObject,
   );
   tempResults = addToResults(
     results, elementValues, index, obj, arrayPath, tempObject, functions, settingsObject, priorPath,
+    refObject, element,
   );
   tempObj = setTempObjectNewIteration(elementValues, tempObj, type);
-  arrPath[index] = setArrayPathIndex(elementValues, arrPath[index]);
+  arrPath[index] = setArrayPathIndex(elementValues, arrPath[index], refObject, tempObj, element);
   priorPath.push(arrPath[index]);
   return { tempResults, ...validateOutput(tempObj, arrPath.length - 1 === index) };
 };
@@ -145,15 +162,17 @@ const getAllIteration = (
  * @param {any} path - string or array representation of path to set.
  * @param {Object} functions - object of functions that can be called within query.
  * @param {Object} settings - object with settings.
+ * @param {Object} referenceObject - object with (resolved) references.
  * @returns {Array} returns array of objects with value/path property
  * that match the specified path with logical checks
  */
-const resolveAll = (obj, path, functions, settings) => {
+const resolveAll = (obj, path, functions, settings, referenceObject) => {
+  const refObject = makeObject(referenceObject);
   const { settingsObject, arrayPath, priorPath } = initializeGetHandler(path, functions, settings);
   if (!doesPathIndicateComplexity(arrayPath)) {
     const simpleGetResult = simpleGet(obj, arrayPath);
     if (simpleGetResult) {
-      return returnArray({ value: simpleGetResult, path });
+      return returnArray({ value: simpleGetResult, path, references: refObject });
     }
     return returnArray();
   }
@@ -162,13 +181,14 @@ const resolveAll = (obj, path, functions, settings) => {
   arrayPath.every((element, i) => {
     const type = getTypeFromTempObject(tempObject);
     const { shouldItContinue, newTempObject, tempResults } = getAllIteration(
-      element, obj, tempObject, type, priorPath, functions, settingsObject, results, i, arrayPath,
+      element, obj, tempObject, type, priorPath, functions, settingsObject, results, i,
+      arrayPath, refObject,
     );
     results = tempResults;
     tempObject = newTempObject;
     return shouldItContinue;
   });
-  results = addFinalTempToResults(results, tempObject, priorPath);
+  results = addFinalTempToResults(results, tempObject, priorPath, refObject);
   return results;
 };
 

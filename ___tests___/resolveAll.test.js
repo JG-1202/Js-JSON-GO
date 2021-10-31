@@ -17,6 +17,15 @@ describe('Test getAll function', () => {
   it('Get all storeNames', () => {
     test(inputFixture, 'stores[*].storeName', ['Berlin', 'Amsterdam', 'Barcelona', 'Rome']);
   });
+  it('Get all storeNames with references', () => {
+    const expectedReferences = [
+      { first: 'stores', store: 0 },
+      { first: 'stores', store: 1 },
+      { first: 'stores', store: 2 },
+      { first: 'stores', store: 3 },
+    ];
+    test(inputFixture, '[stores:(first)][{*}:(store)].storeName', ['Berlin', 'Amsterdam', 'Barcelona', 'Rome'], expectedReferences);
+  });
   it('Get first item name from every store', () => {
     test(inputFixture, 'stores[*].items[0].name', ['Granny Smith small bag', 'Granny Smith small bag', 'Granny Smith small bag']);
   });
@@ -102,6 +111,14 @@ describe('Test getAll function', () => {
   });
   it('Use of wildcard if there is nothing to retrieve returns empty array', () => {
     test(testObject, 'stores["0"].storeName[*]', []);
+  });
+  it('Use of wildcard if there is nothing to retrieve returns empty array', () => {
+    test(
+      inputFixture,
+      'stores[{$.storeName = $mainStore}:(store)].items[{$.price >= $stores[{$.storeName = $mainStore}:(sameStore)].expensive}].name',
+      ['Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag'],
+      [{ store: 1, sameStore: 1 }, { store: 1, sameStore: 1 }, { store: 1, sameStore: 1 }],
+    );
   });
 });
 

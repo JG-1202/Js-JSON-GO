@@ -1,9 +1,9 @@
 /**
- * Check an array of functions until some is successfull
+ * Check an array of functions until some is successful
  * @param {Array} functionArray array of functions
  * @param {Any} functionInput input to the function
- * @param {Any} defaultResponse default response in case no function returns successresponse
- * @returns result of first function that is successfull
+ * @param {Any} defaultResponse default response in case no function returns successResponse
+ * @returns result of first function that is successful
  */
 const checkFunctions = (functionArray, functionInput, defaultResponse) => {
   let result = defaultResponse;

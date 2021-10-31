@@ -24,13 +24,29 @@ describe('Test getting a value', () => {
     const result = transform('stores[{$end}][{$append}][*][{*}][{$all}]');
     expect(result).toStrictEqual([{ string: 'stores' }, { query: [{ custom: 'end' }] }, { query: [{ custom: 'append' }] }, { wildcard: true }, { wildcard: true }, { wildcard: true }]);
   });
-  it('Relative path witin other relative path', () => {
+  it('Relative path within other relative path', () => {
     const result = transform('stores[{$.items[{$.family}]}]');
     expect(result).toStrictEqual([{ string: 'stores' }, { query: [{ relativePath: 'items[{$.family}]', relativeDepth: 0 }] }]);
   });
-  it('Relative path witin other relative path within relative path', () => {
+  it('Relative path within other relative path within relative path', () => {
     const result = transform('stores[{$.items[{$.family[{$.test}]}]}]');
     expect(result).toStrictEqual([{ string: 'stores' }, { query: [{ relativePath: 'items[{$.family[{$.test}]}]', relativeDepth: 0 }] }]);
+  });
+  it('Testing with reference', () => {
+    const result = transform('stores[{$.items[{$.family[{$.test}]}]}:(refName)]');
+    expect(result).toStrictEqual([{ string: 'stores' }, { reference: 'refName', query: [{ relativePath: 'items[{$.family[{$.test}]}]', relativeDepth: 0 }] }]);
+  });
+  it('Testing with reference on simple element', () => {
+    const result = transform('[stores:(first)][{$.items[{$.family[{$.test}]}]}:(refName)]');
+    expect(result).toStrictEqual([{ string: 'stores', reference: 'first' }, { reference: 'refName', query: [{ relativePath: 'items[{$.family[{$.test}]}]', relativeDepth: 0 }] }]);
+  });
+  it('Testing with reference within query', () => {
+    const result = transform('stores[{$.items[{$.family[{$.test}:(refName)]}]}]');
+    expect(result).toStrictEqual([{ string: 'stores' }, { query: [{ relativePath: 'items[{$.family[{$.test}:(refName)]}]', relativeDepth: 0 }] }]);
+  });
+  it('Testing with invalid reference; element will be considered a string', () => {
+    const result = transform('stores[{$.items[{$.family[{$.test}]}]}:(refName{})]');
+    expect(result).toStrictEqual([{ string: 'stores' }, { string: '{$.items[{$.family[{$.test}]}]}:(refName{})' }]);
   });
   it('Testing query in query path', () => {
     const result = transform('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].name');

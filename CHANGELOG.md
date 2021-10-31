@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.5.0] - 2021-10-31
+### Added
+- reference will be output of pathToArrayTransformer
+- resolve/resolveAll will return reference object with resolved references
+- pathElements will now pass refObject to querier
+- query will pass refObject to resolve-handler
+
+
+
 ## [0.4.0] - 2021-10-09
 ### Added
 - getPath, returns first resolved path from input path

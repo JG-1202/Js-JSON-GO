@@ -6,15 +6,15 @@ const getAbsolutePath = require('./src/getAbsolutePath');
  * returns value from provided path
  */
 const getValueFromTransformedQuery = (
-  element, object, currentElement, priorPath, functions, settings,
+  element, object, currentElement, priorPath, functions, settings, refObject,
 ) => {
   if (element && element.relativePath) {
     const result = JG.helpers.resolve(object, [
       ...priorPath, currentElement, ...element.relativePath,
-    ], functions, settings).value;
+    ], functions, settings, refObject).value;
     return result;
   }
-  return JG.helpers.resolve(object, element.path).value;
+  return JG.helpers.resolve(object, element.path, functions, settings, refObject).value;
 };
 
 /**
@@ -36,14 +36,14 @@ const doesElementHaveValue = (element) => (element && element.value !== undefine
  * get value for each of the query elements, either from provided value key or from objects
  * specified path
  */
-const getValue = (element, object, currentElement, priorPath, functions, settings) => {
+const getValue = (element, object, currentElement, priorPath, functions, settings, refObject) => {
   if (doesElementHaveValue(element)) {
     return element.value;
   }
   if (doesElementHaveAbsoluteOrRelativePath(element)) {
     const transformedPath = getAbsolutePath(priorPath, element, functions);
     return getValueFromTransformedQuery(
-      transformedPath, object, currentElement, priorPath, functions, settings,
+      transformedPath, object, currentElement, priorPath, functions, settings, refObject,
     );
   }
   return undefined;
@@ -107,8 +107,9 @@ const getElementToAppend = (tempObject, continueAfterFirstMatch) => {
 /**
  * performs query for arrays
  */
+// eslint-disable-next-line max-lines-per-function
 const handleArray = (
-  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings,
+  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings, refObject,
 ) => {
   let results = [];
   if (isOperationToGetEnd(query)) {
@@ -117,11 +118,16 @@ const handleArray = (
   if (isOperationToAppend(query)) {
     return getElementToAppend(tempObject, continueAfterFirstMatch);
   }
-
   tempObject.every((element, i) => {
-    const firstPart = getValue(query[0], object, { number: i }, priorPath, functions, settings);
-    const operator = getValue(query[1], object, { number: i }, priorPath);
-    const secondPart = getValue(query[2], object, { number: i }, priorPath, functions, settings);
+    const firstPart = getValue(
+      query[0], object, { number: i }, priorPath, functions, settings, refObject,
+    );
+    const operator = getValue(
+      query[1], object, { number: i }, priorPath, undefined, undefined, refObject,
+    );
+    const secondPart = getValue(
+      query[2], object, { number: i }, priorPath, functions, settings, refObject,
+    );
     const { newResults, nextIterationDesired } = checkLogic(
       firstPart, operator, secondPart, results, continueAfterFirstMatch, i, 'number', element,
     );
@@ -135,16 +141,18 @@ const handleArray = (
  * performs query for objects
  */
 const handleObject = (
-  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings,
+  query, object, tempObject, continueAfterFirstMatch, priorPath, functions, settings, refObject,
 ) => {
   let results = [];
   Object.keys(tempObject).every((element) => {
     const firstPart = getValue(
-      query[0], object, { string: element }, priorPath, functions, settings,
+      query[0], object, { string: element }, priorPath, functions, settings, refObject,
     );
-    const operator = getValue(query[1], object, { string: element }, priorPath);
+    const operator = getValue(
+      query[1], object, { string: element }, priorPath, undefined, undefined, refObject,
+    );
     const secondPart = getValue(
-      query[2], object, { string: element }, priorPath, functions, settings,
+      query[2], object, { string: element }, priorPath, functions, settings, refObject,
     );
     const { newResults, nextIterationDesired } = checkLogic(
       firstPart, operator, secondPart, results, continueAfterFirstMatch, element, 'string',
@@ -165,14 +173,21 @@ const handleObject = (
  * (relates to prior path where to find tempObject)
  * @param {Object} functions - object with functions.
  * @param {Object} settings - object with settings.
+ * @param {Object} refObject - object with (resolved) references.
  * @returns {Any} - either object with first element that matches query requirement,
  * or an array of these objects in case of continueAfterFirstMatch
  */
-const query = (q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings) => {
+const query = (
+  q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings, refObject,
+) => {
   if (Array.isArray(tempObject)) {
-    return handleArray(q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings);
+    return handleArray(
+      q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings, refObject,
+    );
   }
-  return handleObject(q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings);
+  return handleObject(
+    q, obj, tempObject, continueAfterFirstMatch, priorPath, functions, settings, refObject,
+  );
 };
 
 module.exports = query;

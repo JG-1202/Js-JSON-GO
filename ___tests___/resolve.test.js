@@ -59,6 +59,9 @@ describe('Test get function', () => {
   it('Get first store that is not Berlin', () => {
     test(inputFixture, 'stores[{$.storeName != Berlin}].storeName', 'Amsterdam');
   });
+  it('Resolving reference', () => {
+    test(inputFixture, '[stores:(first)][{$.storeName != Berlin}:(store)].storeName', 'Amsterdam', { first: 'stores', store: 1 });
+  });
   it('Get end from non existing array', () => {
     test({ test: {} }, 'test[{$end}]', undefined);
   });

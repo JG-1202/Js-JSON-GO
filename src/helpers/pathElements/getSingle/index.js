@@ -25,17 +25,18 @@ const checkQueryResult = (queryResult, getType, element, settings) => {
  * if no match is found for query
  * @param {Object} functions - object with functions.
  * @param {Object} settings - object with settings.
+ * @param {Object} refObject - object with (resolved) references.
  * @returns {Any} - element of provided getType, or undefined if not found
  */
 const getSinglePathElement = (
-  element, obj, tempObject, getType, priorPath, functions, settings,
+  element, obj, tempObject, getType, priorPath, functions, settings, refObject,
 ) => {
   if (element[getType] !== undefined) {
     return element[getType];
   }
   if (element.query) {
     const queryResult = query(
-      element.query, obj, tempObject, false, priorPath, functions, settings,
+      element.query, obj, tempObject, false, priorPath, functions, settings, refObject,
     );
     return checkQueryResult(queryResult, getType, element, settings);
   }
