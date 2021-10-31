@@ -1,8 +1,10 @@
+const checkEquality = require('../../query/src/logicalChecks/checkEquality');
+
 /**
  * Filter invalid responses (defined in ignoreOnTranslate setting).
  */
 const filterInvalidResponses = (getResponse, settings) => {
-  if (settings.ignoreOnTranslate.indexOf(getResponse) === -1) {
+  if (settings.ignoreOnTranslate.every((toIgnore) => checkEquality(getResponse, toIgnore, '!='))) {
     return getResponse;
   }
   return undefined;

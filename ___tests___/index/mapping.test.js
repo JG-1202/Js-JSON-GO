@@ -85,15 +85,20 @@ describe('Mapping', () => {
       value4: 'true',
       value5: 'test',
       value6: false,
-      value7: ''
+      value7: '',
+      value8: {},
+      value9: [{ test: true }]
     };
-    const JsonGo = new JG.Map(inputObject, {}, { ignoreOnTranslate: [true, '', null] });
+    const JsonGo = new JG.Map(inputObject, {}, { ignoreOnTranslate: [true, '', null, {}, [{ test: true }]] });
     JsonGo.translate('value1','value1');
     JsonGo.translate('value2','value2');
     JsonGo.translate('value3','value3');
     JsonGo.translate('value4','value4');
     JsonGo.translate('value5','value5');
     JsonGo.translate('value6','value6');
+    JsonGo.translate('value7','value7');
+    JsonGo.translate('value8','value8');
+    JsonGo.translate('value9','value9');
     expect(JsonGo.export()).toStrictEqual({
       value4: 'true',
       value5: 'test',

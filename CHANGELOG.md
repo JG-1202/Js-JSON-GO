@@ -8,7 +8,8 @@ All notable changes to this project will be documented here.
 - pathElements will now pass refObject to querier
 - query will pass refObject to resolve-handler
 
-
+### Changed
+- ignoreOnTranslate setting will now also be tested against equality of objects
 
 ## [0.4.0] - 2021-10-09
 ### Added
