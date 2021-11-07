@@ -120,6 +120,9 @@ describe('Test getAll function', () => {
       [{ store: 1, sameStore: 1 }, { store: 1, sameStore: 1 }, { store: 1, sameStore: 1 }],
     );
   });
+  it('Getting falsy value', () => {
+    test({ test: false }, 'test', [false]);
+  });
 });
 
 describe('Testing JSON equality', () => {

@@ -11,10 +11,13 @@ All notable changes to this project will be documented here.
 - query will pass refObject to resolve-handler
 
 ### Changed
-- fix where falsy results did not show up on resolveAll
 - translate, translateAll, translateAllToOne, translateOneToAll is considered deprecated and will be removed from version 1.0.0 onwards
 - ignoreOnTranslate is deprecated and renamed to ignoreOnTransform
 - ignoreOnTransform setting will now also be tested against equality of objects
+
+## [0.4.1] - 2021-11-07
+### Changed
+- fix where falsy results did not show up on resolveAll
 
 ## [0.4.0] - 2021-10-09
 ### Added

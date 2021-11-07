@@ -15,7 +15,7 @@ const test = (input, path, result, expectedReferences) => {
   const pathResult = getPath(input, path);
   const resolveResult = resolve(input, path);
   expect(getResult).toStrictEqual(result);
-  if (!getResult) {
+  if (getResult === undefined) {
     expect(getResult).toStrictEqual(pathResult);
   }
   expect(findResult.value).toStrictEqual(getResult);
