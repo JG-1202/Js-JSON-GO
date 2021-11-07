@@ -103,6 +103,9 @@ describe('Test getAll function', () => {
   it('Use of wildcard if there is nothing to retrieve returns empty array', () => {
     test(testObject, 'stores["0"].storeName[*]', []);
   });
+  it('Getting falsy value', () => {
+    test({ test: false }, 'test', [false]);
+  });
 });
 
 describe('Testing JSON equality', () => {
