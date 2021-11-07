@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const JG = require('../../index');
 const inputFixture = require('../fixtures/inputFixture.json');
 

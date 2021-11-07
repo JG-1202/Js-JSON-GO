@@ -1,4 +1,4 @@
-const resolveAll = require('../../handlers/get/resolveAll');
+const resolveAll = require('../../handlers/resolve/resolveAll');
 const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 

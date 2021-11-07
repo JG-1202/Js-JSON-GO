@@ -1,16 +1,16 @@
 const returnObject = require('../../helpers/returnObject');
 
 /**
- * Support for deprecated ingnoreOnTranslate.
+ * Support for deprecated settings.
  */
-const backWardCompatabilityIngnore = (settings) => {
+const backWardCompatability = (settings, oldSetting, newSetting) => {
   const settingsObject = settings;
-  if (settingsObject.ingnoreOnTranslate) {
-    console.warn('Deprecation warning: The use of ingnoreOnTranslate as settings property is deprecated and will be removed from version 1.0.0 onwards. Use ignoreOnTranslate instead.');
-    if (!settingsObject.ignoreOnTranslate) {
-      settingsObject.ignoreOnTranslate = settingsObject.ingnoreOnTranslate;
+  if (settingsObject[oldSetting]) {
+    console.warn(`Deprecation warning: The use of ${oldSetting} as settings property is deprecated and will be removed from version 1.0.0 onwards. Use ${newSetting} instead.`);
+    if (!settingsObject[newSetting]) {
+      settingsObject[newSetting] = settingsObject[oldSetting];
     }
-    delete settingsObject.ingnoreOnTranslate;
+    delete settingsObject[oldSetting];
   }
 };
 
@@ -20,8 +20,10 @@ const backWardCompatabilityIngnore = (settings) => {
 const settingsValidator = {
   fatalErrorOnCreate: (setting) => typeof setting === 'boolean',
   mapIfNotFound: (setting) => typeof setting === 'boolean',
-  ignoreOnTranslate: (setting) => Array.isArray(setting),
+  ignoreOnTransform: (setting) => Array.isArray(setting),
   unlinkInputObject: (setting) => typeof setting === 'boolean',
+  buildOne: (setting) => typeof setting === 'boolean',
+  resolveOne: (setting) => typeof setting === 'boolean',
   defaultGetResponse: () => true,
   defaultGetAllResponse: () => true,
 };
@@ -55,10 +57,13 @@ const loadDefaultSettings = (settings) => {
     return settings;
   }
   const settingsObject = returnObject(settings);
-  backWardCompatabilityIngnore(settingsObject);
+  backWardCompatability(settingsObject, 'ingnoreOnTranslate', 'ignoreOnTransform');
+  backWardCompatability(settingsObject, 'ignoreOnTranslate', 'ignoreOnTransform');
   setDefault(settingsObject, 'fatalErrorOnCreate', false);
+  setDefault(settingsObject, 'buildOne', false);
+  setDefault(settingsObject, 'resolveOne', false);
   setDefault(settingsObject, 'mapIfNotFound', false);
-  setDefault(settingsObject, 'ignoreOnTranslate', []);
+  setDefault(settingsObject, 'ignoreOnTransform', []);
   setDefault(settingsObject, 'unlinkInputObject', false);
   setDefault(settingsObject, 'defaultGetResponse', undefined);
   setDefault(settingsObject, 'defaultGetAllResponse', []);

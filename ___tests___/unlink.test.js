@@ -1,4 +1,5 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const { unlink } = require('../index');
 
 describe('Unlink objects', () => {

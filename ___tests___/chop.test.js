@@ -1,4 +1,5 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const JG = require('../index');
 const choppedArray = require('./fixtures/choppedArray.json');
 const choppedObject = require('./fixtures/choppedObject.json');

@@ -2,7 +2,7 @@
 const {
   getAll, getPaths, findAll,
 } = require('../../../../index');
-const resolveAll = require('../../../../src/handlers/get/resolveAll');
+const resolveAll = require('../../../../src/handlers/resolve/resolveAll');
 
 /**
  * Check results getAll, vs findAll, vs getPaths vs expected getAll results

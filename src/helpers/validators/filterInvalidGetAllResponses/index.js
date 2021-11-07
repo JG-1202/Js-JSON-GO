@@ -1,3 +1,5 @@
+const checkEquality = require('../../query/src/logicalChecks/checkEquality');
+
 /**
  * Filter invalid getAll responses as defined in ignoreOnTranslate settings
  * @param {Array} getAllResponse getAll response from originObject
@@ -6,7 +8,7 @@
  */
 const filterInvalidGetAllResponses = (getAllResponse, settings) => (
   getAllResponse.filter(
-    (el) => settings.ignoreOnTranslate.indexOf(el) === -1,
+    (el) => settings.ignoreOnTranslate.every((toIgnore) => checkEquality(el.value, toIgnore, '!=')),
   )
 );
 

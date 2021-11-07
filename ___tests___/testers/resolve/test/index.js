@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const { get, getPath, find } = require('../../../../index');
-const resolve = require('../../../../src/handlers/get/resolve');
+const resolve = require('../../../../src/handlers/resolve/resolve');
 
 /**
  * Check results get, vs find, vs getPath vs expected get result

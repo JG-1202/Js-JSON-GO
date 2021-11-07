@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const JG = require('../../index');
 const inputFixture = require('../fixtures/inputFixture.json');
 
@@ -34,7 +35,7 @@ describe('Test getAll function with functions', () => {
   it('Testing basic functions findAll', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
     const result = JsonGo.findAll('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
-    expect(result).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag' }, { path: 'stores[0].items[2].name', value: 'Granny Smith large bag' }]);
+    expect(result).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag', references: {} }, { path: 'stores[0].items[2].name', value: 'Granny Smith large bag', references: {} }]);
   });
   it('Testing basic functions getPaths', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
@@ -137,7 +138,7 @@ describe('Test getAll function with functions', () => {
   it('Testing functions for find', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
     const result = JsonGo.find('stores[{$Function(storeNameBerlin)}].storeName');
-    expect(result).toStrictEqual({ value: 'Berlin', path: 'stores[0].storeName' });
+    expect(result).toStrictEqual({ value: 'Berlin', path: 'stores[0].storeName', references: {} });
   });
   it('Testing functions for set', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);

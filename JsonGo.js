@@ -17,8 +17,8 @@ const makeJson = require('./src/handlers/make/makeJson');
 const parse = require('./src/handlers/basic/parse');
 const stringify = require('./src/handlers/basic/stringify');
 
-const resolve = require('./src/handlers/get/resolve');
-const resolveAll = require('./src/handlers/get/resolveAll');
+const resolve = require('./src/handlers/resolve/resolve');
+const resolveAll = require('./src/handlers/resolve/resolveAll');
 
 module.exports.Map = Map;
 module.exports.Json = Json;

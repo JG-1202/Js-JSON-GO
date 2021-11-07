@@ -3,13 +3,18 @@ All notable changes to this project will be documented here.
 
 ## [0.5.0] - 2021-10-31
 ### Added
-- reference will be output of pathToArrayTransformer
+- generic transform function rather than translate, translateAll, translateAllToOne, translateOneToAll
+- reference object will be output of pathToArrayTransformer
 - resolve/resolveAll will return reference object with resolved references
+- find/findAll will return reference object with resolved references
 - pathElements will now pass refObject to querier
 - query will pass refObject to resolve-handler
 
 ### Changed
-- ignoreOnTranslate setting will now also be tested against equality of objects
+- fix where falsy results did not show up on resolveAll
+- translate, translateAll, translateAllToOne, translateOneToAll is considered deprecated and will be removed from version 1.0.0 onwards
+- ignoreOnTranslate is deprecated and renamed to ignoreOnTransform
+- ignoreOnTransform setting will now also be tested against equality of objects
 
 ## [0.4.0] - 2021-10-09
 ### Added

@@ -1,4 +1,4 @@
-const resolveAll = require('../../handlers/get/resolveAll');
+const resolveAll = require('../../handlers/resolve/resolveAll');
 const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 const makePathString = require('../../helpers/makePathString');
@@ -19,6 +19,7 @@ const getPaths = (object, path, functions, settings) => {
     resolved.map((resolvedElement) => ({
       path: makePathString(resolvedElement.path),
       value: resolvedElement.value,
+      references: resolvedElement.references,
     })),
     [],
     settingsToUse.defaultGetAllResponse,

@@ -9,8 +9,10 @@ describe('Test loadDefaultSettings', () => {
     expect(settings).toStrictEqual({
       fatalErrorOnCreate: false,
       mapIfNotFound: false,
-      ignoreOnTranslate: [],
+      ignoreOnTransform: [],
       unlinkInputObject: false,
+      resolveOne: false,
+      buildOne: false,
       defaultGetResponse: undefined,
       defaultGetAllResponse: [],
       defaultSettingsLoaded: true,
@@ -20,16 +22,20 @@ describe('Test loadDefaultSettings', () => {
     const settings = loadDefaultSettings({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
+      ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
+      resolveOne: true,
+      buildOne: true,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
     });
     expect(settings).toStrictEqual({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
+      ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
+      resolveOne: true,
+      buildOne: true,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
       defaultSettingsLoaded: true,
@@ -39,16 +45,20 @@ describe('Test loadDefaultSettings', () => {
     const settings = loadDefaultSettings({
       fatalErrorOnCreate: undefined,
       mapIfNotFound: null,
-      ignoreOnTranslate: {},
+      ignoreOnTransform: {},
       unlinkInputObject: 'true',
+      resolveOne: 'true',
+      buildOne: 'true',
       defaultGetResponse: '',
       defaultGetAllResponse: null,
     });
     expect(settings).toStrictEqual({
       fatalErrorOnCreate: false,
       mapIfNotFound: false,
-      ignoreOnTranslate: [],
+      ignoreOnTransform: [],
       unlinkInputObject: false,
+      resolveOne: false,
+      buildOne: false,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
       defaultSettingsLoaded: true,
@@ -66,19 +76,44 @@ describe('Test loadDefaultSettings', () => {
     expect(settings).toStrictEqual({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
+      ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
       defaultSettingsLoaded: true,
     });
   });
-  it('Deprecated ingnoreOnTranslate still supported until v1.0.0, but ignoreOnTranslate has priority', () => {
+  it('Deprecated ingnoreOnTranslate still supported until v1.0.0, but ignoreOnTransform has priority', () => {
     const settings = loadDefaultSettings({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
       ingnoreOnTranslate: [null, undefined],
-      ignoreOnTranslate: [null, undefined, ''],
+      ignoreOnTransform: [null, undefined, ''],
+      unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
+      defaultGetResponse: '',
+      defaultGetAllResponse: null,
+    });
+    expect(settings).toStrictEqual({
+      fatalErrorOnCreate: true,
+      mapIfNotFound: true,
+      ignoreOnTransform: [null, undefined, ''],
+      unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
+      defaultGetResponse: '',
+      defaultGetAllResponse: null,
+      defaultSettingsLoaded: true,
+    });
+  });
+  it('Deprecated ignoreOnTranslate still supported until v1.0.0', () => {
+    const settings = loadDefaultSettings({
+      fatalErrorOnCreate: true,
+      mapIfNotFound: true,
+      ignoreOnTranslate: [null, undefined],
       unlinkInputObject: true,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
@@ -86,8 +121,34 @@ describe('Test loadDefaultSettings', () => {
     expect(settings).toStrictEqual({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined, ''],
+      ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
+      defaultGetResponse: '',
+      defaultGetAllResponse: null,
+      defaultSettingsLoaded: true,
+    });
+  });
+  it('Deprecated ignoreOnTranslate still supported until v1.0.0, but ignoreOnTransform has priority', () => {
+    const settings = loadDefaultSettings({
+      fatalErrorOnCreate: true,
+      mapIfNotFound: true,
+      ignoreOnTranslate: [null, undefined],
+      ignoreOnTransform: [null, undefined, ''],
+      unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
+      defaultGetResponse: '',
+      defaultGetAllResponse: null,
+    });
+    expect(settings).toStrictEqual({
+      fatalErrorOnCreate: true,
+      mapIfNotFound: true,
+      ignoreOnTransform: [null, undefined, ''],
+      unlinkInputObject: true,
+      resolveOne: false,
+      buildOne: false,
       defaultGetResponse: '',
       defaultGetAllResponse: null,
       defaultSettingsLoaded: true,

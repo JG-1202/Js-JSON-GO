@@ -1,4 +1,5 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const createRegExpFromString = require('../src/helpers/pathTransformer/src/queryElementTransformer/src/handlers/regExp');
 
 describe('Test to create regular expression from string', () => {

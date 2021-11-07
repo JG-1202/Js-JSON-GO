@@ -1,4 +1,4 @@
-const resolve = require('../../handlers/get/resolve');
+const resolve = require('../../handlers/resolve/resolve');
 const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 const makePathString = require('../../helpers/makePathString');

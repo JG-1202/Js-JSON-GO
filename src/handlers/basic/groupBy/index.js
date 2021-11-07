@@ -1,4 +1,4 @@
-const resolve = require('../../get/resolve');
+const resolve = require('../../resolve/resolve');
 
 /**
  * Push each element to tempObject on key _{typeof resolvedElement}_{resolvedElement}

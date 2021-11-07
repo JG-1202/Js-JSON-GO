@@ -1,4 +1,5 @@
-/* eslint-disable */
+/* eslint-disable no-undef  */
+/* eslint-disable max-lines-per-function  */
 const getAllKeysFromArray = require('../src/helpers/pathElements/getKeys/getAllKeysFromArray');
 const getAllKeysFromObject = require('../src/helpers/pathElements/getKeys/getAllKeysFromObject');
 const getFirstKeyFromArray = require('../src/helpers/pathElements/getKeys/getFirstKeyFromArray');
@@ -35,22 +36,22 @@ describe('pathElements', () => {
   });
   it('Safety check: returns value based on getType on getMultiplePathElements while querying', () => {
     const resultA = getMultiplePathElements(
-      {"query":[{"value":1},{"value":"="},{"value":1}]},
+      { query: [{ value: 1 }, { value: '=' }, { value: 1 }] },
       inputFixture,
       inputFixture.stores,
       'number',
-      [{"string":"stores"}],
+      [{ string: 'stores' }],
       {},
-      {}
+      {},
     );
     const resultB = getMultiplePathElements(
-      {"query":[{"value":1},{"value":"="},{"value":1}]},
+      { query: [{ value: 1 }, { value: '=' }, { value: 1 }] },
       inputFixture,
       inputFixture.stores,
       'string',
-      [{"string":"stores"}],
+      [{ string: 'stores' }],
       {},
-      {}
+      {},
     );
     expect(resultA).toStrictEqual([{ number: 0 }, { number: 1 }, { number: 2 }, { number: 3 }]);
     expect(resultB).toStrictEqual([]);

@@ -1,5 +1,5 @@
 const makePathString = require('../../helpers/makePathString');
-const resolve = require('../../handlers/get/resolve');
+const resolve = require('../../handlers/resolve/resolve');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
@@ -17,6 +17,7 @@ const find = (obj, path, functions, settings) => {
   return {
     path: makePathString(resolved.path),
     value: resolved.value,
+    references: resolved.references,
   };
 };
 
