@@ -83,4 +83,7 @@ describe('Test get function', () => {
   it('Get an item that is cheaper than 3.50 for something', () => {
     test(inputFixture, '[*][*].items[{$.price < 3.50}].name', 'Granny Smith small bag');
   });
+  it('Getting falsy value', () => {
+    test({ test: false }, 'test', false);
+  });
 });

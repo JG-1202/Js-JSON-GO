@@ -152,7 +152,7 @@ const resolveAll = (obj, path, functions, settings) => {
   const { settingsObject, arrayPath, priorPath } = initializeGetHandler(path, functions, settings);
   if (!doesPathIndicateComplexity(arrayPath)) {
     const simpleGetResult = simpleGet(obj, arrayPath);
-    if (simpleGetResult) {
+    if (simpleGetResult !== undefined) {
       return returnArray({ value: simpleGetResult, path });
     }
     return returnArray();

@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [0.4.1] - 2021-11-07
+### Changed
+- fix where falsy results did not show up on resolveAll
+
 ## [0.4.0] - 2021-10-09
 ### Added
 - getPath, returns first resolved path from input path

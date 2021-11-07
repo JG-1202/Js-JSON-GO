@@ -12,7 +12,7 @@ const test = (input, path, result) => {
   const findResult = find(input, path);
   const pathResult = getPath(input, path);
   expect(getResult).toStrictEqual(result);
-  if (!getResult) {
+  if (getResult === undefined) {
     expect(getResult).toStrictEqual(pathResult);
   }
   expect(findResult.value).toStrictEqual(getResult);
