@@ -8,7 +8,11 @@ describe('Mapping', () => {
     const JsonGo = new JG.Map(inputFixture, {});
     JsonGo.transform('mainStore', 'test[2].store');
     const result = JsonGo.export();
+    const JsonGoOld = new JG.Map(inputFixture, {});
+    JsonGoOld.translate('mainStore', 'test[2].store');
+    const resultOld = JsonGo.export();
     expect(result).toEqual({ test: [undefined, undefined, { store: 'Amsterdam' }] });
+    expect(resultOld).toStrictEqual(result);
   });
   it('Map to new array', () => {
     const JsonGo = new JG.Map(inputFixture, []);
@@ -20,7 +24,7 @@ describe('Mapping', () => {
     const JsonGo = new JG.Map(inputFixture, [], { resolveOne: true });
     JsonGo.transform('someUndefined.path', '[0].test[2]');
     const result = JsonGo.export();
-    expect(result).toEqual([]);
+    expect(result).toStrictEqual([]);
   });
   it('Do map when no value is found at origin when mapIfNotFound on transform with resolveOne', () => {
     const JsonGo = new JG.Map(inputFixture, [], { mapIfNotFound: true, resolveOne: true });
@@ -32,7 +36,7 @@ describe('Mapping', () => {
     const JsonGo = new JG.Map(inputFixture, []);
     JsonGo.transform('someUndefined.path', '[0].test[2]');
     const result = JsonGo.export();
-    expect(result).toEqual([]);
+    expect(result).toStrictEqual([]);
   });
   it('Do map when no value is found at origin when mapIfNotFound on transform', () => {
     const JsonGo = new JG.Map(inputFixture, [], { mapIfNotFound: true });
@@ -45,12 +49,14 @@ describe('Mapping', () => {
     JsonGo.transform('stores[{$.storeName = Amsterdam}].items[{$.price >= $stores[{$.storeName = Amsterdam}].expensive}].name', 'stores[{$append}].expensiveItems');
     JsonGo.transform('stores[{$.storeName = Amsterdam}].items[{$.price < $stores[{$.storeName = Amsterdam}].expensive}].name', 'stores[{$end}].nonExpensiveItems');
     const result = JsonGo.export();
-    expect(result).toEqual({ stores: [{ expensiveItems: ['Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag'], nonExpensiveItems: ['Granny Smith small bag', 'Granny Smith medium bag'] }] });
+    expect(result).toStrictEqual({ stores: [{ expensiveItems: ['Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag'], nonExpensiveItems: ['Granny Smith small bag', 'Granny Smith medium bag'] }] });
   });
   it('Map all items into all', () => {
     const startingObject = { test: true };
-    const unlinked = JG.unlink(startingObject);
-    const start = { array: [unlinked, unlinked, { test: false }, unlinked] };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
     const JsonGo = new JG.Map(inputFixture, start);
     JsonGo.transform('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
     const result = JsonGo.export();
@@ -61,8 +67,10 @@ describe('Mapping', () => {
   });
   it('Map one item into all that have a test property', () => {
     const startingObject = { test: true };
-    const unlinked = JG.unlink(startingObject);
-    const start = { array: [unlinked, unlinked, { test: false }, unlinked] };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
     const JsonGo = new JG.Map(inputFixture, start, { resolveOne: true });
     JsonGo.transform('stores[{$.storeName}].expensive', 'array[{$.test}].expensive');
     const result = JsonGo.export();
@@ -75,8 +83,10 @@ describe('Mapping', () => {
   });
   it('Map all items into one', () => {
     const startingObject = { test: true };
-    const unlinked = JG.unlink(startingObject);
-    const start = { array: [unlinked, unlinked, { test: false }, unlinked] };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
     const JsonGo = new JG.Map(inputFixture, start, { buildOne: true });
     JsonGo.transform('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
     const result = JsonGo.export();
@@ -84,19 +94,34 @@ describe('Mapping', () => {
     expect(result).toStrictEqual({
       array: [checkObject, startingObject, { test: false }, startingObject],
     });
+    const JsonGoOld = new JG.Map(inputFixture, start);
+    JsonGoOld.translateAll('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
+    const resultOld = JsonGoOld.export();
+    expect(resultOld).toStrictEqual(result);
   });
-  it('Map all items into one except values that are defined in ignoreOnTranslate', () => {
+  it('Map all items into one except values that are defined in ignoreOnTransform', () => {
     const startingObject = { test: true };
-    const start = { array: [startingObject, startingObject, { test: false }, startingObject] };
-    const JsonGo = new JG.Map(inputFixture, start, { ignoreOnTranslate: [3, 4, 5] });
-    JsonGo.transform('[stores:(test)][{$.expensive}:(expensive)].expensive', 'array[{$.test}].expensive');
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
+    const JsonGo = new JG.Map(
+      inputFixture, start, { ignoreOnTransform: [3, 4, 5], buildOne: true },
+    );
+    JsonGo.transform('[stores][{$.expensive}:(expensive)].expensive', 'array[{$.test}].expensive');
     const result = JsonGo.export();
     const checkObject = { test: true, expensive: [6, 4.5] };
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       array: [checkObject, startingObject, { test: false }, startingObject],
     });
+    const JsonGoOld = new JG.Map(
+      inputFixture, start, { ignoreOnTransform: [3, 4, 5] },
+    );
+    JsonGoOld.translateAllToOne('[stores][{$.expensive}:(expensive)].expensive', 'array[{$.test}].expensive');
+    const resultOld = JsonGoOld.export();
+    expect(resultOld).toStrictEqual(result);
   });
-  it('Do not map values defined in ignoreOnTranslate', () => {
+  it('Do not map values defined in ignoreOnTransform', () => {
     const inputObject = {
       value1: true,
       value2: null,
@@ -122,6 +147,48 @@ describe('Mapping', () => {
       value4: 'true',
       value5: 'test',
       value6: false,
+    });
+  });
+  it('Transform all expensive < 6 to their reference', () => {
+    const startingObject = { test: true };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
+    const JsonGo = new JG.Map(inputFixture, start);
+    JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      array: [{ test: true, expensive: 5 }, { test: true },
+        { test: false, expensive: 4.5 }, { test: true, expensive: null }],
+    });
+  });
+  it('Transform all expensive < 6 to their reference with buildOne', () => {
+    const startingObject = { test: true };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
+    const JsonGo = new JG.Map(inputFixture, start, { buildOne: true });
+    JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      array: [{ test: true, expensive: 5 }, { test: true },
+        { test: false }, { test: true }],
+    });
+  });
+  it('Transform all expensive < 6 to their reference with resolveOne', () => {
+    const startingObject = { test: true };
+    const start = {
+      array: [JG.unlink(startingObject), JG.unlink(startingObject),
+        { test: false }, JG.unlink(startingObject)],
+    };
+    const JsonGo = new JG.Map(inputFixture, start, { resolveOne: true });
+    JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      array: [{ test: true, expensive: 5 }, { test: true },
+        { test: false }, { test: true }],
     });
   });
 });

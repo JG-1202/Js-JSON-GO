@@ -4,7 +4,7 @@ const replaceReferences = (references, destinationPath) => {
   let newPath = destinationPath;
   if (references) {
     Object.keys(references).forEach((reference) => {
-      newPath = newPath.replace(`:(${reference})`, references[references]);
+      newPath = newPath.replace(new RegExp(`\\:\\(${reference}\\)`, 'g'), references[reference]);
     });
   }
   return newPath;
