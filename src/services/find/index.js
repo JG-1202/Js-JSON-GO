@@ -1,6 +1,6 @@
 const makePathString = require('../../helpers/makePathString');
-const resolve = require('../../handlers/resolve/resolve');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
+const Resolver = require('../../handlers/resolver');
 
 /**
  * Finds single value and resolved path from objects specified path
@@ -13,7 +13,15 @@ const loadDefaultSettings = require('../../settings/loadDefaultSettings');
  */
 const find = (obj, path, functions, settings) => {
   const settingsToUse = loadDefaultSettings(settings);
-  const resolved = resolve(obj, path, functions, settingsToUse);
+  const resolver = new Resolver({ functions, settings: { ...settingsToUse, limit: 1 } });
+  const resolved = resolver.resolve(obj, path)[0];
+  if (!resolved || resolved.value === undefined) {
+    return {
+      path: settingsToUse.defaultGetResponse,
+      value: settingsToUse.defaultGetResponse,
+      references: {},
+    };
+  }
   return {
     path: makePathString(resolved.path),
     value: resolved.value,

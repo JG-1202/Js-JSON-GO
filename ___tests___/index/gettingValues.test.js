@@ -18,6 +18,16 @@ describe('Test getting value(s)', () => {
     const result = JsonGo.getAll('stores[{$.storeName}].storeName');
     expect(result).toStrictEqual(['Berlin', 'Amsterdam', 'Barcelona', 'Rome']);
   });
+  it('Get first store in list', () => {
+    const JsonGo = new JG.Json(inputFixture, { limit: 1 });
+    const result = JsonGo.getAll('stores[{$.storeName}].storeName');
+    expect(result).toStrictEqual(['Berlin']);
+  });
+  it('Get first two stores in list', () => {
+    const JsonGo = new JG.Json(inputFixture, { limit: 2 });
+    const result = JsonGo.getAll('stores[{$.storeName}].storeName');
+    expect(result).toStrictEqual(['Berlin', 'Amsterdam']);
+  });
   it('Get all stores that have items for sale', () => {
     const JsonGo = new JG.Json(inputFixture);
     const result = JsonGo.getAll('stores[{$.items[{$.name}]}].storeName');

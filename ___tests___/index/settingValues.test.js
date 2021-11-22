@@ -17,7 +17,7 @@ describe('Test setting value(s)', () => {
     const result = JsonGo.export();
     expect(result).toStrictEqual([true]);
   });
-  it('Set element at end of array with $end when it is not an arry results in error by default', () => {
+  it('Set element at end of array with $end when it is not an array results in error by default', () => {
     let errorMessage = null;
     try {
       const JsonGo = new JG.Json(undefined, { fatalErrorOnCreate: true });
@@ -26,9 +26,9 @@ describe('Test setting value(s)', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toBe('No results found for provided query [{"custom":"end"}].');
+    expect(errorMessage).toBe('Path invalid. No results found for query.');
   });
-  it('Set element at end of array with $end when it is not an arry results not in error based on settings', () => {
+  it('Set element at end of array with $end when it is not an array results not in error based on settings', () => {
     const JsonGo = new JG.Json({}, { fatalErrorOnCreate: false });
     JsonGo.set('test', {});
     JsonGo.set('test2', {});
@@ -81,7 +81,7 @@ describe('Test setting value(s)', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toBe('No results found for provided query [{"absolutePath":"expensive"},{"value":">"},{"value":100}].');
+    expect(errorMessage).toBe('Path invalid. No results found for query.');
   });
   it('Test creating inputFixture generates error by default on set because query not found', () => {
     let errorMessage = null;
@@ -96,6 +96,6 @@ describe('Test setting value(s)', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toBe('No results found for provided query [{"relativePath":"expensive","relativeDepth":0},{"value":">"},{"value":99}].');
+    expect(errorMessage).toBe('Path invalid. No results found for query.');
   });
 });

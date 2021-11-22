@@ -6,6 +6,8 @@ const testError = require('./testers/resolve/testError');
 const inputFixture = require('./fixtures/inputFixture.json');
 const testObject = require('./fixtures/resolve/testObject.json');
 
+const { get } = require('../index');
+
 describe('Test get function', () => {
   it('Get from array if number 1', () => {
     test(inputFixture, 'stores[0].storeName', 'Berlin');
@@ -35,7 +37,8 @@ describe('Test get function', () => {
     test(testObject, [{ string: 'stores' }, { string: '0' }, { string: 'storeName' }], 'Berlin');
   });
   it('Attempt to get "$end" from object returns value', () => {
-    test(testObject, 'stores["$end"].storeName', 'Amsterdam');
+    test(testObject, 'stores.$end.storeName', 'Amsterdam');
+    expect(get(testObject, 'stores["$end"].storeName')).toStrictEqual('Amsterdam');
   });
   it('returns error if relative path is empty', () => {
     testError(testObject, 'stores[{$.}].storeName', 'Query element is invalid.');

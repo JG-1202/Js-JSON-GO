@@ -1,26 +1,17 @@
-const getPathElements = require('../../helpers/pathElements/getMultiple');
-const setElement = require('./src/setElement');
-const getAllKeysFromArray = require('../../helpers/pathElements/getKeys/getAllKeysFromArray');
-const getAllKeysFromObject = require('../../helpers/pathElements/getKeys/getAllKeysFromObject');
-const defineConstants = require('./src/defineConstants');
+const Resolver = require('../resolver');
+const pathTransformer = require('../../helpers/pathTransformer');
+const doesPathIndicateComplexity = require('./src/doesPathIndicateComplexity');
+const setSimplePath = require('./src/setSimplePath');
 
-/**
- * Get key values of all elements that need to be set
- */
-// eslint-disable-next-line complexity
-const getElementValues = (element, obj, tempObject, priorPath, functions, settings) => {
-  if (Array.isArray(tempObject)) {
-    return element.wildcard ? getAllKeysFromArray(tempObject, settings) : getPathElements(element, obj, tempObject, 'number', priorPath, functions, settings);
+const setComplexPath = (obj, arrayPath, val, functions, settings, complexIndex) => {
+  const complexPart = arrayPath.slice(0, complexIndex);
+  const simplePart = arrayPath.slice(complexIndex);
+  const resolver = new Resolver({ functions, settings });
+  const allResolved = resolver.resolve(obj, complexPart);
+  if (allResolved.length === 0 && settings.fatalErrorOnCreate) {
+    throw new Error('Path invalid. No results found for query.');
   }
-  return element.wildcard ? getAllKeysFromObject(tempObject, settings) : getPathElements(element, obj, tempObject, 'string', priorPath, functions, settings);
-};
-
-/**
- * Get value from element in object
- */
-const getElementValue = (element) => {
-  const resultKeys = Object.keys(element);
-  return element[resultKeys[0]];
+  allResolved.forEach((resolved) => setSimplePath(obj, [...resolved.path, ...simplePart], val));
 };
 
 /**
@@ -33,34 +24,14 @@ const getElementValue = (element) => {
  * @returns {object} object with newly set path in case that multiple logical checks
  * satisfy the first element will be set.
  */
-// eslint-disable-next-line max-lines-per-function
 const setAll = (obj, path, val, functions, settings) => {
-  const {
-    settingsObject, arrayPath, priorPath, functionsObject,
-  } = defineConstants(path, functions, settings);
-  let tempObject = obj;
-  arrayPath.every((element, index) => {
-    const elementValues = getElementValues(
-      element, obj, tempObject, priorPath, functions, settingsObject,
-    );
-    if (elementValues.length === 1) {
-      const elementValue = getElementValue(elementValues[0]);
-      tempObject = setElement(
-        elementValue, tempObject, arrayPath[index + 1], arrayPath.length - 1 === index, val,
-      );
-      // eslint-disable-next-line prefer-destructuring
-      arrayPath[index] = elementValues[0];
-      priorPath.push(elementValues[0]);
-      return true;
-    } if (elementValues.length > 1) {
-      elementValues.forEach((elementValue) => {
-        const newPath = [...arrayPath.slice(0, index), elementValue, ...arrayPath.slice(index + 1)];
-        return setAll(obj, newPath, val, functionsObject, settingsObject);
-      });
-      return false;
-    }
-    return false;
-  });
+  const arrayPath = pathTransformer(path, functions);
+  const { isComplex, complexIndex } = doesPathIndicateComplexity(arrayPath);
+  if (!isComplex) {
+    setSimplePath(obj, arrayPath, val);
+  } else {
+    setComplexPath(obj, arrayPath, val, functions, settings, complexIndex);
+  }
   return obj;
 };
 

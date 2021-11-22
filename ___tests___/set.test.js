@@ -22,12 +22,12 @@ describe('Test fatalError option on set', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toStrictEqual('No results found for provided query [{"custom":"end"}].');
+    expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
   });
   it('Set with end and no fetalError', () => {
     const testObject = {};
     const result = set(testObject, 'stores[{$end}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: false });
-    expect(result).toStrictEqual({ stores: {} });
+    expect(result).toStrictEqual({});
   });
   it('Set with end to empty array', () => {
     const testObject = { stores: [] };
@@ -37,7 +37,7 @@ describe('Test fatalError option on set', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toStrictEqual('No results found for provided query [{"custom":"end"}].');
+    expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
   });
   it('Test wildcard for object', () => {
     const testObject = { wrapper: { key1: {}, key2: {} } };
@@ -52,7 +52,7 @@ describe('Test fatalError option on set', () => {
   it('Use of wildcard for non-existing element', () => {
     const testObject = { wrapper: [{}, {}] };
     const result = set(testObject, 'wrapper2[*].test', true, {}, { fatalErrorOnCreate: false });
-    expect(result).toStrictEqual({ wrapper: [{}, {}], wrapper2: {} });
+    expect(result).toStrictEqual({ wrapper: [{}, {}] });
   });
   it('Use of wildcard for non-existing element returns error', () => {
     const testObject = { wrapper: [{}, {}] };
@@ -62,7 +62,7 @@ describe('Test fatalError option on set', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toStrictEqual('No element is found for provided wildcard.');
+    expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
   });
   it('Use of wildcard for non-existing element within array returns error', () => {
     const testObject = { wrapper: [] };
@@ -72,16 +72,6 @@ describe('Test fatalError option on set', () => {
     } catch (e) {
       errorMessage = e.message;
     }
-    expect(errorMessage).toStrictEqual('No element is found for provided wildcard.');
-  });
-  it('Use of wildcard for non-existing element returns error (old style)', () => {
-    const testObject = { wrapper: [{}, {}] };
-    let errorMessage = null;
-    try {
-      result = set(testObject, 'wrapper2[*].test', true, true);
-    } catch (e) {
-      errorMessage = e.message;
-    }
-    expect(errorMessage).toStrictEqual('No element is found for provided wildcard.');
+    expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
   });
 });

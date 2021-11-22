@@ -1,5 +1,7 @@
 /* eslint-disable no-undef  */
 /* eslint-disable max-lines-per-function  */
+const _ = require('lodash');
+
 const JG = require('../../index');
 const inputFixture = require('../fixtures/inputFixture.json');
 
@@ -54,8 +56,8 @@ describe('Mapping', () => {
   it('Map all items into all', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start);
     JsonGo.transform('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
@@ -68,8 +70,8 @@ describe('Mapping', () => {
   it('Map one item into all that have a test property', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start, { resolveOne: true });
     JsonGo.transform('stores[{$.storeName}].expensive', 'array[{$.test}].expensive');
@@ -84,8 +86,8 @@ describe('Mapping', () => {
   it('Map all items into one', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start, { buildOne: true });
     JsonGo.transform('stores[{$.expensive}].expensive', 'array[{$.test}].expensive');
@@ -102,8 +104,8 @@ describe('Mapping', () => {
   it('Map all items into one except values that are defined in ignoreOnTransform', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(
       inputFixture, start, { ignoreOnTransform: [3, 4, 5], buildOne: true },
@@ -152,8 +154,8 @@ describe('Mapping', () => {
   it('Transform all expensive < 6 to their reference', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start);
     JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');
@@ -166,8 +168,8 @@ describe('Mapping', () => {
   it('Transform all expensive < 6 to their reference with buildOne', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start, { buildOne: true });
     JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');
@@ -180,8 +182,8 @@ describe('Mapping', () => {
   it('Transform all expensive < 6 to their reference with resolveOne', () => {
     const startingObject = { test: true };
     const start = {
-      array: [JG.unlink(startingObject), JG.unlink(startingObject),
-        { test: false }, JG.unlink(startingObject)],
+      array: [_.cloneDeep(startingObject), _.cloneDeep(startingObject),
+        { test: false }, _.cloneDeep(startingObject)],
     };
     const JsonGo = new JG.Map(inputFixture, start, { resolveOne: true });
     JsonGo.transform('stores[{$.expensive < 6}:(store)].expensive', 'array[:(store)].expensive');

@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 const { get, getPath, find } = require('../../../../index');
-const resolve = require('../../../../src/handlers/resolve/resolve');
 
 /**
  * Check results get, vs find, vs getPath vs expected get result
@@ -13,7 +12,6 @@ const test = (input, path, result, expectedReferences) => {
   const getResult = get(input, path);
   const findResult = find(input, path);
   const pathResult = getPath(input, path);
-  const resolveResult = resolve(input, path);
   expect(getResult).toStrictEqual(result);
   if (getResult === undefined) {
     expect(getResult).toStrictEqual(pathResult);
@@ -24,9 +22,8 @@ const test = (input, path, result, expectedReferences) => {
     expect(get(input, pathResult)).toStrictEqual(result);
     expect(typeof pathResult).toStrictEqual('string');
   }
-  expect(resolveResult.value).toStrictEqual(findResult.value);
   if (expectedReferences) {
-    expect(resolveResult.references).toStrictEqual(expectedReferences);
+    expect(findResult.references).toStrictEqual(expectedReferences);
   }
 };
 

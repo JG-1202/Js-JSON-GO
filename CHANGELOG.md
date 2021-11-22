@@ -9,11 +9,14 @@ All notable changes to this project will be documented here.
 - find/findAll will return reference object with resolved references
 - pathElements will now pass refObject to querier
 - query will pass refObject to resolve-handler
+- lodash as dependency
 
 ### Changed
-- translate, translateAll, translateAllToOne, translateOneToAll is considered deprecated and will be removed from version 1.0.0 onwards
+- translate, translateAll, translateAllToOne, translateOneToAll, unlink are considered deprecated and will be removed from version 1.0.0 onwards
 - ignoreOnTranslate is deprecated and renamed to ignoreOnTransform
 - ignoreOnTransform setting will now also be tested against equality of objects
+- using lodash.cloneDeep for unlinkInputObject
+- using lodash.isEqual to test equality
 
 ## [0.4.1] - 2021-11-07
 ### Changed

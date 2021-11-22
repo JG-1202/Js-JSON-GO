@@ -1,6 +1,7 @@
+const _ = require('lodash');
+
 const makeJson = require('../../handlers/make/makeJson');
 const makeObject = require('../../handlers/make/makeObject');
-const unlink = require('../../handlers/basic/unlink');
 
 const getAllService = require('../getAll');
 const getService = require('../get');
@@ -41,7 +42,7 @@ class Json {
   constructor(object, settings, functions) {
     this.settings = loadDefaultSettings(settings);
     if (this.settings.unlinkInputObject) {
-      this.object = unlink(makeJson(object, this.settings));
+      this.object = _.cloneDeep(makeJson(object, this.settings));
     } else {
       this.object = makeJson(object, this.settings);
     }

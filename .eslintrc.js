@@ -11,7 +11,7 @@ module.exports = {
     ecmaVersion: 12,
   },
   rules: {
-    complexity: ['error', 3],
+    complexity: ['error', 5],
     'max-lines-per-function': ['error', { max: 25 }],
   },
 };

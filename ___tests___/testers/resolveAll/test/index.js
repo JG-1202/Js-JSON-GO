@@ -2,7 +2,6 @@
 const {
   getAll, getPaths, findAll,
 } = require('../../../../index');
-const resolveAll = require('../../../../src/handlers/resolve/resolveAll');
 
 /**
  * Check results getAll, vs findAll, vs getPaths vs expected getAll results
@@ -14,7 +13,6 @@ const test = (input, path, results, expectedReferences) => {
   const getResult = getAll(input, path);
   const findResult = findAll(input, path);
   const pathResult = getPaths(input, path);
-  const resolveResult = resolveAll(input, path);
   expect(findResult.length).toStrictEqual(getResult.length);
   expect(findResult.length).toStrictEqual(pathResult.length);
   expect(getResult).toStrictEqual(results);
@@ -25,8 +23,7 @@ const test = (input, path, results, expectedReferences) => {
     expect(typeof result.path).toStrictEqual('string');
     expect(singleResult.length).toStrictEqual(1);
     expect(singleResult).toStrictEqual([result.value]);
-    expect(resolveResult[index].value).toStrictEqual(result.value);
-    references.push(resolveResult[index].references);
+    references.push(result.references);
   });
   if (expectedReferences) {
     expect(references).toStrictEqual(expectedReferences);
