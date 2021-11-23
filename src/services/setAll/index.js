@@ -1,4 +1,4 @@
-const setAllHandler = require('../../handlers/set/setAll');
+const Builder = require('../../handlers/builder');
 const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
@@ -13,7 +13,8 @@ const loadDefaultSettings = require('../../settings/loadDefaultSettings');
  */
 const setAll = (object, path, value, functions, settings) => {
   const settingsToUse = loadDefaultSettings(settings);
-  return setAllHandler(object, path, value, functions, settingsToUse);
+  const builder = new Builder({ functions, settings: settingsToUse });
+  return builder.build(object, path, value);
 };
 
 module.exports = setAll;

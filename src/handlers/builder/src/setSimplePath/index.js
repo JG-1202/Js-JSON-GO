@@ -1,4 +1,4 @@
-const setElement = require('./setElement');
+const setElement = require('../setElement');
 
 const setSimplePath = (obj, path, val) => {
   let tempObject = obj;

@@ -6,7 +6,7 @@ const isComplexQuery = (query) => query && !(query[0] && query[0].custom === 'ap
  * @param {Array} pat - array representation of path
  * @returns {Object} with isComplex and complexIndex properties
  */
-const doesPathIndicateComplexity = (path) => {
+const isComplexPathToBuild = (path) => {
   let complexIndex = -1;
   let isComplex = false;
   path.forEach((el, index) => {
@@ -20,4 +20,4 @@ const doesPathIndicateComplexity = (path) => {
   return { isComplex, complexIndex };
 };
 
-module.exports = doesPathIndicateComplexity;
+module.exports = isComplexPathToBuild;
