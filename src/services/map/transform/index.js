@@ -1,4 +1,4 @@
-const checkEquality = require('../../../handlers/querier/src/logicalChecks/checkEquality');
+const checkEquality = require('../../../handlers/querier/src/logicalValidator/logicalChecks/checkEquality');
 
 const replaceReferences = (references, destinationPath) => {
   let newPath = destinationPath;

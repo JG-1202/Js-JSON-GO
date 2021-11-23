@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const checkGreaterThan = require('../../src/handlers/querier/src/logicalChecks/checkGreaterThan');
+const checkGreaterThan = require('../../src/handlers/querier/src/logicalValidator/logicalChecks/checkGreaterThan');
 
 describe('Testing greater than', () => {
   it('Testing greater than (number)', () => {

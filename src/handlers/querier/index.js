@@ -1,46 +1,10 @@
 const pathTransformer = require('../../helpers/pathTransformer');
 const logicalValidator = require('./src/logicalValidator');
-/**
- * check if operation is to get end of array
- */
-const isOperationToGetEnd = (query) => query[0] && query[0].custom === 'end';
-
-/**
- * custom query end
- */
-const getEndOfArray = (tempObject) => {
-  const arrayEnd = tempObject.length - 1;
-  if (arrayEnd >= 0) {
-    return [{ number: tempObject.length - 1 }];
-  }
-  return [];
-};
-
-/**
- * checks whether value key is present
- */
-const doesElementHaveValue = (element) => (element && element.value !== undefined);
-
-/**
- * checks if either absolutePath or relativePath is present
- */
-const doesElementHaveAbsoluteOrRelativePath = (element) => {
-  if (element) {
-    return (element.absolutePath || element.relativePath);
-  }
-  return false;
-};
-
-/**
- * Get index of relativeDepth and check whether it is valid
- * (non-existing index <0 is considered invalid)
- */
-const getRelativeIndex = (index, relativeDepth) => {
-  if (index + relativeDepth >= 0 && relativeDepth <= 0) {
-    return index + relativeDepth;
-  }
-  throw new Error(`Relative depth (${index}+${relativeDepth}) of query is invalid.`);
-};
+const getRelativeIndex = require('./src/getRelativeIndex');
+const doesElementHaveAbsoluteOrRelativePath = require('./src/doesElementHaveAbsoluteOrRelativePath');
+const doesElementHaveValue = require('./src/doesElementHaveValue');
+const getEndOfArray = require('./src/getEndOfArray');
+const isOperationToGetEnd = require('./src/isOperationToGetEnd');
 
 class Querier {
   constructor({
