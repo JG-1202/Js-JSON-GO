@@ -5,13 +5,15 @@ const doesElementHaveAbsoluteOrRelativePath = require('./src/doesElementHaveAbso
 const doesElementHaveValue = require('./src/doesElementHaveValue');
 const getEndOfArray = require('./src/getEndOfArray');
 const isOperationToGetEnd = require('./src/isOperationToGetEnd');
+const SettingsLoader = require('../settingsLoader');
 
-class Querier {
+class Querier extends SettingsLoader {
   constructor({
     functions, settings,
   }) {
+    super({ settings });
     this.functions = functions;
-    this.settings = settings;
+    // this.settings = settings;
   }
 
   getPath(priorPath, element) {
@@ -68,7 +70,9 @@ class Querier {
   }
 
   isMaxResultsReached(intermediate) {
-    return !intermediate && this.resultCounter > this.settings.limit;
+    return !intermediate
+    && this.settings.limit
+    && this.resultCounter > this.settings.limit;
   }
 
   checkLogic({

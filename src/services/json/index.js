@@ -13,24 +13,26 @@ const setService = require('../set');
 const setAllService = require('../setAll');
 const chopService = require('../chop');
 
-const mergeFunctions = require('../../helpers/mergeFunctions');
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
-
 /**
  * Call set/setAll
  */
-const callSetService = (service, val, constructor, functions, path) => {
-  const mergedFunctions = mergeFunctions(functions, constructor.functions);
-  return service(constructor.object, path, val, mergedFunctions, constructor.settings);
-};
+const callSetService = (service, val, constructor, functions, path, settings) => service(
+  constructor.object,
+  path,
+  val,
+  { ...constructor.functions, ...functions },
+  { ...constructor.settings, ...settings },
+);
 
 /**
  * Call get/getAll/getPath/getPaths/find/findAll
  */
-const callResolveService = (service, constructor, functions, path) => {
-  const mergedFunctions = mergeFunctions(functions, constructor.functions);
-  return service(constructor.object, path, mergedFunctions, constructor.settings);
-};
+const callResolveService = (service, constructor, functions, path, settings) => service(
+  constructor.object,
+  path,
+  { ...constructor.functions, ...functions },
+  { ...constructor.settings, ...settings },
+);
 
 class Json {
   /**
@@ -40,7 +42,7 @@ class Json {
    * @param {Object} functions - object of functions that can be called within query.
    */
   constructor(object, settings, functions) {
-    this.settings = loadDefaultSettings(settings);
+    this.settings = makeObject(settings);
     if (this.settings.unlinkInputObject) {
       this.object = _.cloneDeep(makeJson(object, this.settings));
     } else {
@@ -56,8 +58,8 @@ class Json {
    * @returns {any} returns value found at specified path, in case that multiple logical checks
    * satisfy the first element will be returned
    */
-  get(path, functions) {
-    return callResolveService(getService, this, functions, path);
+  get(path, functions, settings) {
+    return callResolveService(getService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -67,8 +69,8 @@ class Json {
    * @returns {any} returns value and resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
-  find(path, functions) {
-    return callResolveService(findService, this, functions, path);
+  find(path, functions, settings) {
+    return callResolveService(findService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -78,8 +80,8 @@ class Json {
    * @returns {any} returns resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
-  getPath(path, functions) {
-    return callResolveService(getPathService, this, functions, path);
+  getPath(path, functions, settings) {
+    return callResolveService(getPathService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -88,8 +90,8 @@ class Json {
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
-  getAll(path, functions) {
-    return callResolveService(getAllService, this, functions, path);
+  getAll(path, functions, settings) {
+    return callResolveService(getAllService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -99,8 +101,8 @@ class Json {
    * @returns {Array} returns array of objects with value/path property
    * that match the specified path with logical checks
    */
-  findAll(path, functions) {
-    return callResolveService(findAllService, this, functions, path);
+  findAll(path, functions, settings) {
+    return callResolveService(findAllService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -109,8 +111,8 @@ class Json {
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of paths that match the specified path with logical checks
    */
-  getPaths(path, functions) {
-    return callResolveService(getPathsService, this, functions, path);
+  getPaths(path, functions, settings) {
+    return callResolveService(getPathsService, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -121,8 +123,8 @@ class Json {
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
-  set(path, val, functions) {
-    return callSetService(setService, val, this, functions, path);
+  set(path, val, functions, settings) {
+    return callSetService(setService, val, this, functions, path, makeObject(settings));
   }
 
   /**
@@ -133,8 +135,8 @@ class Json {
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
-  setAll(path, val, functions) {
-    return callSetService(setAllService, val, this, functions, path);
+  setAll(path, val, functions, settings) {
+    return callSetService(setAllService, val, this, functions, path, makeObject(settings));
   }
 
   /**

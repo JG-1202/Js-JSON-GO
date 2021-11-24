@@ -13,9 +13,8 @@ class Resolver extends Querier {
   constructor({
     functions, settings,
   }) {
-    const settingsObject = makeObject(settings);
     super({
-      functions, settings: settingsObject,
+      functions, settings,
     });
   }
 

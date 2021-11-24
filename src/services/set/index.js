@@ -1,5 +1,4 @@
 const Builder = require('../../handlers/builder');
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
  * Sets single value on specified path
@@ -12,8 +11,7 @@ const loadDefaultSettings = require('../../settings/loadDefaultSettings');
  * satisfy the first element will be set.
  */
 const set = (object, path, value, functions, settings) => {
-  const settingsToUse = loadDefaultSettings(settings);
-  const builder = new Builder({ functions, settings: { ...settingsToUse, limit: 1 } });
+  const builder = new Builder({ functions, settings: { ...settings, limit: 1 } });
   return builder.build(object, path, value);
 };
 

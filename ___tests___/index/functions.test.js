@@ -73,9 +73,8 @@ describe('Test getAll function with functions', () => {
     const result = JsonGo.getAll('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions);
     expect(result).toStrictEqual([6, 8, 10]);
   });
-  it('Testing with local function definition, same function name throws error', () => {
+  it('Testing with local function definition, function provided while calling function will overwrite default', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
-    let errorMessage = null;
     const functions = {
       storeNameNotBerlin: (element) => {
         if (element.storeName !== 'Berlin') {
@@ -90,14 +89,10 @@ describe('Test getAll function with functions', () => {
         return false;
       },
     };
-    try {
-      JsonGo.getAll('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions);
-    } catch (err) {
-      errorMessage = err.message;
-    }
-    expect(errorMessage).toStrictEqual('Conflicting function name priceCheck.');
+    const result = JsonGo.getAll('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions);
+    expect(result).toStrictEqual([10]);
   });
-  it('Testing function cache, local function does not exist in next query', () => {
+  it('Testing function cache, local function does not persist in next query', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
     const functions = {
       storeNameNotBerlin: (element) => {

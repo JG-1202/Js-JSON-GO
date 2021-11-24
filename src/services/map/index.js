@@ -2,10 +2,9 @@ const Json = require('../json');
 const makeObject = require('../../handlers/make/makeObject');
 
 const transformService = require('./transform');
+const SettingsLoader = require('../../handlers/settingsLoader');
 
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
-
-class Map {
+class Map extends SettingsLoader {
   /**
    * Construct a map containing origin object, destination object and settings
    * @param {Object} originObject - origin object, from where data should be obtained
@@ -15,7 +14,7 @@ class Map {
 
    */
   constructor(originObject, destinationObject, settings, functions) {
-    this.settings = loadDefaultSettings(settings);
+    super({ settings });
     this.originObject = new Json(originObject, settings, functions);
     this.destinationObject = new Json(destinationObject, settings, functions);
     this.functions = makeObject(functions);

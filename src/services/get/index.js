@@ -1,4 +1,3 @@
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 const Resolver = require('../../handlers/resolver');
 
 /**
@@ -11,11 +10,10 @@ const Resolver = require('../../handlers/resolver');
  * in case that multiple logical checks satisfy the first element will be returned
  */
 const get = (object, path, functions, settings) => {
-  const settingsToUse = loadDefaultSettings(settings);
-  const resolver = new Resolver({ functions, settings: { ...settingsToUse, limit: 1 } });
+  const resolver = new Resolver({ functions, settings: { ...settings, limit: 1 } });
   const resolved = resolver.resolve(object, path)[0];
   if (!resolved || resolved.value === undefined) {
-    return settingsToUse.defaultGetResponse;
+    return resolver.settings.defaultGetResponse;
   }
   return resolved.value;
 };

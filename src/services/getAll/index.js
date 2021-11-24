@@ -1,6 +1,5 @@
 const Resolver = require('../../handlers/resolver');
 const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
  * Retrieves all values from objects specified path
@@ -12,14 +11,13 @@ const loadDefaultSettings = require('../../settings/loadDefaultSettings');
  * that match the specified path with logical checks
  */
 const getAll = (object, path, functions, settings) => {
-  const settingsToUse = loadDefaultSettings(settings);
-  const resolver = new Resolver({ functions, settings: settingsToUse });
+  const resolver = new Resolver({ functions, settings });
   const resolved = resolver.resolve(object, path);
   return validateResponseAndPassDefault(
     resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
       .map((resolvedElement) => (resolvedElement.value)),
     [],
-    settingsToUse.defaultGetAllResponse,
+    resolver.settings.defaultGetAllResponse,
   );
 };
 

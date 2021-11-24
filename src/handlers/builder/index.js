@@ -1,5 +1,4 @@
 const Resolver = require('../resolver');
-const makeObject = require('../make/makeObject');
 const pathTransformer = require('../../helpers/pathTransformer');
 
 const isComplexPathToBuild = require('./src/isComplexPathToBuild');
@@ -9,9 +8,8 @@ class Builder extends Resolver {
   constructor({
     functions, settings,
   }) {
-    const settingsObject = makeObject(settings);
     super({
-      functions, settings: settingsObject,
+      functions, settings,
     });
   }
 

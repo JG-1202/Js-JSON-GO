@@ -1,5 +1,4 @@
 const Builder = require('../../handlers/builder');
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 
 /**
  * Sets all values on specified path
@@ -12,8 +11,7 @@ const loadDefaultSettings = require('../../settings/loadDefaultSettings');
  * satisfy the first element will be set.
  */
 const setAll = (object, path, value, functions, settings) => {
-  const settingsToUse = loadDefaultSettings(settings);
-  const builder = new Builder({ functions, settings: settingsToUse });
+  const builder = new Builder({ functions, settings });
   return builder.build(object, path, value);
 };
 

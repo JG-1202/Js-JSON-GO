@@ -1,5 +1,4 @@
 const makePathString = require('../../helpers/makePathString');
-const loadDefaultSettings = require('../../settings/loadDefaultSettings');
 const Resolver = require('../../handlers/resolver');
 
 /**
@@ -12,13 +11,12 @@ const Resolver = require('../../handlers/resolver');
  * in case that multiple logical checks satisfy the first element will be returned
  */
 const find = (obj, path, functions, settings) => {
-  const settingsToUse = loadDefaultSettings(settings);
-  const resolver = new Resolver({ functions, settings: { ...settingsToUse, limit: 1 } });
+  const resolver = new Resolver({ functions, settings: { ...settings, limit: 1 } });
   const resolved = resolver.resolve(obj, path)[0];
   if (!resolved || resolved.value === undefined) {
     return {
-      path: settingsToUse.defaultGetResponse,
-      value: settingsToUse.defaultGetResponse,
+      path: resolver.settings.defaultGetResponse,
+      value: resolver.settings.defaultGetResponse,
       references: {},
     };
   }
