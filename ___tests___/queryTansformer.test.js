@@ -1,7 +1,12 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const transform = require('../src/helpers/pathTransformer/src/queryTransformer');
+const QueryTransformer = require('../src/handlers/pathTransformer/src/queryTransformer');
+
+const transform = (queryString) => {
+  const queryTransformer = new QueryTransformer({ queryString });
+  return queryTransformer.transformQuery();
+};
 
 describe('Test different queries to transform from string to array', () => {
   it('1 = 1', () => {
@@ -40,3 +45,23 @@ describe('Test different queries to transform from string to array', () => {
     }
   });
 });
+describe('Testing with regular expressions', () => {
+  it('regex without flags', () => {
+    const result = transform('$.storeName ? $RegExp(/\\w+/)');
+    expect(result).toStrictEqual([{ relativeDepth: 0, relativePath: 'storeName' }, { value: '?' }, { value: { regex: /\w+/ } }]);
+  });
+  it('regex with flags', () => {
+    const result = transform('$.storeName ? $RegExp(/\\w+/gi)');
+    expect(result).toStrictEqual([{ relativeDepth: 0, relativePath: 'storeName' }, { value: '?' }, { value: { regex: /\w+/gi } }]);
+  });
+  it('invalid regex', () => {
+    let result = null;
+    try {
+      transform('$.storeName ? $RegExp(\\w+)');
+    } catch (err) {
+      result = err.message;
+    }
+    expect(result).toStrictEqual('Invalid regular expression, missing / at beginning and between pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
+  });
+});
+// $.storeName ? $RegExp(/.*AMS.*/)

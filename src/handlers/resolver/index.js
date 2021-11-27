@@ -1,6 +1,5 @@
 const Querier = require('../querier');
 const makeObject = require('../make/makeObject');
-const pathTransformer = require('../../helpers/pathTransformer');
 const isObject = require('./src/isObject');
 
 const validateOutput = require('./src/validateOutput');
@@ -117,7 +116,7 @@ class Resolver extends Querier {
     }
     return {
       refObject: makeObject(references),
-      arrayPath: pathTransformer(path, this.functions),
+      arrayPath: this.transformPath(path),
       priorPath: [],
       results: [],
     };

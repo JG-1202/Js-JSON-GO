@@ -1,31 +1,29 @@
-const pathTransformer = require('../../helpers/pathTransformer');
 const logicalValidator = require('./src/logicalValidator');
 const getRelativeIndex = require('./src/getRelativeIndex');
 const doesElementHaveAbsoluteOrRelativePath = require('./src/doesElementHaveAbsoluteOrRelativePath');
 const doesElementHaveValue = require('./src/doesElementHaveValue');
 const getEndOfArray = require('./src/getEndOfArray');
 const isOperationToGetEnd = require('./src/isOperationToGetEnd');
-const SettingsLoader = require('../settingsLoader');
+const PathTransformer = require('../pathTransformer');
 
-class Querier extends SettingsLoader {
+class Querier extends PathTransformer {
   constructor({
     functions, settings,
   }) {
     super({ settings });
     this.functions = functions;
-    // this.settings = settings;
   }
 
   getPath(priorPath, element) {
     let newElement = element;
     if (newElement.absolutePath) {
       newElement = {
-        path: pathTransformer(newElement.absolutePath, this.functions),
+        path: this.transformPath(newElement.absolutePath),
       };
     } else if (newElement.relativePath) {
       if (newElement.relativeDepth === 0) {
         newElement = {
-          relativePath: pathTransformer(newElement.relativePath, this.functions),
+          relativePath: this.transformPath(newElement.relativePath),
           relativeOrigin: priorPath,
         };
       } else {
@@ -34,7 +32,7 @@ class Querier extends SettingsLoader {
         );
         newElement = {
           path: [...priorPath.slice(0, relativeIndex),
-            ...pathTransformer(newElement.relativePath, this.functions)],
+            ...this.transformPath(newElement.relativePath, this.functions)],
         };
       }
     }

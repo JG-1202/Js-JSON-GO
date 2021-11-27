@@ -1,9 +1,18 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const transform = require('../src/helpers/pathTransformer');
+const PathTransformer = require('../src/handlers/pathTransformer');
+
+const transform = (path) => {
+  const pathTransformer = new PathTransformer({});
+  return pathTransformer.transformPath(path);
+};
 
 describe('Test getting a value', () => {
+  it('Single element', () => {
+    const result = transform('stores');
+    expect(result).toStrictEqual([{ string: 'stores' }]);
+  });
   it('Simple path with array', () => {
     const result = transform('stores[0].storeName');
     expect(result).toStrictEqual([{ string: 'stores' }, { number: 0 }, { string: 'storeName' }]);
@@ -52,6 +61,10 @@ describe('Test getting a value', () => {
     const result = transform('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].name');
     expect(result).toStrictEqual([{ string: 'stores' }, { query: [{ relativePath: 'storeName', relativeDepth: 0 }, { value: '=' }, { absolutePath: 'mainStore' }] }, { string: 'items' }, { query: [{ relativePath: 'price', relativeDepth: 0 }, { value: '>=' }, { absolutePath: 'stores[{$.storeName = $mainStore}].expensive' }] }, { string: 'name' }]);
   });
+  it('Testing whether numbers are transformed to numbers and relative depth is calculated correctly', () => {
+    const result = transform('[0][2]itemFamilies[{$.small.price <= 1}][{$...small.price <= "1"}]');
+    expect(result).toStrictEqual([{ number: 0 }, { number: 2 }, { string: 'itemFamilies' }, { query: [{ relativePath: 'small.price', relativeDepth: 0 }, { value: '<=' }, { value: 1 }] }, { query: [{ relativePath: 'small.price', relativeDepth: -2 }, { value: '<=' }, { value: '1' }] }]);
+  });
   it('Test invalid relative query', () => {
     let message = null;
     try {
@@ -77,10 +90,10 @@ describe('Test getting a value', () => {
   it('Test invalid element in path', () => {
     let message = null;
     try {
-      transform([{ somethingNonExistent: 'stores' }, { string: '0' }, { string: 'storeName' }]);
+      transform({});
     } catch (err) {
       message = err.message;
     }
-    expect(message).toStrictEqual('Path element {"somethingNonExistent":"stores"} is invalid.');
+    expect(message).toStrictEqual('Input path is invalid.');
   });
 });

@@ -1,5 +1,4 @@
 const Resolver = require('../resolver');
-const pathTransformer = require('../../helpers/pathTransformer');
 
 const isComplexPathToBuild = require('./src/isComplexPathToBuild');
 const setSimplePath = require('./src/setSimplePath');
@@ -26,7 +25,7 @@ class Builder extends Resolver {
   }
 
   build(obj, path, val) {
-    const arrayPath = pathTransformer(path, this.functions);
+    const arrayPath = this.transformPath(path);
     const { isComplex, complexIndex } = isComplexPathToBuild(arrayPath);
     if (!isComplex) {
       setSimplePath(obj, arrayPath, val);
