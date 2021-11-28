@@ -1,7 +1,7 @@
-const SettingsLoader = require('../settingsLoader');
+const BasicProcessor = require('../basicProcessor');
 const ElementTransformer = require('./src/elementTransformer');
 
-class PathTransformer extends SettingsLoader {
+class PathTransformer extends BasicProcessor {
   constructor({ functions, settings }) {
     super({ settings });
     this.functions = functions;
@@ -53,7 +53,7 @@ class PathTransformer extends SettingsLoader {
   }
 
   transformPath(path) {
-    if (Array.isArray(path)) {
+    if (this.isArray(path)) {
       return path;
     }
     if (typeof path === 'string') {

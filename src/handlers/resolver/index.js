@@ -1,10 +1,6 @@
 const Querier = require('../querier');
-const makeObject = require('../make/makeObject');
-const isObject = require('./src/isObject');
 
-const validateOutput = require('./src/validateOutput');
 const updateReferences = require('./src/updateReferences');
-const simpleResolve = require('./src/simpleResolve');
 const isComplexPathToResolve = require('./src/isComplexPathToResolve');
 const getNextIterationsTempObject = require('./src/getNextIterationsTempObject');
 
@@ -62,13 +58,13 @@ class Resolver extends Querier {
     if (element.wildcard) {
       const toReturn = [];
       if (type === 'number') {
-        if (Array.isArray(tempObject)) {
+        if (this.isArray(tempObject)) {
           tempObject.some((el, index) => {
             toReturn.push({ number: index });
             return this.isMaxResultsReached(intermediate);
           });
         }
-      } else if (isObject(tempObject)) {
+      } else if (this.isObject(tempObject)) {
         Object.keys(tempObject).some((el) => {
           toReturn.push({ string: el });
           return this.isMaxResultsReached(intermediate);
@@ -81,11 +77,46 @@ class Resolver extends Querier {
     });
   }
 
+  validateOutput(tempObject, isLastIteration) {
+    if (this.isJson(tempObject)) {
+      return { shouldItContinue: true, newTempObject: tempObject };
+    }
+    if (!isLastIteration) {
+      return { shouldItContinue: false, newTempObject: undefined };
+    }
+    return { shouldItContinue: false, newTempObject: tempObject };
+  }
+
+  simpleResolve({ arrayPath, obj, refObject }) {
+    let tempObject = obj;
+    arrayPath.every((element, index) => {
+      let elementValue = element.string;
+      if (this.isArray(tempObject)) {
+        elementValue = element.number;
+      }
+      tempObject = tempObject[elementValue];
+      const {
+        shouldItContinue, newTempObject,
+      } = this.validateOutput(tempObject, arrayPath.length - 1 === index);
+      tempObject = newTempObject;
+      updateReferences({
+        currentReference: element.reference,
+        resolvedElement: element,
+        refObject,
+      });
+      return shouldItContinue;
+    });
+    if (tempObject !== undefined) {
+      return this.makeArray([{ value: tempObject, path: arrayPath, references: { ...refObject } }]);
+    }
+    return this.makeArray();
+  }
+
   // eslint-disable-next-line max-lines-per-function
   resolveIteration({
     element, obj, tempObject, priorPath, results, index, arrayPath, refObject, intermediate,
   }) {
-    const type = Array.isArray(tempObject) ? 'number' : 'string';
+    const type = this.isArray(tempObject) ? 'number' : 'string';
     let tempObj = tempObject;
     const arrPath = arrayPath;
     const elementValues = this.getPathElements({
@@ -107,7 +138,7 @@ class Resolver extends Querier {
       });
     }
     priorPath.push(arrPath[index]);
-    return { ...validateOutput(tempObj, arrPath.length - 1 === index) };
+    return { ...this.validateOutput(tempObj, arrPath.length - 1 === index) };
   }
 
   initiateResolver({ references, path, intermediate }) {
@@ -115,7 +146,7 @@ class Resolver extends Querier {
       this.resultCounter = 0;
     }
     return {
-      refObject: makeObject(references),
+      refObject: this.makeObject(references),
       arrayPath: this.transformPath(path),
       priorPath: [],
       results: [],
@@ -140,7 +171,7 @@ class Resolver extends Querier {
       refObject, arrayPath, priorPath, results,
     } = this.initiateResolver({ references, path, intermediate });
     if (!isComplexPathToResolve(arrayPath)) {
-      return simpleResolve({
+      return this.simpleResolve({
         arrayPath, obj, refObject,
       });
     }

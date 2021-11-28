@@ -113,7 +113,7 @@ class Querier extends PathTransformer {
     query, object, tempObject, priorPath, refObject, intermediate,
   }) {
     let checkType = 'string';
-    if (Array.isArray(tempObject)) {
+    if (this.isArray(tempObject)) {
       if (isOperationToGetEnd(query)) {
         return getEndOfArray(tempObject);
       }
