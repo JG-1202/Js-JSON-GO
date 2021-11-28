@@ -109,7 +109,7 @@ class BasicProcessor extends SettingsLoader {
     }
     // eslint-disable-next-line guard-for-in, no-restricted-syntax
     for (const attribute in variable) {
-      newElement[attribute] = this.clone(attribute);
+      newElement[attribute] = this.clone(variable[attribute]);
     }
     return newElement;
   }
@@ -120,7 +120,7 @@ class BasicProcessor extends SettingsLoader {
       return variable;
     }
     if (this.isJson(variable)) {
-      return this.cloneJson();
+      return this.cloneJson(variable);
     }
     if (variable instanceof Date) {
       return new Date(variable);

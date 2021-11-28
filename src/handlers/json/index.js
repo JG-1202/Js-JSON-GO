@@ -1,22 +1,18 @@
-const _ = require('lodash');
-
-const makeJson = require('../../services/make/makeJson');
-const makeObject = require('../../services/make/makeObject');
-
-const getAllService = require('../getAll');
-const getService = require('../get');
-const getPathService = require('../getPath');
-const getPathsService = require('../getPaths');
-const findAllService = require('../findAll');
-const findService = require('../find');
-const setService = require('../set');
-const setAllService = require('../setAll');
-const chopService = require('../chop');
+const getAll = require('../getAll');
+const get = require('../get');
+const getPath = require('../getPath');
+const getPaths = require('../getPaths');
+const findAll = require('../findAll');
+const find = require('../find');
+const set = require('../set');
+const setAll = require('../setAll');
+const chop = require('../chop');
+const BasicProcessor = require('../../services/basicProcessor');
 
 /**
  * Call set/setAll
  */
-const callSetService = (service, val, constructor, functions, path, settings) => service(
+const callSetService = (handler, val, constructor, functions, path, settings) => handler(
   constructor.object,
   path,
   val,
@@ -27,14 +23,14 @@ const callSetService = (service, val, constructor, functions, path, settings) =>
 /**
  * Call get/getAll/getPath/getPaths/find/findAll
  */
-const callResolveService = (service, constructor, functions, path, settings) => service(
+const callResolveService = (handler, constructor, functions, path, settings) => handler(
   constructor.object,
   path,
   { ...constructor.functions, ...functions },
   { ...constructor.settings, ...settings },
 );
 
-class Json {
+class Json extends BasicProcessor {
   /**
    * Construct Json
    * @param {any} object - input object/array
@@ -42,13 +38,13 @@ class Json {
    * @param {Object} functions - object of functions that can be called within query.
    */
   constructor(object, settings, functions) {
-    this.settings = makeObject(settings);
+    super({ settings });
     if (this.settings.unlinkInputObject) {
-      this.object = _.cloneDeep(makeJson(object, this.settings));
+      this.object = this.clone(this.makeJson(object, this.settings));
     } else {
-      this.object = makeJson(object, this.settings);
+      this.object = this.makeJson(object, this.settings);
     }
-    this.functions = makeObject(functions);
+    this.functions = this.makeObject(functions);
   }
 
   /**
@@ -59,7 +55,7 @@ class Json {
    * satisfy the first element will be returned
    */
   get(path, functions, settings) {
-    return callResolveService(getService, this, functions, path, makeObject(settings));
+    return callResolveService(get, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -70,7 +66,7 @@ class Json {
    * in case that multiple logical checks satisfy the first element will be returned
    */
   find(path, functions, settings) {
-    return callResolveService(findService, this, functions, path, makeObject(settings));
+    return callResolveService(find, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -81,7 +77,7 @@ class Json {
    * in case that multiple logical checks satisfy the first element will be returned
    */
   getPath(path, functions, settings) {
-    return callResolveService(getPathService, this, functions, path, makeObject(settings));
+    return callResolveService(getPath, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -91,7 +87,7 @@ class Json {
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   getAll(path, functions, settings) {
-    return callResolveService(getAllService, this, functions, path, makeObject(settings));
+    return callResolveService(getAll, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -102,7 +98,7 @@ class Json {
    * that match the specified path with logical checks
    */
   findAll(path, functions, settings) {
-    return callResolveService(findAllService, this, functions, path, makeObject(settings));
+    return callResolveService(findAll, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -112,7 +108,7 @@ class Json {
    * @returns {Array} returns array of paths that match the specified path with logical checks
    */
   getPaths(path, functions, settings) {
-    return callResolveService(getPathsService, this, functions, path, makeObject(settings));
+    return callResolveService(getPaths, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -124,7 +120,7 @@ class Json {
    * satisfy the first element will be set.
    */
   set(path, val, functions, settings) {
-    return callSetService(setService, val, this, functions, path, makeObject(settings));
+    return callSetService(set, val, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -136,7 +132,7 @@ class Json {
    * satisfy the first element will be set.
    */
   setAll(path, val, functions, settings) {
-    return callSetService(setAllService, val, this, functions, path, makeObject(settings));
+    return callSetService(setAll, val, this, functions, path, this.makeObject(settings));
   }
 
   /**
@@ -146,7 +142,7 @@ class Json {
    * @returns {Array} array of chopped pieces.
    */
   chop(chopSize) {
-    return chopService(this.object, chopSize);
+    return chop(this.object, chopSize);
   }
 
   /**
