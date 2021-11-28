@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const SettingsLoader = require('../src/handlers/settingsLoader');
+const SettingsLoader = require('../src/services/settingsLoader');
 
 describe('Test SettingsLoader', () => {
   it('Test undefined settings', () => {

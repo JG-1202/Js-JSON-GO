@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const QueryTransformer = require('../src/handlers/pathTransformer/src/queryTransformer');
+const QueryTransformer = require('../src/services/pathTransformer/src/queryTransformer');
 
 const transform = (queryString) => {
   const queryTransformer = new QueryTransformer({ queryString });

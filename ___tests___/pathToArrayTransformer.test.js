@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const PathTransformer = require('../src/handlers/pathTransformer');
+const PathTransformer = require('../src/services/pathTransformer');
 
 const transform = (path) => {
   const pathTransformer = new PathTransformer({});
