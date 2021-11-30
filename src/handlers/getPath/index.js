@@ -1,5 +1,4 @@
 const Resolver = require('../../services/resolver');
-const makePathString = require('../../helpers/makePathString');
 
 /**
  * Retrieves resolved path from objects specified path
@@ -16,7 +15,7 @@ const getPath = (object, path, functions, settings) => {
   if (!resolved || resolved.value === undefined) {
     return resolver.settings.defaultGetResponse;
   }
-  return makePathString(resolved.path);
+  return resolver.makePathString(resolved.path);
 };
 
 module.exports = getPath;

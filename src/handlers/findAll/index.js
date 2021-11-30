@@ -1,4 +1,3 @@
-const makePathString = require('../../helpers/makePathString');
 const Resolver = require('../../services/resolver');
 
 /**
@@ -15,7 +14,7 @@ const findAll = (object, path, functions, settings) => {
   const resolved = resolver.resolve(object, path);
   const results = resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
     .map((resolvedElement) => ({
-      path: makePathString(resolvedElement.path),
+      path: resolver.makePathString(resolvedElement.path),
       value: resolvedElement.value,
       references: resolvedElement.references,
     }));

@@ -123,6 +123,26 @@ class BasicProcessor {
     }
     return variable;
   }
+
+  makePathString(inputPath) {
+    if (this.isArray(inputPath)) {
+      let toReturn = '';
+      inputPath.forEach((element) => {
+        if (element.number !== undefined) {
+          toReturn += `[${element.number}]`;
+        } else if (!Number.isNaN(Number(element.string))) {
+          toReturn += `["${element.string}"]`;
+        } else {
+          if (toReturn) {
+            toReturn += '.';
+          }
+          toReturn += element.string;
+        }
+      });
+      return toReturn;
+    }
+    return inputPath;
+  }
 }
 
 module.exports = BasicProcessor;

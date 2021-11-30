@@ -1,4 +1,3 @@
-const makePathString = require('../../helpers/makePathString');
 const Resolver = require('../../services/resolver');
 
 /**
@@ -21,7 +20,7 @@ const find = (obj, path, functions, settings) => {
     };
   }
   return {
-    path: makePathString(resolved.path),
+    path: resolver.makePathString(resolved.path),
     value: resolved.value,
     references: resolved.references,
   };
