@@ -1,7 +1,7 @@
-const BasicProcessor = require('../basicProcessor');
+const SettingsLoader = require('../settingsLoader');
 const ElementTransformer = require('./src/elementTransformer');
 
-class PathTransformer extends BasicProcessor {
+class PathTransformer extends SettingsLoader {
   constructor({ functions, settings }) {
     super({ settings });
     this.functions = functions;

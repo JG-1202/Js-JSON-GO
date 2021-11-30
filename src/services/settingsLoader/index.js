@@ -1,5 +1,8 @@
-class SettingsLoader {
+const BasicProcessor = require('../basicProcessor');
+
+class SettingsLoader extends BasicProcessor {
   constructor({ settings }) {
+    super();
     this.settings = {};
     this.loadSettings({ userSettings: settings });
   }

@@ -7,7 +7,7 @@ const find = require('../find');
 const set = require('../set');
 const setAll = require('../setAll');
 const chop = require('../chop');
-const BasicProcessor = require('../../services/basicProcessor');
+const SettingsLoader = require('../../services/settingsLoader');
 
 /**
  * Call set/setAll
@@ -30,7 +30,7 @@ const callResolveService = (handler, constructor, functions, path, settings) => 
   { ...constructor.settings, ...settings },
 );
 
-class Json extends BasicProcessor {
+class Json extends SettingsLoader {
   /**
    * Construct Json
    * @param {any} object - input object/array

@@ -1,21 +1,8 @@
-/* eslint-disable class-methods-use-this */
-const SettingsLoader = require('../settingsLoader');
-
-class BasicProcessor extends SettingsLoader {
-  constructor({ settings }) {
-    super({ settings });
-  }
-
-  isObjectLike(variable) {
-    return variable && typeof variable === 'object';
-  }
-
-  isObject(variable) {
-    return Object.prototype.toString.call(variable) === '[object Object]';
-  }
-
-  isArray(variable) {
-    return Array.isArray(variable);
+class BasicProcessor {
+  constructor() {
+    this.isObjectLike = (variable) => variable && typeof variable === 'object';
+    this.isObject = (variable) => Object.prototype.toString.call(variable) === '[object Object]';
+    this.isArray = (variable) => Array.isArray(variable);
   }
 
   isJson(variable) {
