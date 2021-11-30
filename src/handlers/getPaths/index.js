@@ -1,5 +1,4 @@
 const Resolver = require('../../services/resolver');
-const validateResponseAndPassDefault = require('../../helpers/validators/validateResponseAndPassDefault');
 const makePathString = require('../../helpers/makePathString');
 
 /**
@@ -14,12 +13,12 @@ const makePathString = require('../../helpers/makePathString');
 const getPaths = (object, path, functions, settings) => {
   const resolver = new Resolver({ functions, settings });
   const resolved = resolver.resolve(object, path);
-  return validateResponseAndPassDefault(
-    resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
-      .map((resolvedElement) => makePathString(resolvedElement.path)),
-    [],
-    resolver.settings.defaultGetAllResponse,
-  );
+  const results = resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
+    .map((resolvedElement) => makePathString(resolvedElement.path));
+  if (results.length > 0) {
+    return results;
+  }
+  return resolver.settings.defaultGetAllResponse;
 };
 
 module.exports = getPaths;
