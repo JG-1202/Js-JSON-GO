@@ -1,5 +1,4 @@
 const Json = require('../json');
-const makeObject = require('../../services/make/makeObject');
 
 const transformService = require('./transform');
 const SettingsLoader = require('../../services/settingsLoader');
@@ -17,7 +16,7 @@ class Map extends SettingsLoader {
     super({ settings });
     this.originObject = new Json(originObject, settings, functions);
     this.destinationObject = new Json(destinationObject, settings, functions);
-    this.functions = makeObject(functions);
+    this.functions = this.makeObject(functions);
   }
 
   /**

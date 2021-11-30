@@ -7,7 +7,7 @@ const BasicProcessor = require('../../services/basicProcessor');
  * @returns {Array} array of chopped pieces.
  */
 const chop = (object, chopSize) => {
-  const basicProcessor = new BasicProcessor({});
+  const basicProcessor = new BasicProcessor();
   return basicProcessor.chop(object, chopSize);
 };
 

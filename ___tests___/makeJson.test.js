@@ -8,10 +8,6 @@ describe('Make an array', () => {
     const result = makeJson({ test: true });
     expect(result).toStrictEqual({ test: true });
   });
-  it('Stringified object will also be an object', () => {
-    const result = makeJson(JSON.stringify({ test: true }));
-    expect(result).toStrictEqual({ test: true });
-  });
   it('Null will return an object', () => {
     const result = makeJson(null);
     expect(result).toStrictEqual({});
