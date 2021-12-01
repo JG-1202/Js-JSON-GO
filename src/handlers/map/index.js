@@ -1,4 +1,4 @@
-const Json = require('../json');
+const Json = require('../../clients/json');
 
 const transformService = require('./transform');
 const SettingsLoader = require('../../services/settingsLoader');

@@ -1,4 +1,4 @@
-const Json = require('./src/handlers/json');
+const Json = require('./src/clients/json');
 const Map = require('./src/handlers/map');
 
 const set = require('./src/handlers/set');
@@ -15,7 +15,9 @@ const makeObject = require('./src/handlers/makeObject');
 const makeArray = require('./src/handlers/makeArray');
 const makeJson = require('./src/handlers/makeJson');
 const parse = require('./src/handlers/parse');
+const safeParse = require('./src/handlers/safeParse');
 const stringify = require('./src/handlers/stringify');
+const safeStringify = require('./src/handlers/safeStringify');
 
 module.exports.Map = Map;
 module.exports.Json = Json;
@@ -32,6 +34,8 @@ module.exports.makeObject = makeObject;
 module.exports.makeArray = makeArray;
 module.exports.makeJson = makeJson;
 module.exports.parse = parse;
+module.exports.safeParse = safeParse;
 module.exports.stringify = stringify;
+module.exports.safeStringify = safeStringify;
 module.exports.chop = chop;
 module.exports.unlink = unlink;

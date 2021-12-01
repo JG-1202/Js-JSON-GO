@@ -1,36 +1,17 @@
-const getAll = require('../getAll');
-const get = require('../get');
-const getPath = require('../getPath');
-const getPaths = require('../getPaths');
-const findAll = require('../findAll');
-const find = require('../find');
-const set = require('../set');
-const setAll = require('../setAll');
-const chop = require('../chop');
+const set = require('../../handlers/set');
+const setAll = require('../../handlers/setAll');
+const find = require('../../handlers/find');
+const findAll = require('../../handlers/findAll');
+const get = require('../../handlers/get');
+const getAll = require('../../handlers/getAll');
+const getPath = require('../../handlers/getPath');
+const getPaths = require('../../handlers/getPaths');
+const chop = require('../../handlers/chop');
+const mergeObjects = require('../../handlers/mergeObjects');
+
 const SettingsLoader = require('../../services/settingsLoader');
 
-/**
- * Call set/setAll
- */
-const callSetService = (handler, val, constructor, functions, path, settings) => handler(
-  constructor.object,
-  path,
-  val,
-  { ...constructor.functions, ...functions },
-  { ...constructor.settings, ...settings },
-);
-
-/**
- * Call get/getAll/getPath/getPaths/find/findAll
- */
-const callResolveService = (handler, constructor, functions, path, settings) => handler(
-  constructor.object,
-  path,
-  { ...constructor.functions, ...functions },
-  { ...constructor.settings, ...settings },
-);
-
-class Json extends SettingsLoader {
+class Json {
   /**
    * Construct Json
    * @param {any} object - input object/array
@@ -38,13 +19,14 @@ class Json extends SettingsLoader {
    * @param {Object} functions - object of functions that can be called within query.
    */
   constructor(object, settings, functions) {
-    super({ settings });
+    const settingsLoader = new SettingsLoader({ settings });
+    this.settings = settingsLoader.settings;
     if (this.settings.unlinkInputObject) {
-      this.object = this.clone(this.makeJson(object, this.settings));
+      this.object = settingsLoader.clone(settingsLoader.makeJson(object));
     } else {
-      this.object = this.makeJson(object, this.settings);
+      this.object = settingsLoader.makeJson(object);
     }
-    this.functions = this.makeObject(functions);
+    this.functions = settingsLoader.makeObject(functions);
   }
 
   /**
@@ -55,7 +37,10 @@ class Json extends SettingsLoader {
    * satisfy the first element will be returned
    */
   get(path, functions, settings) {
-    return callResolveService(get, this, functions, path, this.makeObject(settings));
+    return get(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -66,7 +51,10 @@ class Json extends SettingsLoader {
    * in case that multiple logical checks satisfy the first element will be returned
    */
   find(path, functions, settings) {
-    return callResolveService(find, this, functions, path, this.makeObject(settings));
+    return find(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -77,7 +65,10 @@ class Json extends SettingsLoader {
    * in case that multiple logical checks satisfy the first element will be returned
    */
   getPath(path, functions, settings) {
-    return callResolveService(getPath, this, functions, path, this.makeObject(settings));
+    return getPath(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -87,7 +78,10 @@ class Json extends SettingsLoader {
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   getAll(path, functions, settings) {
-    return callResolveService(getAll, this, functions, path, this.makeObject(settings));
+    return getAll(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -98,7 +92,10 @@ class Json extends SettingsLoader {
    * that match the specified path with logical checks
    */
   findAll(path, functions, settings) {
-    return callResolveService(findAll, this, functions, path, this.makeObject(settings));
+    return findAll(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -108,7 +105,10 @@ class Json extends SettingsLoader {
    * @returns {Array} returns array of paths that match the specified path with logical checks
    */
   getPaths(path, functions, settings) {
-    return callResolveService(getPaths, this, functions, path, this.makeObject(settings));
+    return getPaths(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -120,7 +120,10 @@ class Json extends SettingsLoader {
    * satisfy the first element will be set.
    */
   set(path, val, functions, settings) {
-    return callSetService(set, val, this, functions, path, this.makeObject(settings));
+    return set(
+      this.object, path, val, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
@@ -132,7 +135,10 @@ class Json extends SettingsLoader {
    * satisfy the first element will be set.
    */
   setAll(path, val, functions, settings) {
-    return callSetService(setAll, val, this, functions, path, this.makeObject(settings));
+    return setAll(
+      this.object, path, val, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
   }
 
   /**
