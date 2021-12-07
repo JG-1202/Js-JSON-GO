@@ -54,8 +54,8 @@ describe('Testing with multiple JG instances', () => {
     };
     const JG_A = new JG.Map(inputFixture, {}, settingsObjA, functionsObjA);
     const JG_B = new JG.Map(inputFixture, {}, settingsObjB, functionsObjB);
-    const testA = [JG_A, JG_A.originObject, JG_A.destinationObject];
-    const testB = [JG_B, JG_B.originObject, JG_B.destinationObject];
+    const testA = [JG_A.originObject, JG_A.destinationObject];
+    const testB = [JG_B.originObject, JG_B.destinationObject];
     testA.forEach((test) => {
       expect(test.settings.defaultGetOneResponse).toStrictEqual(null);
       expect(test.settings.unlinkInputObject).toStrictEqual(true);

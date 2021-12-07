@@ -10,20 +10,19 @@ class JsonTransformer extends Builder {
     });
   }
 
-  determineWhatToMap(resolved, validResults, destinationPath) {
+  determineWhatToMap(validResults, destinationPath) {
     const toMap = {};
-    validResults.every((result) => {
+    validResults.forEach((result) => {
       let resolvedDestinationPath = destinationPath;
-      if (this.isObject(resolved.references)) {
-        Object.keys(resolved.references).forEach((reference) => {
-          resolvedDestinationPath = resolvedDestinationPath.replace(new RegExp(`\\:\\(${reference}\\)`, 'g'), resolved.references[reference]);
+      if (this.isObject(result.references)) {
+        Object.keys(result.references).forEach((reference) => {
+          resolvedDestinationPath = resolvedDestinationPath.replace(new RegExp(`\\:\\(${reference}\\)`, 'g'), result.references[reference]);
         });
       }
-      if (result.path || this.settings.mapIfNotFound) {
+      if (result.path) {
         toMap[resolvedDestinationPath] = this.makeArray(toMap[resolvedDestinationPath]);
         toMap[resolvedDestinationPath].push(result.value);
       }
-      return this.settings.resolveOne === true && Object.keys(toMap).length === 1;
     });
     return toMap;
   }
@@ -32,13 +31,15 @@ class JsonTransformer extends Builder {
     const resolved = this.resolve(originObject, originPath);
     const validResults = resolved.filter((el) => (
       this.settings.ignoreOnTransform.every((toIgnore) => checkEquality(el.value, toIgnore, '!='))));
-    const toMap = this.determineWhatToMap(resolved, validResults, destinationPath);
-    Object.keys(toMap).every((path) => {
-      const valueArray = this.settings.buildOne === true ? [toMap[path][0]] : toMap[path];
-      const valueToBuild = valueArray.length === 1 ? valueArray[0] : valueArray;
+    const toMap = this.determineWhatToMap(validResults, destinationPath);
+    const toMapKeys = Object.keys(toMap);
+    toMapKeys.forEach((path) => {
+      const valueToBuild = toMap[path].length === 1 ? toMap[path][0] : toMap[path];
       this.build(destinationObject, path, valueToBuild);
-      return this.settings.buildOne !== true;
     });
+    if (this.settings.mapIfNotFound && toMapKeys.length === 0) {
+      this.build(destinationObject, destinationPath, undefined);
+    }
   }
 }
 

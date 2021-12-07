@@ -1,5 +1,5 @@
 const Json = require('./src/clients/json');
-const Map = require('./src/handlers/map');
+const Map = require('./src/clients/map');
 
 const setOne = require('./src/handlers/setOne');
 const set = require('./src/handlers/set');
