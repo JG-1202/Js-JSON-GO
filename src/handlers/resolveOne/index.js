@@ -1,7 +1,7 @@
 const Resolver = require('../../services/resolver');
 
 /**
- * Finds single value and resolved path from objects specified path
+ * Resolves single value and path from objects specified query path
  * @param {Object} obj - object/array from which value should be retrieved.
  * @param {any} path - string or array representation of path to set.
  * @param {Object} functions - object of functions that can be called within query.
@@ -9,13 +9,13 @@ const Resolver = require('../../services/resolver');
  * @returns {any} returns value and resolved path found at specified path,
  * in case that multiple logical checks satisfy the first element will be returned
  */
-const find = (obj, path, functions, settings) => {
+const resolveOne = (obj, path, functions, settings) => {
   const resolver = new Resolver({ functions, settings: { ...settings, limit: 1 } });
   const resolved = resolver.resolve(obj, path)[0];
   if (!resolved || resolved.value === undefined) {
     return {
-      path: resolver.settings.defaultGetResponse,
-      value: resolver.settings.defaultGetResponse,
+      path: resolver.settings.defaultGetOneResponse,
+      value: resolver.settings.defaultGetOneResponse,
       references: {},
     };
   }
@@ -26,4 +26,4 @@ const find = (obj, path, functions, settings) => {
   };
 };
 
-module.exports = find;
+module.exports = resolveOne;

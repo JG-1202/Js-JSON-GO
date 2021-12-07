@@ -13,8 +13,8 @@ describe('Test SettingsLoader', () => {
       unlinkInputObject: false,
       resolveOne: false,
       buildOne: false,
-      defaultGetResponse: undefined,
-      defaultGetAllResponse: [],
+      defaultGetOneResponse: undefined,
+      defaultGetResponse: [],
       limit: 0,
     });
   });
@@ -29,8 +29,8 @@ describe('Test SettingsLoader', () => {
       unlinkInputObject: false,
       resolveOne: false,
       buildOne: false,
-      defaultGetResponse: undefined,
-      defaultGetAllResponse: [],
+      defaultGetOneResponse: undefined,
+      defaultGetResponse: [],
       limit: 3,
     });
   });
@@ -43,8 +43,8 @@ describe('Test SettingsLoader', () => {
         unlinkInputObject: true,
         resolveOne: true,
         buildOne: true,
-        defaultGetResponse: '',
-        defaultGetAllResponse: null,
+        defaultGetOneResponse: '',
+        defaultGetResponse: null,
         limit: 10,
       },
     });
@@ -55,8 +55,8 @@ describe('Test SettingsLoader', () => {
       unlinkInputObject: true,
       resolveOne: true,
       buildOne: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
+      defaultGetOneResponse: '',
+      defaultGetResponse: null,
       limit: 10,
     });
   });
@@ -69,8 +69,8 @@ describe('Test SettingsLoader', () => {
         unlinkInputObject: 'true',
         resolveOne: 'true',
         buildOne: 'true',
-        defaultGetResponse: '',
-        defaultGetAllResponse: null,
+        defaultGetOneResponse: '',
+        defaultGetResponse: null,
         limit: 'abc',
       },
     });
@@ -81,8 +81,8 @@ describe('Test SettingsLoader', () => {
       unlinkInputObject: false,
       resolveOne: false,
       buildOne: false,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
+      defaultGetOneResponse: '',
+      defaultGetResponse: null,
       limit: 0,
     });
   });

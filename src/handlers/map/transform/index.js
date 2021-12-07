@@ -35,9 +35,9 @@ const mapResponses = (findResult, destinationObject, destinationPath, functions,
   Object.keys(toMap).every((path) => {
     const result = toMap[path].length === 1 ? toMap[path][0] : toMap[path];
     if (buildOne === true) {
-      destinationObject.set(path, result, functions, settings);
+      destinationObject.setOne(path, result, functions, settings);
     } else {
-      destinationObject.setAll(path, result, functions, settings);
+      destinationObject.set(path, result, functions, settings);
     }
     return buildOne !== true;
   });
@@ -56,19 +56,19 @@ const transformService = (
   originPath, destinationPath, functions, constructorsObject,
 ) => {
   const { settings, originObject, destinationObject } = constructorsObject;
-  const { resolveOne, defaultGetAllResponse } = settings;
+  const { resolveOne, defaultGetResponse } = settings;
   if (resolveOne === true) {
     return mapResponses(
-      [originObject.find(originPath, functions, settings)],
+      [originObject.resolveOne(originPath, functions, settings)],
       destinationObject,
       destinationPath,
       functions,
       settings,
     );
   }
-  const findAllResult = originObject.findAll(originPath, functions, settings);
+  const resolveResult = originObject.resolve(originPath, functions, settings);
   return mapResponses(
-    findAllResult.length > 0 ? findAllResult : [{ value: defaultGetAllResponse }],
+    resolveResult.length > 0 ? resolveResult : [{ value: defaultGetResponse }],
     destinationObject,
     destinationPath,
     functions,

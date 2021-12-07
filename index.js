@@ -1,12 +1,12 @@
 const Json = require('./src/clients/json');
 const Map = require('./src/handlers/map');
 
+const setOne = require('./src/handlers/setOne');
 const set = require('./src/handlers/set');
-const setAll = require('./src/handlers/setAll');
-const find = require('./src/handlers/find');
-const findAll = require('./src/handlers/findAll');
+const resolveOne = require('./src/handlers/resolveOne');
+const resolve = require('./src/handlers/resolve');
+const getOne = require('./src/handlers/getOne');
 const get = require('./src/handlers/get');
-const getAll = require('./src/handlers/getAll');
 const getPath = require('./src/handlers/getPath');
 const getPaths = require('./src/handlers/getPaths');
 const chop = require('./src/handlers/chop');
@@ -23,11 +23,11 @@ module.exports.Map = Map;
 module.exports.Json = Json;
 
 module.exports.set = set;
-module.exports.setAll = setAll;
+module.exports.setOne = setOne;
 module.exports.get = get;
-module.exports.getAll = getAll;
-module.exports.find = find;
-module.exports.findAll = findAll;
+module.exports.getOne = getOne;
+module.exports.resolve = resolve;
+module.exports.resolveOne = resolveOne;
 module.exports.getPath = getPath;
 module.exports.getPaths = getPaths;
 module.exports.makeObject = makeObject;

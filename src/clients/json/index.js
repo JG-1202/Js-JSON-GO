@@ -1,9 +1,9 @@
+const setOne = require('../../handlers/setOne');
 const set = require('../../handlers/set');
-const setAll = require('../../handlers/setAll');
-const find = require('../../handlers/find');
-const findAll = require('../../handlers/findAll');
+const resolveOne = require('../../handlers/resolveOne');
+const resolve = require('../../handlers/resolve');
+const getOne = require('../../handlers/getOne');
 const get = require('../../handlers/get');
-const getAll = require('../../handlers/getAll');
 const getPath = require('../../handlers/getPath');
 const getPaths = require('../../handlers/getPaths');
 const chop = require('../../handlers/chop');
@@ -30,28 +30,28 @@ class Json {
   }
 
   /**
-   * Retrieves single value from objects specified path
+   * Retrieves single value from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {any} returns value found at specified path, in case that multiple logical checks
    * satisfy the first element will be returned
    */
-  get(path, functions, settings) {
-    return get(
+  getOne(path, functions, settings) {
+    return getOne(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
   }
 
   /**
-   * Finds single value and resolved path from objects specified path
+   * Resolves single value and path from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {any} returns value and resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
-  find(path, functions, settings) {
-    return find(
+  resolveOne(path, functions, settings) {
+    return resolveOne(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
@@ -72,27 +72,27 @@ class Json {
   }
 
   /**
-   * Retrieves all values from objects specified path
+   * Retrieves values from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
-  getAll(path, functions, settings) {
-    return getAll(
+  get(path, functions, settings) {
+    return get(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
   }
 
   /**
-   * Finds all values and resolved paths from objects specified path
+   * Resolves values and paths from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of objects with value/path property
    * that match the specified path with logical checks
    */
-  findAll(path, functions, settings) {
-    return findAll(
+  resolve(path, functions, settings) {
+    return resolve(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
@@ -119,8 +119,8 @@ class Json {
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
-  set(path, val, functions, settings) {
-    return set(
+  setOne(path, val, functions, settings) {
+    return setOne(
       this.object, path, val, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
@@ -134,8 +134,8 @@ class Json {
    * @returns {object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
-  setAll(path, val, functions, settings) {
-    return setAll(
+  set(path, val, functions, settings) {
+    return set(
       this.object, path, val, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );

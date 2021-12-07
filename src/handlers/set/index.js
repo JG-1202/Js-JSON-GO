@@ -1,7 +1,7 @@
 const Builder = require('../../services/builder');
 
 /**
- * Sets single value on specified path
+ * Sets values on specified path
  * @param {object} obj - object
  * @param {any} path - string or array representation of path to set.
  * @param {any} val - value to be set at specified path.
@@ -11,7 +11,7 @@ const Builder = require('../../services/builder');
  * satisfy the first element will be set.
  */
 const set = (object, path, value, functions, settings) => {
-  const builder = new Builder({ functions, settings: { ...settings, limit: 1 } });
+  const builder = new Builder({ functions, settings });
   return builder.build(object, path, value);
 };
 

@@ -42,12 +42,12 @@ describe('Test fatalError option on set', () => {
   it('Test wildcard for object', () => {
     const testObject = { wrapper: { key1: {}, key2: {} } };
     const result = set(testObject, 'wrapper[*].test', true, {}, { fatalErrorOnCreate: false });
-    expect(result).toStrictEqual({ wrapper: { key1: { test: true }, key2: {} } });
+    expect(result).toStrictEqual({ wrapper: { key1: { test: true }, key2: { test: true } } });
   });
   it('Test wildcard for array', () => {
-    const testObject = { wrapper: [{}, {}] };
+    const testObject = { wrapper: [{ }, { }] };
     const result = set(testObject, 'wrapper[*].test', true, {}, { fatalErrorOnCreate: false });
-    expect(result).toStrictEqual({ wrapper: [{ test: true }, {}] });
+    expect(result).toStrictEqual({ wrapper: [{ test: true }, { test: true }] });
   });
   it('Use of wildcard for non-existing element', () => {
     const testObject = { wrapper: [{}, {}] };
@@ -64,7 +64,7 @@ describe('Test fatalError option on set', () => {
     }
     expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
   });
-  it('Use of wildcard for non-existing element within array returns error', () => {
+  it('Use of wildcard for non-existing element returns error 2', () => {
     const testObject = { wrapper: [] };
     let errorMessage = null;
     try {
@@ -73,5 +73,13 @@ describe('Test fatalError option on set', () => {
       errorMessage = e.message;
     }
     expect(errorMessage).toStrictEqual('Path invalid. No results found for query.');
+  });
+  it('Use of custom function', () => {
+    const testObject = [[], [{ test: true }, { test: true }, { test: false }]];
+    const customFunction = (element) => element.test === true;
+    const result = set(testObject, '[*][{$Function(customFunction)}].test2', true, { customFunction }, { fatalErrorOnCreate: false });
+    expect(result).toStrictEqual(
+      [[], [{ test: true, test2: true }, { test: true, test2: true }, { test: false }]],
+    );
   });
 });

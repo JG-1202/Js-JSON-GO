@@ -5,14 +5,14 @@ const JG = require('../../index');
 const inputFixture = require('../fixtures/inputFixture.json');
 
 describe('Testing different settings', () => {
-  it('defaultGetResponse', () => {
-    const JsonGo = new JG.Json(inputFixture, { defaultGetResponse: 'default' });
-    const result = JsonGo.get('nonExisting');
+  it('defaultGetOneResponse', () => {
+    const JsonGo = new JG.Json(inputFixture, { defaultGetOneResponse: 'default' });
+    const result = JsonGo.getOne('nonExisting');
     expect(result).toStrictEqual('default');
   });
-  it('defaultGetAllResponse', () => {
-    const JsonGo = new JG.Json(inputFixture, { defaultGetAllResponse: '' });
-    const result = JsonGo.getAll('nonExisting');
+  it('defaultGetResponse', () => {
+    const JsonGo = new JG.Json(inputFixture, { defaultGetResponse: '' });
+    const result = JsonGo.get('nonExisting');
     expect(result).toStrictEqual('');
   });
   it('unlinkInputObject default', () => {

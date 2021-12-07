@@ -35,28 +35,28 @@ const map = JG.Map(origin, destination, settings, functions);
 ### new JG.Json(object, settings, functions) 
 Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` and custom `functions` that are made available for all actions on that JSON `object`.
 
-#### json.get(path, functions)
+#### json.getOne(path, functions)
 Retrieves single value from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the `path`.
 
-#### json.getAll(path, functions)
-Retrieves all values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the `path`.
+#### json.get(path, functions)
+Retrieves values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the `path`.
 
 #### json.getPath(path, functions)
 Similar to `json.get`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`.
 
 #### json.getPaths(path, functions)
-Similar to `json.getAll`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`.
+Similar to `json.get`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`.
 
-#### json.find(path, functions)
-Combining `json.get` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+#### json.resolveOne(path, functions)
+Combining `json.getOne` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
 
-#### json.findAll(path, functions)
-Combining `json.getAll` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
+#### json.resolve(path, functions)
+Combining `json.get` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
 
-#### json.set(path, value, functions)
+#### json.setOne(path, value, functions)
 Sets single `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets the first element that matches the `path`.
 
-#### json.setAll(path, value, functions)
+#### json.set(path, value, functions)
 Sets `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets all elements that matches the `path`.
 
 #### json.chop(chopSize)
@@ -86,9 +86,9 @@ Returns the (modified) JSON `destination` object.
 ### settings for Json and Map constructor
 The following `settings` can be passed into the `settings` object:
 * `unlinkInputObject`: if set to `true`, the origin `object` will not be altered by any of the operations, default value is `false`.
-* `defaultGetResponse`: default response in case query did not return any matches, by default get returns `undefined` 
-* `defaultGetAllResponse`: default response in case query did not return any matches, by default getAll returns `[]`.
-* `fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setAll in case query did not return any matches, default value is `false`.
+* `defaultGetOneResponse`: default response in case query did not return any matches, by default getOne returns `undefined` 
+* `defaultGetResponse`: default response in case query did not return any matches, by default get returns `[]`.
+* `fatalErrorOnCreate`: if set to `true` and error will be thrown on set and setOne in case query did not return any matches, default value is `false`.
 * `mapIfNotFound`: if set to `true` the query result will always be mapped, even if the query did not return any matches, default value is `false`.
 * `ignoreOnTranslate`: array of responses from originObject that should not be translated within Map constructors translate functions into destinationObject. Default is `[]`.
 
@@ -218,27 +218,27 @@ const inputFixture = require('./fixtures/inputFixture.json');
 -- use of get will return a single output (first result that complies with input query)
 */
 const JsonGo = new JG.Json(inputFixture);
-const result1 = JsonGo.get('stores[0].storeName'); //'Berlin' -> get storeName from stores with element 0 
-const result2 = JsonGo.get('stores["0"].storeName'); //undefined -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
-const result3 = JsonGo.get('stores[{$end}].storeName'); //'Rome' -> get storeName of last store from stores
-const result4 = JsonGo.get('stores[{$.storeName = $mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from origin of object)
-const result5 = JsonGo.get('stores[{$.storeName = $..mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from relative location)
-const result6 = JsonGo.get('stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName'); //'Amsterdam' -> get storeName of store that has an item with name Pink Lady large bag
-const result7 = JsonGo.get('stores[{$.items[{$.expensive = true}]}].storeName'); //'Amsterdam' -> get storeName of store that has items where expensive = true (boolean)
-const result8 = JsonGo.get('stores[{$.items[{$.expensive = "true"}]}].storeName'); //undefined -> get storeName of store that has items where expensive = 'true' (string)
+const result1 = JsonGo.getOne('stores[0].storeName'); //'Berlin' -> get storeName from stores with element 0 
+const result2 = JsonGo.getOne('stores["0"].storeName'); //undefined -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
+const result3 = JsonGo.getOne('stores[{$end}].storeName'); //'Rome' -> get storeName of last store from stores
+const result4 = JsonGo.getOne('stores[{$.storeName = $mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from origin of object)
+const result5 = JsonGo.getOne('stores[{$.storeName = $..mainStore}].expensive'); //6 -> get expensive field of store where storeName equals mainStore (derived from relative location)
+const result6 = JsonGo.getOne('stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName'); //'Amsterdam' -> get storeName of store that has an item with name Pink Lady large bag
+const result7 = JsonGo.getOne('stores[{$.items[{$.expensive = true}]}].storeName'); //'Amsterdam' -> get storeName of store that has items where expensive = true (boolean)
+const result8 = JsonGo.getOne('stores[{$.items[{$.expensive = "true"}]}].storeName'); //undefined -> get storeName of store that has items where expensive = 'true' (string)
 
 
 /*
--- use of getAll will return all things that comply to the query
+-- use of get will return all things that comply to the query
 */
 const JsonGo = new JG.Json(inputFixture);
-const result1 = JsonGo.getAll('stores[0].storeName'); //['Berlin'] -> get storeName from stores with element 0 
-const result2 = JsonGo.getAll('stores["0"].storeName'); //[] -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
-const result3 = JsonGo.getAll('stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName'); //['Amsterdam'] -> get storeName of store that has an item with name Pink Lady large bag
-const result4 = JsonGo.getAll('stores[{$.items[{Pink ∈ $.name}]}].storeName'); //['Berlin', 'Amsterdam'] -> get storeName of store that has an item with Pink in its name
-const result5 = JsonGo.getAll('stores[{$.items[{Fuji ∈ $.name}]}].items[{medium ∉ $.name}].name'); //["Granny Smith small bag", "Granny Smith large bag", "Fuji small bag", "Pink Lady small bag"] -> get al item names that do not have 'medium' in its name from stores that have items with 'Fuji' in its name.
-const result6 = JsonGo.getAll(`stores[{$.storeName ∈ $JSON(${JSON.stringify(['Berlin', 'Barcelona'])})}].storeName`); //['Berlin'] -> get storeNames of store that has storename in ['Berlin', 'Barcelona']
-const result7 = JsonGo.getAll('stores[{$.storeName ? $RegExp(/.*AMS.*/i)}].storeName'); //['Amsterdam'] -> get storeNames containing case insensitive AMS in its storeName using a regular expression
+const result1 = JsonGo.get('stores[0].storeName'); //['Berlin'] -> get storeName from stores with element 0 
+const result2 = JsonGo.get('stores["0"].storeName'); //[] -> get storeName from stores with element '0', undefined because stores is not an object wity key '0'
+const result3 = JsonGo.get('stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName'); //['Amsterdam'] -> get storeName of store that has an item with name Pink Lady large bag
+const result4 = JsonGo.get('stores[{$.items[{Pink ∈ $.name}]}].storeName'); //['Berlin', 'Amsterdam'] -> get storeName of store that has an item with Pink in its name
+const result5 = JsonGo.get('stores[{$.items[{Fuji ∈ $.name}]}].items[{medium ∉ $.name}].name'); //["Granny Smith small bag", "Granny Smith large bag", "Fuji small bag", "Pink Lady small bag"] -> get al item names that do not have 'medium' in its name from stores that have items with 'Fuji' in its name.
+const result6 = JsonGo.get(`stores[{$.storeName ∈ $JSON(${JSON.stringify(['Berlin', 'Barcelona'])})}].storeName`); //['Berlin'] -> get storeNames of store that has storename in ['Berlin', 'Barcelona']
+const result7 = JsonGo.get('stores[{$.storeName ? $RegExp(/.*AMS.*/i)}].storeName'); //['Amsterdam'] -> get storeNames containing case insensitive AMS in its storeName using a regular expression
 const functions = {
     customFunction: (element) => {
         if(['Amsterdam', 'Rome'].indexOf(element.storeName) > -1){
@@ -247,37 +247,37 @@ const functions = {
         return false;
     }
 };
-const result8 = JsonGo.getAll('stores[{$Function(customFunction)}].storeName', functions); //['Amsterdam', 'Rome'] -> get storeNames for all elements where customFunction(element) returns true
+const result8 = JsonGo.get('stores[{$Function(customFunction)}].storeName', functions); //['Amsterdam', 'Rome'] -> get storeNames for all elements where customFunction(element) returns true
 
 
 /*
 -- set and setAll will set values on the specified path, using these functions the inputFixture can be generated with the code below
 */
 const JsonGo = new JG.Json({});
-JsonGo.set('holding', 'appleCompany');
-JsonGo.set('mainStore', 'Amsterdam');
-JsonGo.set('stores[{$append}].storeName', 'Berlin');
-JsonGo.set('stores[{$end}].expensive', 5);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Granny Smith small bag');
-JsonGo.set('stores[{$end}].items[{$end}].price', 3);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Granny Smith medium bag');
-JsonGo.set('stores[{$end}].items[{$end}].price', 5);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Granny Smith large bag');
-JsonGo.set('stores[{$end}].items[{$end}].price', 6);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Fuji small bag');
-JsonGo.set('stores[{$end}].items[{$end}].price', 3.50);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Pink Lady small bag');
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Pink Lady medium bag');
-JsonGo.set('stores[{$append}].storeName', 'Amsterdam');
-JsonGo.set('stores[{$end}].expensive', 6);
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Pink Lady medium bag');
-JsonGo.set('stores[{$end}].items[{$append}].name', 'Pink Lady large bag');
-JsonGo.set('stores[{$end}].items[{$end}].price', 10);
-JsonGo.set('stores[{$append}].storeName', 'Rome');
-JsonGo.set('stores[{$end}].expensive', null);
-JsonGo.set('stores[{$end}].items', []);
-JsonGo.setAll(`stores[{1 = 1}].items[{$.name ∈ $JSON(${JSON.stringify(['Pink Lady medium bag', 'Pink Lady small bag'])})}].price`, 8); //sets price = 8 for all items in all stores where items name is in ['Pink Lady medium bag', 'Pink Lady small bag']
-JsonGo.setAll('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].expensive', true); // sets expensive key/value where price >= expensive field of mainStore
+JsonGo.setOne('holding', 'appleCompany');
+JsonGo.setOne('mainStore', 'Amsterdam');
+JsonGo.setOne('stores[{$append}].storeName', 'Berlin');
+JsonGo.setOne('stores[{$end}].expensive', 5);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Granny Smith small bag');
+JsonGo.setOne('stores[{$end}].items[{$end}].price', 3);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Granny Smith medium bag');
+JsonGo.setOne('stores[{$end}].items[{$end}].price', 5);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Granny Smith large bag');
+JsonGo.setOne('stores[{$end}].items[{$end}].price', 6);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Fuji small bag');
+JsonGo.setOne('stores[{$end}].items[{$end}].price', 3.50);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Pink Lady small bag');
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Pink Lady medium bag');
+JsonGo.setOne('stores[{$append}].storeName', 'Amsterdam');
+JsonGo.setOne('stores[{$end}].expensive', 6);
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Pink Lady medium bag');
+JsonGo.setOne('stores[{$end}].items[{$append}].name', 'Pink Lady large bag');
+JsonGo.setOne('stores[{$end}].items[{$end}].price', 10);
+JsonGo.setOne('stores[{$append}].storeName', 'Rome');
+JsonGo.setOne('stores[{$end}].expensive', null);
+JsonGo.setOne('stores[{$end}].items', []);
+JsonGo.set(`stores[{1 = 1}].items[{$.name ∈ $JSON(${JSON.stringify(['Pink Lady medium bag', 'Pink Lady small bag'])})}].price`, 8); //sets price = 8 for all items in all stores where items name is in ['Pink Lady medium bag', 'Pink Lady small bag']
+JsonGo.set('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].expensive', true); // sets expensive key/value where price >= expensive field of mainStore
 const result = JsonGo.export();
 
 

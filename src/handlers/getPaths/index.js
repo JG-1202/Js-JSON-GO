@@ -17,7 +17,7 @@ const getPaths = (object, path, functions, settings) => {
   if (results.length > 0) {
     return results;
   }
-  return resolver.settings.defaultGetAllResponse;
+  return resolver.settings.defaultGetResponse;
 };
 
 module.exports = getPaths;
