@@ -9,21 +9,13 @@ const Resolver = require('../../services/resolver');
  * @returns {any} returns value and resolved path found at specified path,
  * in case that multiple logical checks satisfy the first element will be returned
  */
-const resolveOne = (obj, path, functions, settings) => {
+const findOne = (obj, path, functions, settings) => {
   const resolver = new Resolver({ functions, settings: { ...settings, limit: 1 } });
-  const resolved = resolver.resolve(obj, path)[0];
+  const resolved = resolver.find(obj, path)[0];
   if (!resolved || resolved.value === undefined) {
-    return {
-      path: resolver.settings.defaultGetOneResponse,
-      value: resolver.settings.defaultGetOneResponse,
-      references: {},
-    };
+    return {};
   }
-  return {
-    path: resolver.makePathString(resolved.path),
-    value: resolved.value,
-    references: resolved.references,
-  };
+  return resolved;
 };
 
-module.exports = resolveOne;
+module.exports = findOne;

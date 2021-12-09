@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const {
-  get, getPaths, find,
+  getAll, getAllPaths, findAll,
 } = require('../../../../index');
 
 /**
@@ -10,16 +10,16 @@ const {
  * @param {Array} results
  */
 const test = (input, path, results, expectedReferences) => {
-  const getResult = get(input, path);
-  const findResult = find(input, path);
-  const pathResult = getPaths(input, path);
+  const getResult = getAll(input, path, null, { limit: 1 });
+  const findResult = findAll(input, path, null, { limit: 1 });
+  const pathResult = getAllPaths(input, path, null, { limit: 1 });
   expect(findResult.length).toStrictEqual(getResult.length);
   expect(findResult.length).toStrictEqual(pathResult.length);
   expect(getResult).toStrictEqual(results);
   const references = [];
   findResult.forEach((result, index) => {
     expect(result.value).toStrictEqual(getResult[index]);
-    const singleResult = get(input, result.path);
+    const singleResult = getAll(input, result.path);
     expect(typeof result.path).toStrictEqual('string');
     expect(singleResult.length).toStrictEqual(1);
     expect(singleResult).toStrictEqual([result.value]);

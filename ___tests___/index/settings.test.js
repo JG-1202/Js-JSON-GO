@@ -2,19 +2,8 @@
 /* eslint-disable max-lines-per-function  */
 
 const JG = require('../../index');
-const inputFixture = require('../fixtures/inputFixture.json');
 
 describe('Testing different settings', () => {
-  it('defaultGetOneResponse', () => {
-    const JsonGo = new JG.Json(inputFixture, { defaultGetOneResponse: 'default' });
-    const result = JsonGo.getOne('nonExisting');
-    expect(result).toStrictEqual('default');
-  });
-  it('defaultGetResponse', () => {
-    const JsonGo = new JG.Json(inputFixture, { defaultGetResponse: '' });
-    const result = JsonGo.get('nonExisting');
-    expect(result).toStrictEqual('');
-  });
   it('unlinkInputObject default', () => {
     const testObject = {
       test: true,

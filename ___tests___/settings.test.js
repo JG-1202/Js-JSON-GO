@@ -11,10 +11,6 @@ describe('Test SettingsLoader', () => {
       mapIfNotFound: false,
       ignoreOnTransform: [],
       unlinkInputObject: false,
-      resolveOne: false,
-      buildOne: false,
-      defaultGetOneResponse: undefined,
-      defaultGetResponse: [],
       limit: 0,
     });
   });
@@ -27,10 +23,6 @@ describe('Test SettingsLoader', () => {
       mapIfNotFound: false,
       ignoreOnTransform: [],
       unlinkInputObject: false,
-      resolveOne: false,
-      buildOne: false,
-      defaultGetOneResponse: undefined,
-      defaultGetResponse: [],
       limit: 3,
     });
   });
@@ -41,10 +33,6 @@ describe('Test SettingsLoader', () => {
         mapIfNotFound: true,
         ignoreOnTransform: [null, undefined],
         unlinkInputObject: true,
-        resolveOne: true,
-        buildOne: true,
-        defaultGetOneResponse: '',
-        defaultGetResponse: null,
         limit: 10,
       },
     });
@@ -53,10 +41,6 @@ describe('Test SettingsLoader', () => {
       mapIfNotFound: true,
       ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
-      resolveOne: true,
-      buildOne: true,
-      defaultGetOneResponse: '',
-      defaultGetResponse: null,
       limit: 10,
     });
   });
@@ -67,10 +51,6 @@ describe('Test SettingsLoader', () => {
         mapIfNotFound: null,
         ignoreOnTransform: {},
         unlinkInputObject: 'true',
-        resolveOne: 'true',
-        buildOne: 'true',
-        defaultGetOneResponse: '',
-        defaultGetResponse: null,
         limit: 'abc',
       },
     });
@@ -79,10 +59,6 @@ describe('Test SettingsLoader', () => {
       mapIfNotFound: false,
       ignoreOnTransform: [],
       unlinkInputObject: false,
-      resolveOne: false,
-      buildOne: false,
-      defaultGetOneResponse: '',
-      defaultGetResponse: null,
       limit: 0,
     });
   });

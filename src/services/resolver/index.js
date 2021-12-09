@@ -190,6 +190,28 @@ class Resolver extends Querier {
     }
     return results;
   }
+
+  find(obj, path) {
+    const resolved = this.resolve(obj, path);
+    return resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
+      .map((resolvedElement) => ({
+        path: this.makePathString(resolvedElement.path),
+        value: resolvedElement.value,
+        references: resolvedElement.references,
+      }));
+  }
+
+  getPaths(obj, path) {
+    const resolved = this.resolve(obj, path);
+    return resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
+      .map((resolvedElement) => this.makePathString(resolvedElement.path));
+  }
+
+  get(obj, path) {
+    const resolved = this.resolve(obj, path);
+    return resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
+      .map((resolvedElement) => (resolvedElement.value));
+  }
 }
 
 module.exports = Resolver;

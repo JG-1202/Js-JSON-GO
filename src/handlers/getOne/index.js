@@ -11,11 +11,7 @@ const Resolver = require('../../services/resolver');
  */
 const getOne = (object, path, functions, settings) => {
   const resolver = new Resolver({ functions, settings: { ...settings, limit: 1 } });
-  const resolved = resolver.resolve(object, path)[0];
-  if (!resolved || resolved.value === undefined) {
-    return resolver.settings.defaultGetOneResponse;
-  }
-  return resolved.value;
+  return resolver.get(object, path)[0];
 };
 
 module.exports = getOne;

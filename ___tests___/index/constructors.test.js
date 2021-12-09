@@ -6,11 +6,10 @@ const inputFixture = require('../fixtures/inputFixture.json');
 describe('Testing with multiple JG instances', () => {
   it('settings and functions stay within instance of Json', () => {
     const settingsObjA = {
-      defaultGetOneResponse: null,
+      limit: 3,
       unlinkInputObject: true,
     };
     const settingsObjB = {
-      defaultGetResponse: null,
       unlinkInputObject: true,
     };
     const functionsObjA = {
@@ -23,25 +22,23 @@ describe('Testing with multiple JG instances', () => {
     };
     const JG_A = new JG.Json(inputFixture, settingsObjA, functionsObjA);
     const JG_B = new JG.Json(inputFixture, settingsObjB, functionsObjB);
-    expect(JG_A.settings.defaultGetOneResponse).toStrictEqual(null);
     expect(JG_A.settings.unlinkInputObject).toStrictEqual(true);
+    expect(JG_A.settings.limit).toStrictEqual(3);
     expect(JG_A.functions.testFunc1).toBeDefined();
     expect(JG_A.functions.testFunc2).toBeDefined();
     expect(JG_A.functions.testFunc3).toBeUndefined();
-    expect(JG_B.settings.defaultGetResponse).toStrictEqual(null);
-    expect(JG_B.settings.defaultGetOneResponse).toStrictEqual(undefined);
     expect(JG_B.settings.unlinkInputObject).toStrictEqual(true);
+    expect(JG_B.settings.limit).toStrictEqual(0);
     expect(JG_B.functions.testFunc2).toBeUndefined();
     expect(JG_B.functions.testFunc3).toBeDefined();
     expect(JG_B.functions.testFunc4).toBeDefined();
   });
   it('settings and functions stay within instance of Map', () => {
     const settingsObjA = {
-      defaultGetOneResponse: null,
       unlinkInputObject: true,
+      limit: 3,
     };
     const settingsObjB = {
-      defaultGetResponse: null,
       unlinkInputObject: true,
     };
     const functionsObjA = {
@@ -57,16 +54,15 @@ describe('Testing with multiple JG instances', () => {
     const testA = [JG_A.originObject, JG_A.destinationObject];
     const testB = [JG_B.originObject, JG_B.destinationObject];
     testA.forEach((test) => {
-      expect(test.settings.defaultGetOneResponse).toStrictEqual(null);
       expect(test.settings.unlinkInputObject).toStrictEqual(true);
+      expect(test.settings.limit).toStrictEqual(3);
       expect(test.functions.testFunc1).toBeDefined();
       expect(test.functions.testFunc2).toBeDefined();
       expect(test.functions.testFunc3).toBeUndefined();
     });
     testB.forEach((test) => {
-      expect(test.settings.defaultGetResponse).toStrictEqual(null);
-      expect(test.settings.defaultGetOneResponse).toStrictEqual(undefined);
       expect(test.settings.unlinkInputObject).toStrictEqual(true);
+      expect(test.settings.limit).toStrictEqual(0);
       expect(test.functions.testFunc2).toBeUndefined();
       expect(test.functions.testFunc3).toBeDefined();
       expect(test.functions.testFunc4).toBeDefined();

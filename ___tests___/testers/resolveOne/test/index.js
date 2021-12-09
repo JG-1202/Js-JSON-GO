@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const { getOne, getPath, resolveOne } = require('../../../../index');
+const { getOne, getPath, findOne } = require('../../../../index');
 
 /**
  * Check results get, vs find, vs getPath vs expected get result
@@ -10,7 +10,7 @@ const { getOne, getPath, resolveOne } = require('../../../../index');
 // eslint-disable-next-line complexity
 const test = (input, path, result, expectedReferences) => {
   const getResult = getOne(input, path);
-  const findResult = resolveOne(input, path);
+  const findResult = findOne(input, path);
   const pathResult = getPath(input, path);
   expect(getResult).toStrictEqual(result);
   if (getResult === undefined) {

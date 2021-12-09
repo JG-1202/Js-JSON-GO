@@ -13,10 +13,6 @@ class SettingsLoader extends BasicProcessor {
       mapIfNotFound: (setting) => typeof setting === 'boolean',
       ignoreOnTransform: (setting) => Array.isArray(setting),
       unlinkInputObject: (setting) => typeof setting === 'boolean',
-      buildOne: (setting) => typeof setting === 'boolean',
-      resolveOne: (setting) => typeof setting === 'boolean',
-      defaultGetOneResponse: () => true,
-      defaultGetResponse: (setting) => setting !== undefined,
       limit: (setting) => Number(setting),
     };
     if (settingsValidator[settingName] && settingsValidator[settingName](settingValue)) {
@@ -29,13 +25,9 @@ class SettingsLoader extends BasicProcessor {
   loadSettings({ userSettings }) {
     const defaultSettings = {
       fatalErrorOnCreate: false,
-      buildOne: false,
-      resolveOne: false,
       mapIfNotFound: false,
       ignoreOnTransform: [],
       unlinkInputObject: false,
-      defaultGetOneResponse: undefined,
-      defaultGetResponse: [],
       limit: 0,
     };
     if (userSettings && typeof userSettings === 'object') {

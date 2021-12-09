@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const { get, getPath, resolveOne } = require('../../../../index');
+const { getOne, getPath, findOne } = require('../../../../index');
 
 /**
  * Check whether get, find, and getPath all throw the same error
@@ -8,7 +8,7 @@ const { get, getPath, resolveOne } = require('../../../../index');
  * @param {Array} results
  */
 const testError = (input, path, errorMessage) => {
-  const tests = [get, resolveOne, getPath];
+  const tests = [getOne, findOne, getPath];
   tests.forEach((testFunction) => {
     let errMessage = null;
     try {

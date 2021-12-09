@@ -32,9 +32,9 @@ describe('Test getAll function with functions', () => {
     const result = JsonGo.get('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(result).toStrictEqual(['Granny Smith medium bag', 'Granny Smith large bag']);
   });
-  it('Testing basic functions resolve', () => {
+  it('Testing basic functions find', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
-    const result = JsonGo.resolve('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
+    const result = JsonGo.find('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(result).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag', references: {} }, { path: 'stores[0].items[2].name', value: 'Granny Smith large bag', references: {} }]);
   });
   it('Testing basic functions getPaths', () => {
@@ -130,9 +130,9 @@ describe('Test getAll function with functions', () => {
     const result = JsonGo.getPath('stores[{$Function(storeNameBerlin)}].storeName');
     expect(result).toStrictEqual('stores[0].storeName');
   });
-  it('Testing functions for resolveOne', () => {
+  it('Testing functions for findOne', () => {
     const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
-    const result = JsonGo.resolveOne('stores[{$Function(storeNameBerlin)}].storeName');
+    const result = JsonGo.findOne('stores[{$Function(storeNameBerlin)}].storeName');
     expect(result).toStrictEqual({ value: 'Berlin', path: 'stores[0].storeName', references: {} });
   });
   it('Testing functions for set', () => {

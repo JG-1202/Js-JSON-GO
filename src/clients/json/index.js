@@ -1,11 +1,14 @@
 const setOne = require('../../handlers/setOne');
 const set = require('../../handlers/set');
-const resolveOne = require('../../handlers/resolveOne');
-const resolve = require('../../handlers/resolve');
+const findOne = require('../../handlers/findOne');
+const find = require('../../handlers/find');
+const findAll = require('../../handlers/findAll');
 const getOne = require('../../handlers/getOne');
 const get = require('../../handlers/get');
+const getAll = require('../../handlers/getAll');
 const getPath = require('../../handlers/getPath');
 const getPaths = require('../../handlers/getPaths');
+const getAllPaths = require('../../handlers/getAllPaths');
 const chop = require('../../handlers/chop');
 const mergeObjects = require('../../handlers/mergeObjects');
 
@@ -44,14 +47,14 @@ class Json {
   }
 
   /**
-   * Resolves single value and path from objects specified query path
+   * Finds single value and path from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {any} returns value and resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
-  resolveOne(path, functions, settings) {
-    return resolveOne(
+  findOne(path, functions, settings) {
+    return findOne(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
@@ -85,14 +88,41 @@ class Json {
   }
 
   /**
-   * Resolves values and paths from objects specified query path
+   * Retrieves all values from objects specified query path
+   * @param {any} path - string or array representation of path to set.
+   * @param {Object} functions - object of functions that can be called within query.
+   * @returns {Array} returns array of values that match the specified path with logical checks
+   */
+  getAll(path, functions, settings) {
+    return getAll(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
+  }
+
+  /**
+   * Finds values and paths from objects specified query path
    * @param {any} path - string or array representation of path to set.
    * @param {Object} functions - object of functions that can be called within query.
    * @returns {Array} returns array of objects with value/path property
    * that match the specified path with logical checks
    */
-  resolve(path, functions, settings) {
-    return resolve(
+  find(path, functions, settings) {
+    return find(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
+  }
+
+  /**
+   * Finds all values and paths from objects specified query path
+   * @param {any} path - string or array representation of path to set.
+   * @param {Object} functions - object of functions that can be called within query.
+   * @returns {Array} returns array of objects with value/path property
+   * that match the specified path with logical checks
+   */
+  findAll(path, functions, settings) {
+    return findAll(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
@@ -106,6 +136,19 @@ class Json {
    */
   getPaths(path, functions, settings) {
     return getPaths(
+      this.object, path, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
+  }
+
+  /**
+   * Retrieves all resolved paths from objects specified path
+   * @param {any} path - string or array representation of path to set.
+   * @param {Object} functions - object of functions that can be called within query.
+   * @returns {Array} returns array of paths that match the specified path with logical checks
+   */
+  getAllPaths(path, functions, settings) {
+    return getAllPaths(
       this.object, path, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
