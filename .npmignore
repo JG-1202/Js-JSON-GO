@@ -7,3 +7,4 @@
 .codeclimate.yml
 jest.config.js
 /.github
+.commitlintrc.json
