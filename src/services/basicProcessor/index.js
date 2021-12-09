@@ -89,59 +89,40 @@ class BasicProcessor {
     return result;
   }
 
-  cloneJson(variable) {
-    let newElement = {};
+  unlink(variable) {
+    if (!this.isJson(variable)) {
+      return variable;
+    }
     if (this.isArray(variable)) {
-      newElement = [];
+      const newElement = [];
+      variable.forEach((element) => newElement.push(this.unlink(element)));
+      return newElement;
     }
-    // eslint-disable-next-line guard-for-in, no-restricted-syntax
-    for (const attribute in variable) {
-      newElement[attribute] = this.clone(variable[attribute]);
-    }
+    const newElement = {};
+    Object.keys(variable).forEach((key) => {
+      newElement[key] = this.unlink(variable[key]);
+    });
     return newElement;
   }
 
-  // eslint-disable-next-line complexity
-  clone(variable) {
-    if (!this.isObjectLike(variable)) {
-      return variable;
-    }
-    if (this.isJson(variable)) {
-      return this.cloneJson(variable);
-    }
-    if (variable instanceof Date) {
-      return new Date(variable);
-    }
-    if (variable instanceof RegExp) {
-      return new RegExp(variable.source, variable.flags);
-    }
-    if (variable instanceof Set) {
-      return new Set(variable);
-    }
-    if (variable instanceof Map) {
-      return new Map(variable);
-    }
-    return variable;
-  }
-
   makePathString(inputPath) {
-    if (this.isArray(inputPath)) {
-      let toReturn = '';
-      inputPath.forEach((element) => {
-        if (element.number !== undefined) {
-          toReturn += `[${element.number}]`;
-        } else if (!Number.isNaN(Number(element.string))) {
-          toReturn += `["${element.string}"]`;
-        } else {
-          if (toReturn) {
-            toReturn += '.';
-          }
-          toReturn += element.string;
-        }
-      });
-      return toReturn;
+    if (!this.isArray(inputPath)) {
+      return inputPath;
     }
-    return inputPath;
+    let toReturn = '';
+    inputPath.forEach((element) => {
+      if (element.number !== undefined) {
+        toReturn += `[${element.number}]`;
+      } else if (!Number.isNaN(Number(element.string))) {
+        toReturn += `["${element.string}"]`;
+      } else {
+        if (toReturn) {
+          toReturn += '.';
+        }
+        toReturn += element.string;
+      }
+    });
+    return toReturn;
   }
 }
 

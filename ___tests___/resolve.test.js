@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const JG = require('../index');
 const test = require('./testers/resolve/test');
 const testError = require('./testers/resolve/testError');
 const inputFixture = require('./fixtures/inputFixture.json');
@@ -123,6 +122,11 @@ describe('Test getAll function', () => {
   it('Getting falsy value', () => {
     test({ test: false }, 'test', [false]);
   });
+  it('Getting wildcard from something non-existing', () => {
+    test({}, '[*][*]', []);
+    test([], '[*][*]', []);
+    test(null, '[*][*]', []);
+  });
 });
 
 describe('Testing JSON equality', () => {
@@ -192,20 +196,5 @@ describe('Test getAll function with regular expressions', () => {
   });
   it('If invalid regular expression, throw error', () => {
     testError(inputFixture, 'stores[{$.storeName ? $RegExp(\\w+)}].storeName', 'Invalid regular expression, missing / at beginning and between pattern and flags, or flags are invalid. (Don\'t forget to escape special chars.)');
-  });
-});
-
-describe('Settings do not affect outcome', () => {
-  it('defaultGetOneResponse', () => {
-    const result = JG.get(inputFixture, 'stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName', undefined, { defaultGetOneResponse: 'test' });
-    expect(result).toStrictEqual(['Amsterdam']);
-    const result2 = JG.get(inputFixture, 'stores[*].items[{$.price >= $..expensive}].name', undefined, { defaultGetOneResponse: 'test' });
-    expect(result2).toStrictEqual(['Granny Smith medium bag', 'Granny Smith large bag', 'Pink Lady small bag', 'Pink Lady medium bag', 'Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag']);
-  });
-  it('defaultGetResponse', () => {
-    const result = JG.get(inputFixture, 'stores[{$.items[{$.name = "Pink Lady large bag"}]}].storeName', undefined, { defaultGetResponse: [{ value: 'test', path: 'testPath' }] });
-    expect(result).toStrictEqual(['Amsterdam']);
-    const result2 = JG.get(inputFixture, 'stores[*].items[{$.price >= $..expensive}].name', undefined, { defaultGetResponse: [{ value: 'test', path: 'testPath' }] });
-    expect(result2).toStrictEqual(['Granny Smith medium bag', 'Granny Smith large bag', 'Pink Lady small bag', 'Pink Lady medium bag', 'Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag']);
   });
 });

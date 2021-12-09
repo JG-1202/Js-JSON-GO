@@ -39,15 +39,11 @@ class Resolver extends Querier {
     const results = [];
     if (element[type] !== undefined) {
       results.push(element);
-    } else if (element.query) {
+    } else {
       const queryResult = this.query({
         query: element.query, object: obj, tempObject, priorPath, refObject, intermediate,
       });
-      queryResult.forEach((result) => {
-        if (result[type] !== undefined) {
-          results.push(result);
-        }
-      });
+      queryResult.forEach((result) => results.push(result));
     }
     return results;
   }
@@ -58,12 +54,10 @@ class Resolver extends Querier {
     if (element.wildcard) {
       const toReturn = [];
       if (type === 'number') {
-        if (this.isArray(tempObject)) {
-          tempObject.some((el, index) => {
-            toReturn.push({ number: index });
-            return this.isMaxResultsReached(intermediate);
-          });
-        }
+        tempObject.some((el, index) => {
+          toReturn.push({ number: index });
+          return this.isMaxResultsReached(intermediate);
+        });
       } else if (this.isObject(tempObject)) {
         Object.keys(tempObject).some((el) => {
           toReturn.push({ string: el });

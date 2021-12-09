@@ -20,21 +20,19 @@ class Querier extends PathTransformer {
       newElement = {
         path: this.transformPath(newElement.absolutePath),
       };
-    } else if (newElement.relativePath) {
-      if (newElement.relativeDepth === 0) {
-        newElement = {
-          relativePath: this.transformPath(newElement.relativePath),
-          relativeOrigin: priorPath,
-        };
-      } else {
-        const relativeIndex = getRelativeIndex(
-          priorPath.length, newElement.relativeDepth,
-        );
-        newElement = {
-          path: [...priorPath.slice(0, relativeIndex),
-            ...this.transformPath(newElement.relativePath, this.functions)],
-        };
-      }
+    } else if (newElement.relativeDepth === 0) {
+      newElement = {
+        relativePath: this.transformPath(newElement.relativePath),
+        relativeOrigin: priorPath,
+      };
+    } else {
+      const relativeIndex = getRelativeIndex(
+        priorPath.length, newElement.relativeDepth,
+      );
+      newElement = {
+        path: [...priorPath.slice(0, relativeIndex),
+          ...this.transformPath(newElement.relativePath, this.functions)],
+      };
     }
     return newElement;
   }

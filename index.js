@@ -3,6 +3,7 @@ const Map = require('./src/clients/map');
 
 const setOne = require('./src/handlers/setOne');
 const set = require('./src/handlers/set');
+const setAll = require('./src/handlers/setAll');
 const findOne = require('./src/handlers/findOne');
 const find = require('./src/handlers/find');
 const findAll = require('./src/handlers/findAll');
@@ -21,11 +22,14 @@ const parse = require('./src/handlers/parse');
 const safeParse = require('./src/handlers/safeParse');
 const stringify = require('./src/handlers/stringify');
 const safeStringify = require('./src/handlers/safeStringify');
+const mergeArrays = require('./src/handlers/mergeArrays');
+const mergeObjects = require('./src/handlers/mergeObjects');
 
 module.exports.Map = Map;
 module.exports.Json = Json;
 
 module.exports.set = set;
+module.exports.setAll = setAll;
 module.exports.setOne = setOne;
 module.exports.get = get;
 module.exports.getAll = getAll;
@@ -44,4 +48,6 @@ module.exports.safeParse = safeParse;
 module.exports.stringify = stringify;
 module.exports.safeStringify = safeStringify;
 module.exports.chop = chop;
+module.exports.mergeArrays = mergeArrays;
+module.exports.mergeObjects = mergeObjects;
 module.exports.unlink = unlink;

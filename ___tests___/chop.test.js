@@ -12,12 +12,14 @@ describe('Chops an array', () => {
     const result = JsonGo.chop(10);
     expect(result).toStrictEqual(choppedArray);
   });
-});
-
-describe('Chops an object', () => {
   it('Chops an object into pieces', () => {
     const JsonGo = new JG.Json(largeObject);
     const result = JsonGo.chop(10);
     expect(result).toStrictEqual(choppedObject);
+  });
+  it('Something unchoppable', () => {
+    const JsonGo = new JG.Json(null);
+    const result = JsonGo.chop(10);
+    expect(result).toStrictEqual([]);
   });
 });

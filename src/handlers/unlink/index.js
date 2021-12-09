@@ -7,7 +7,7 @@ const BasicProcessor = require('../../services/basicProcessor');
  */
 const unlink = (value) => {
   const basicProcessor = new BasicProcessor();
-  return basicProcessor.clone(value);
+  return basicProcessor.unlink(value);
 };
 
 module.exports = unlink;

@@ -14,15 +14,11 @@ class JsonTransformer extends Builder {
     const toMap = {};
     validResults.forEach((result) => {
       let resolvedDestinationPath = destinationPath;
-      if (this.isObject(result.references)) {
-        Object.keys(result.references).forEach((reference) => {
-          resolvedDestinationPath = resolvedDestinationPath.replace(new RegExp(`\\:\\(${reference}\\)`, 'g'), result.references[reference]);
-        });
-      }
-      if (result.path) {
-        toMap[resolvedDestinationPath] = this.makeArray(toMap[resolvedDestinationPath]);
-        toMap[resolvedDestinationPath].push(result.value);
-      }
+      Object.keys(result.references).forEach((reference) => {
+        resolvedDestinationPath = resolvedDestinationPath.replace(new RegExp(`\\:\\(${reference}\\)`, 'g'), result.references[reference]);
+      });
+      toMap[resolvedDestinationPath] = this.makeArray(toMap[resolvedDestinationPath]);
+      toMap[resolvedDestinationPath].push(result.value);
     });
     return toMap;
   }

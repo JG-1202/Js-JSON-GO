@@ -1,22 +1,33 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [0.5.0] - 2021-10-31
+## [1.0.0] - 2021-12-09
 ### Added
-- generic transform function rather than translate, translateAll, translateAllToOne, translateOneToAll
-- reference object will be output of pathToArrayTransformer
-- resolve/resolveAll will return reference object with resolved references
-- find/findAll will return reference object with resolved references
-- pathElements will now pass refObject to querier
-- query will pass refObject to resolve-handler
-- lodash as dependency
+- references: References will be returned on find and can be used on transform
+- limit setting: limits the number of results returned on get, find, getPaths, and limits number of builds on set
+- findOne: Returns only single find result
+- getOne: Gets single value
+- getAllPaths: Returns all paths
+- setOne: Set single value only
+- safeParse: Tries to parse when non-parsed input is provided
+- safeStringify: Tries to stringify when object like input is provided
+- mergeArrays: Merges arrays
+- mergeObjects: Merges objects
 
 ### Changed
-- translate, translateAll, translateAllToOne, translateOneToAll, unlink are considered deprecated and will be removed from version 1.0.0 onwards
-- ignoreOnTranslate is deprecated and renamed to ignoreOnTransform
-- ignoreOnTransform setting will now also be tested against equality of objects
-- using lodash.cloneDeep for unlinkInputObject
-- using lodash.isEqual to test equality
+- get returns array of values, use getOne to return single value
+- find returns array of results, use findOne to return single result
+- getPaths now accepts limit setting, use getAllPaths to return all paths
+- set will set multiple values, use limit = 1 or setOne to set single value only
+
+### Removed
+- defaultGetResponse, returns undefined when no results found
+- defaultGetAllResponse, returns empty array when no results found
+- translate, use transform with limit 1 instead
+- translateAll, use transform without limit instead
+- translateOneToAll, deprecated
+- translateAllToOne, deprecated
+
 
 ## [0.4.1] - 2021-11-07
 ### Changed

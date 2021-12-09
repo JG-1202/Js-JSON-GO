@@ -98,4 +98,12 @@ describe('Test setting value(s)', () => {
     }
     expect(errorMessage).toBe('Path invalid. No results found for query.');
   });
+  it('Test set vs setAll', () => {
+    const array = [0, 0, 0];
+    const JsonGo = new JG.Json(array, { limit: 1 });
+    JsonGo.set('[*]', 1);
+    expect(JsonGo.export()).toStrictEqual([1, 0, 0]);
+    JsonGo.setAll('[*]', 2);
+    expect(JsonGo.export()).toStrictEqual([2, 2, 2]);
+  });
 });

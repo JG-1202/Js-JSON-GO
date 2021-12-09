@@ -37,16 +37,13 @@ const setNonExistingElement = (nextElement) => {
 };
 
 const getElement = (element, object) => {
-  if (element.number !== undefined) {
-    return Number(element.number);
-  }
-  if (element.string !== undefined) {
-    return String(element.string);
-  }
   if (isOperationToAppend(element)) {
     return object.length;
   }
-  return element;
+  if (element.number !== undefined) {
+    return Number(element.number);
+  }
+  return String(element.string);
 };
 
 /**

@@ -5,10 +5,8 @@ const updateReferences = ({
   if (currentReference && resolvedElement) {
     if (resolvedElement.number !== undefined) {
       references[currentReference] = Number(resolvedElement.number);
-    } else if (resolvedElement.string !== undefined) {
-      references[currentReference] = String(resolvedElement.string);
     } else {
-      references[currentReference] = resolvedElement;
+      references[currentReference] = String(resolvedElement.string);
     }
   }
 };

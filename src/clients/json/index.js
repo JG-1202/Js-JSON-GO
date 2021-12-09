@@ -1,5 +1,6 @@
 const setOne = require('../../handlers/setOne');
 const set = require('../../handlers/set');
+const setAll = require('../../handlers/setAll');
 const findOne = require('../../handlers/findOne');
 const find = require('../../handlers/find');
 const findAll = require('../../handlers/findAll');
@@ -25,7 +26,7 @@ class Json {
     const settingsLoader = new SettingsLoader({ settings });
     this.settings = settingsLoader.settings;
     if (this.settings.unlinkInputObject) {
-      this.object = settingsLoader.clone(settingsLoader.makeJson(object));
+      this.object = settingsLoader.unlink(settingsLoader.makeJson(object));
     } else {
       this.object = settingsLoader.makeJson(object);
     }
@@ -170,7 +171,7 @@ class Json {
   }
 
   /**
-   * Sets all values on specified path
+   * Sets values on specified path
    * @param {any} path - string or array representation of path to set.
    * @param {any} val - value to be set at specified path.
    * @param {Object} functions - object of functions that can be called within query.
@@ -179,6 +180,21 @@ class Json {
    */
   set(path, val, functions, settings) {
     return set(
+      this.object, path, val, mergeObjects([this.functions, functions]),
+      mergeObjects([this.settings, settings]),
+    );
+  }
+
+  /**
+   * Sets all values on specified path
+   * @param {any} path - string or array representation of path to set.
+   * @param {any} val - value to be set at specified path.
+   * @param {Object} functions - object of functions that can be called within query.
+   * @returns {object} object with newly set path in case that multiple logical checks
+   * satisfy the first element will be set.
+   */
+  setAll(path, val, functions, settings) {
+    return setAll(
       this.object, path, val, mergeObjects([this.functions, functions]),
       mergeObjects([this.settings, settings]),
     );
