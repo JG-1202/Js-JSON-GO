@@ -4,9 +4,6 @@ const JG = require('../../index');
 const inputFixture = require('../fixtures/inputFixture.json');
 
 describe('Test getAll function with functions', () => {
-  const basicSettings = {
-    unlinkInputObject: true,
-  };
   const basicFunctions = {
     storeNameBerlin: (element) => {
       if (element.storeName === 'Berlin') {
@@ -27,49 +24,53 @@ describe('Test getAll function with functions', () => {
       return false;
     },
   };
+  const basicSettings = {
+    unlinkInputObject: true,
+    functions: basicFunctions,
+  };
   it('Testing basic functions get', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.get('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(result).toStrictEqual(['Granny Smith medium bag', 'Granny Smith large bag']);
   });
   it('Testing basic functions getAll with limit', () => {
-    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 }, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 });
     const getResult = JsonGo.get('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     const getAllResult = JsonGo.getAll('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(getResult).toStrictEqual(['Granny Smith medium bag']);
     expect(getAllResult).toStrictEqual(['Granny Smith medium bag', 'Granny Smith large bag']);
   });
   it('Testing basic functions find', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.find('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(result).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag', references: {} }, { path: 'stores[0].items[2].name', value: 'Granny Smith large bag', references: {} }]);
   });
   it('Testing basic functions findAll with limit', () => {
-    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 }, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 });
     const findResult = JsonGo.find('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     const findAllResult = JsonGo.findAll('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(findResult).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag', references: {} }]);
     expect(findAllResult).toStrictEqual([{ path: 'stores[0].items[1].name', value: 'Granny Smith medium bag', references: {} }, { path: 'stores[0].items[2].name', value: 'Granny Smith large bag', references: {} }]);
   });
   it('Testing basic functions getPaths', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.getPaths('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(result).toStrictEqual(['stores[0].items[1].name', 'stores[0].items[2].name']);
   });
   it('Testing basic functions getAllPaths with limit', () => {
-    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 }, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, { ...basicSettings, limit: 1 });
     const getPathsResult = JsonGo.getPaths('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     const getAllPathsResult = JsonGo.getAllPaths('stores[{$Function(storeNameBerlin)}].items[{$Function(priceIsFiveOrSix)}].name');
     expect(getPathsResult).toStrictEqual(['stores[0].items[1].name']);
     expect(getAllPathsResult).toStrictEqual(['stores[0].items[1].name', 'stores[0].items[2].name']);
   });
   it('Non-existing function returns false', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.get('stores[{$Function(unkownFunctionName)}]');
     expect(result).toStrictEqual([]);
   });
   it('Testing with local function definition', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const functions = {
       storeNameNotBerlin: (element) => {
         if (element.storeName !== 'Berlin') {
@@ -78,11 +79,11 @@ describe('Test getAll function with functions', () => {
         return false;
       },
     };
-    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].storeName', functions);
+    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].storeName', { functions });
     expect(result).toStrictEqual(['Amsterdam', 'Barcelona', 'Rome']);
   });
   it('Testing with local and global function definition', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const functions = {
       storeNameNotBerlin: (element) => {
         if (element.storeName !== 'Berlin') {
@@ -91,11 +92,11 @@ describe('Test getAll function with functions', () => {
         return false;
       },
     };
-    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions);
+    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', { functions });
     expect(result).toStrictEqual([6, 8, 10]);
   });
   it('Testing with local function definition, function provided while calling function will overwrite default', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const functions = {
       storeNameNotBerlin: (element) => {
         if (element.storeName !== 'Berlin') {
@@ -110,11 +111,11 @@ describe('Test getAll function with functions', () => {
         return false;
       },
     };
-    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions);
+    const result = JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', { functions });
     expect(result).toStrictEqual([10]);
   });
   it('Testing function cache, local function does not persist in next query', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const functions = {
       storeNameNotBerlin: (element) => {
         if (element.storeName !== 'Berlin') {
@@ -124,12 +125,12 @@ describe('Test getAll function with functions', () => {
       },
     };
     const results = [];
-    results.push(JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', functions));
+    results.push(JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price', { functions }));
     results.push(JsonGo.get('stores[{$Function(storeNameNotBerlin)}].items[{$Function(priceCheck)}].price'));
     expect(results).toStrictEqual([[6, 8, 10], []]);
   });
   it('Testing function cache, functions still available for query-in-query', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const functions = {
       storeNameAmsterdam: (element) => {
         if (element.storeName === 'Amsterdam') {
@@ -138,31 +139,31 @@ describe('Test getAll function with functions', () => {
         return false;
       },
     };
-    const result = JsonGo.get('stores[{$Function(storeNameAmsterdam)}].items[{$.price >= $stores[{$Function(storeNameAmsterdam)}].expensive}].name', functions);
+    const result = JsonGo.get('stores[{$Function(storeNameAmsterdam)}].items[{$.price >= $stores[{$Function(storeNameAmsterdam)}].expensive}].name', { functions });
     expect(result).toStrictEqual(['Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag']);
   });
   it('Testing functions for get', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.getOne('stores[{$Function(storeNameBerlin)}].storeName');
     expect(result).toStrictEqual('Berlin');
   });
   it('Testing functions for getPath', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.getPath('stores[{$Function(storeNameBerlin)}].storeName');
     expect(result).toStrictEqual('stores[0].storeName');
   });
   it('Testing functions for findOne', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     const result = JsonGo.findOne('stores[{$Function(storeNameBerlin)}].storeName');
     expect(result).toStrictEqual({ value: 'Berlin', path: 'stores[0].storeName', references: {} });
   });
   it('Testing functions for set', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     JsonGo.set('stores[{$Function(storeNameBerlin)}].storeName', 'BERLIN');
     expect(JsonGo.getOne('stores[0].storeName')).toStrictEqual('BERLIN');
   });
   it('Testing functions for set', () => {
-    const JsonGo = new JG.Json(inputFixture, basicSettings, basicFunctions);
+    const JsonGo = new JG.Json(inputFixture, basicSettings);
     JsonGo.set('stores[{$Function(storeNameBerlin)}].storeName', 'BerlIn');
     expect(JsonGo.getOne('stores[0].storeName')).toStrictEqual('BerlIn');
   });

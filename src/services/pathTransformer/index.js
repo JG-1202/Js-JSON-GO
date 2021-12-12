@@ -2,14 +2,13 @@ const SettingsLoader = require('../settingsLoader');
 const ElementTransformer = require('./src/elementTransformer');
 
 class PathTransformer extends SettingsLoader {
-  constructor({ functions, settings }) {
+  constructor({ settings }) {
     super({ settings });
-    this.functions = functions;
   }
 
   elementTransformer(element) {
     const elementTransformer = new ElementTransformer({
-      functions: this.functions,
+      functions: this.settings.functions,
       element,
     });
     return elementTransformer.transformElement();

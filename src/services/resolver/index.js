@@ -6,10 +6,10 @@ const getNextIterationsTempObject = require('./src/getNextIterationsTempObject')
 
 class Resolver extends Querier {
   constructor({
-    functions, settings,
+    settings,
   }) {
     super({
-      functions, settings,
+      settings,
     });
   }
 
@@ -190,7 +190,7 @@ class Resolver extends Querier {
     return resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
       .map((resolvedElement) => ({
         path: this.makePathString(resolvedElement.path),
-        value: resolvedElement.value,
+        value: this.settings.formatter(resolvedElement.value),
         references: resolvedElement.references,
       }));
   }
@@ -204,7 +204,7 @@ class Resolver extends Querier {
   get(obj, path) {
     const resolved = this.resolve(obj, path);
     return resolved.filter((resolvedElement) => resolvedElement.value !== undefined)
-      .map((resolvedElement) => (resolvedElement.value));
+      .map((resolvedElement) => this.settings.formatter(resolvedElement.value));
   }
 }
 

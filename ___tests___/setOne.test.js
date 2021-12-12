@@ -6,19 +6,19 @@ const { setOne } = require('../index');
 describe('Test fatalError option on set', () => {
   it('setOne with append and fetalError', () => {
     const testObject = {};
-    const result = setOne(testObject, 'stores[{$append}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: true });
+    const result = setOne(testObject, 'stores[{$append}].storeName', 'Amsterdam', { fatalErrorOnCreate: true });
     expect(result).toStrictEqual({ stores: [{ storeName: 'Amsterdam' }] });
   });
   it('setOne with append and no fetalError', () => {
     const testObject = {};
-    const result = setOne(testObject, 'stores[{$append}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: false });
+    const result = setOne(testObject, 'stores[{$append}].storeName', 'Amsterdam', { fatalErrorOnCreate: false });
     expect(result).toStrictEqual({ stores: [{ storeName: 'Amsterdam' }] });
   });
   it('setOne with end and fetalError', () => {
     const testObject = {};
     let errorMessage = null;
     try {
-      result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: true });
+      result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', { fatalErrorOnCreate: true });
     } catch (e) {
       errorMessage = e.message;
     }
@@ -26,14 +26,14 @@ describe('Test fatalError option on set', () => {
   });
   it('setOne with end and no fetalError', () => {
     const testObject = {};
-    const result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: false });
+    const result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', { fatalErrorOnCreate: false });
     expect(result).toStrictEqual({});
   });
   it('setOne with end to empty array', () => {
     const testObject = { stores: [] };
     let errorMessage = null;
     try {
-      result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', {}, { fatalErrorOnCreate: true });
+      result = setOne(testObject, 'stores[{$end}].storeName', 'Amsterdam', { fatalErrorOnCreate: true });
     } catch (e) {
       errorMessage = e.message;
     }
@@ -41,24 +41,24 @@ describe('Test fatalError option on set', () => {
   });
   it('Test wildcard for object', () => {
     const testObject = { wrapper: { key1: {}, key2: {} } };
-    const result = setOne(testObject, 'wrapper[*].test', true, {}, { fatalErrorOnCreate: false });
+    const result = setOne(testObject, 'wrapper[*].test', true, { fatalErrorOnCreate: false });
     expect(result).toStrictEqual({ wrapper: { key1: { test: true }, key2: {} } });
   });
   it('Test wildcard for array', () => {
     const testObject = { wrapper: [{}, {}] };
-    const result = setOne(testObject, 'wrapper[*].test', true, {}, { fatalErrorOnCreate: false });
+    const result = setOne(testObject, 'wrapper[*].test', true, { fatalErrorOnCreate: false });
     expect(result).toStrictEqual({ wrapper: [{ test: true }, {}] });
   });
   it('Use of wildcard for non-existing element', () => {
     const testObject = { wrapper: [{}, {}] };
-    const result = setOne(testObject, 'wrapper2[*].test', true, {}, { fatalErrorOnCreate: false });
+    const result = setOne(testObject, 'wrapper2[*].test', true, { fatalErrorOnCreate: false });
     expect(result).toStrictEqual({ wrapper: [{}, {}] });
   });
   it('Use of wildcard for non-existing element returns error', () => {
     const testObject = { wrapper: [{}, {}] };
     let errorMessage = null;
     try {
-      result = setOne(testObject, 'wrapper2[*].test', true, {}, { fatalErrorOnCreate: true });
+      result = setOne(testObject, 'wrapper2[*].test', true, { fatalErrorOnCreate: true });
     } catch (e) {
       errorMessage = e.message;
     }
@@ -68,7 +68,7 @@ describe('Test fatalError option on set', () => {
     const testObject = { wrapper: [] };
     let errorMessage = null;
     try {
-      result = setOne(testObject, 'wrapper[*].test', true, {}, { fatalErrorOnCreate: true });
+      result = setOne(testObject, 'wrapper[*].test', true, { fatalErrorOnCreate: true });
     } catch (e) {
       errorMessage = e.message;
     }

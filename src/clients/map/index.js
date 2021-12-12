@@ -1,7 +1,7 @@
 const Json = require('../json');
 const JsonTransformer = require('../../services/jsonTransformer');
-const mergeObjects = require('../../handlers/mergeObjects');
 const makeObject = require('../../handlers/makeObject');
+const mergeSettings = require('../json/src/mergeSettings');
 
 class Map {
   /**
@@ -24,10 +24,9 @@ class Map {
    * object
    * @param {Object} functions - object of functions that can be called within query.
    */
-  transform(originPath, destinationPath, functions, settings) {
+  transform(originPath, destinationPath, settings) {
     const jsonTransformer = new JsonTransformer({
-      functions: mergeObjects([this.originObject.functions, makeObject(functions)]),
-      settings: mergeObjects([this.originObject.settings, makeObject(settings)]),
+      settings: mergeSettings(this.originObject.settings, makeObject(settings)),
     });
     return jsonTransformer.transform(originPath, destinationPath,
       this.originObject.object, this.destinationObject.object);

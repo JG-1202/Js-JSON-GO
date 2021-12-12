@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 
 const SettingsLoader = require('../src/services/settingsLoader');
+const defaultFormatter = require('../src/services/settingsLoader/src/defaultFormatter');
 
 describe('Test SettingsLoader', () => {
   it('Test undefined settings', () => {
@@ -12,6 +13,8 @@ describe('Test SettingsLoader', () => {
       ignoreOnTransform: [],
       unlinkInputObject: false,
       limit: 0,
+      formatter: defaultFormatter,
+      functions: {},
     });
   });
   it('Test some settings', () => {
@@ -24,9 +27,12 @@ describe('Test SettingsLoader', () => {
       ignoreOnTransform: [],
       unlinkInputObject: false,
       limit: 3,
+      formatter: defaultFormatter,
+      functions: {},
     });
   });
   it('Custom settings will be loaded correctly', () => {
+    const customFormatter = (value) => `${value}-test`;
     const settingsLoader = new SettingsLoader({
       settings: {
         fatalErrorOnCreate: true,
@@ -34,6 +40,8 @@ describe('Test SettingsLoader', () => {
         ignoreOnTransform: [null, undefined],
         unlinkInputObject: true,
         limit: 10,
+        formatter: customFormatter,
+        functions: {},
       },
     });
     expect(settingsLoader.settings).toStrictEqual({
@@ -42,6 +50,8 @@ describe('Test SettingsLoader', () => {
       ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
       limit: 10,
+      formatter: customFormatter,
+      functions: {},
     });
   });
   it('Custom settings of invalid type will be set to default', () => {
@@ -52,6 +62,8 @@ describe('Test SettingsLoader', () => {
         ignoreOnTransform: {},
         unlinkInputObject: 'true',
         limit: 'abc',
+        formatter: {},
+        functions: null,
       },
     });
     expect(settingsLoader.settings).toStrictEqual({
@@ -60,6 +72,8 @@ describe('Test SettingsLoader', () => {
       ignoreOnTransform: [],
       unlinkInputObject: false,
       limit: 0,
+      formatter: defaultFormatter,
+      functions: {},
     });
   });
 });

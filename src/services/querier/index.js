@@ -8,10 +8,9 @@ const PathTransformer = require('../pathTransformer');
 
 class Querier extends PathTransformer {
   constructor({
-    functions, settings,
+    settings,
   }) {
     super({ settings });
-    this.functions = functions;
   }
 
   getPath(priorPath, element) {
@@ -31,7 +30,7 @@ class Querier extends PathTransformer {
       );
       newElement = {
         path: [...priorPath.slice(0, relativeIndex),
-          ...this.transformPath(newElement.relativePath, this.functions)],
+          ...this.transformPath(newElement.relativePath, this.settings.functions)],
       };
     }
     return newElement;
@@ -39,7 +38,7 @@ class Querier extends PathTransformer {
 
   getValueFromPath(element, object, currentElement, priorPath, refObject) {
     let result = [];
-    const transformedPath = this.getPath(priorPath, element, this.functions);
+    const transformedPath = this.getPath(priorPath, element, this.settings.functions);
     if (transformedPath && transformedPath.relativePath) {
       result = this.resolve(object, [
         ...priorPath, currentElement, ...transformedPath.relativePath,

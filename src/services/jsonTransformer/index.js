@@ -3,10 +3,10 @@ const checkEquality = require('../querier/src/logicalValidator/logicalChecks/che
 
 class JsonTransformer extends Builder {
   constructor({
-    functions, settings,
+    settings,
   }) {
     super({
-      functions, settings,
+      settings,
     });
   }
 
@@ -26,7 +26,10 @@ class JsonTransformer extends Builder {
   transform(originPath, destinationPath, originObject, destinationObject) {
     const resolved = this.resolve(originObject, originPath);
     const validResults = resolved.filter((el) => (
-      this.settings.ignoreOnTransform.every((toIgnore) => checkEquality(el.value, toIgnore, '!='))));
+      this.settings.ignoreOnTransform.every((toIgnore) => checkEquality(el.value, toIgnore, '!=')))).map((result) => ({
+      ...result,
+      value: this.settings.formatter(result.value),
+    }));
     const toMap = this.determineWhatToMap(validResults, destinationPath);
     const toMapKeys = Object.keys(toMap);
     toMapKeys.forEach((path) => {

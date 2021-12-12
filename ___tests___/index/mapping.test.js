@@ -47,6 +47,14 @@ describe('Mapping', () => {
     const result = JsonGo.export();
     expect(result).toStrictEqual({ stores: [{ expensiveItems: ['Granny Smith large bag', 'Pink Lady medium bag', 'Pink Lady large bag'], nonExpensiveItems: ['Granny Smith small bag', 'Granny Smith medium bag'] }] });
   });
+  it('Map items of main store to new object with custom formatter', () => {
+    const customFormatter = (value) => value.toUpperCase();
+    const JsonGo = new JG.Map(inputFixture, {});
+    JsonGo.transform('stores[{$.storeName = Amsterdam}].items[{$.price >= $stores[{$.storeName = Amsterdam}].expensive}].name', 'stores[{$append}].expensiveItems', { formatter: customFormatter });
+    JsonGo.transform('stores[{$.storeName = Amsterdam}].items[{$.price < $stores[{$.storeName = Amsterdam}].expensive}].name', 'stores[{$end}].nonExpensiveItems');
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({ stores: [{ expensiveItems: ['GRANNY SMITH LARGE BAG', 'PINK LADY MEDIUM BAG', 'PINK LADY LARGE BAG'], nonExpensiveItems: ['Granny Smith small bag', 'Granny Smith medium bag'] }] });
+  });
   it('Map all items into all', () => {
     const startingObject = { test: true };
     const start = {

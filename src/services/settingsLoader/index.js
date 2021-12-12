@@ -1,4 +1,5 @@
 const BasicProcessor = require('../basicProcessor');
+const defaultFormatter = require('./src/defaultFormatter');
 
 class SettingsLoader extends BasicProcessor {
   constructor({ settings }) {
@@ -11,9 +12,11 @@ class SettingsLoader extends BasicProcessor {
     const settingsValidator = {
       fatalErrorOnCreate: (setting) => typeof setting === 'boolean',
       mapIfNotFound: (setting) => typeof setting === 'boolean',
-      ignoreOnTransform: (setting) => Array.isArray(setting),
+      ignoreOnTransform: (setting) => this.isArray(setting),
       unlinkInputObject: (setting) => typeof setting === 'boolean',
       limit: (setting) => Number(setting),
+      formatter: (setting) => typeof setting === 'function',
+      functions: (setting) => this.isObject(setting),
     };
     if (settingsValidator[settingName] && settingsValidator[settingName](settingValue)) {
       this.settings[settingName] = settingValue;
@@ -29,6 +32,8 @@ class SettingsLoader extends BasicProcessor {
       ignoreOnTransform: [],
       unlinkInputObject: false,
       limit: 0,
+      formatter: defaultFormatter,
+      functions: {},
     };
     if (userSettings && typeof userSettings === 'object') {
       Object.keys(defaultSettings).forEach((settingName) => (

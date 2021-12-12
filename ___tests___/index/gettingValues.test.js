@@ -68,4 +68,12 @@ describe('Test getting value(s)', () => {
     const result = JsonGo.get('itemFamilies[{$.small.price <= 1}]');
     expect(result).toStrictEqual([inputFixtureObject.itemFamilies["Granny's"]]);
   });
+  it('Get last store in list with custom formatter', () => {
+    const JsonGo = new JG.Json(inputFixture);
+    const customFormatter = (value) => value.toUpperCase();
+    expect(JsonGo.getOne('stores[{$end}].storeName', { formatter: customFormatter })).toStrictEqual('ROME');
+    expect(JsonGo.findOne('stores[{$end}].storeName', { formatter: customFormatter }).value).toStrictEqual('ROME');
+    expect(JsonGo.getOne('stores[{$end}].storeName')).toStrictEqual('Rome');
+    expect(JsonGo.findOne('stores[{$end}].storeName').value).toStrictEqual('Rome');
+  });
 });

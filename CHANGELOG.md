@@ -13,6 +13,7 @@ All notable changes to this project will be documented here.
 - safeStringify: Tries to stringify when object like input is provided
 - mergeArrays: Merges arrays
 - mergeObjects: Merges objects
+- formatter setting: formats value before it is returned on get, find and on transform
 
 ### Changed
 - get returns array of values, use getOne to return single value

@@ -5,10 +5,10 @@ const setSimplePath = require('./src/setSimplePath');
 
 class Builder extends Resolver {
   constructor({
-    functions, settings,
+    settings,
   }) {
     super({
-      functions, settings,
+      settings,
     });
   }
 
