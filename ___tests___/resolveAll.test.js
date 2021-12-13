@@ -40,4 +40,7 @@ describe('Test getAll function', () => {
   it('returns error if invalid path is given', () => {
     testError(testObject, undefined, 'Input path is invalid.');
   });
+  it('Testing relative path with multiple outputs', () => {
+    test(inputFixture, 'stores[{$.storeName != $..mainStore}].storeName', ['Berlin', 'Barcelona', 'Rome']);
+  });
 });
