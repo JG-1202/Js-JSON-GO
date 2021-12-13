@@ -48,9 +48,12 @@ const inputObject = {
     ],
 };
 const JsonGo = new JG.Map(inputObject, []);
-JsonGo.transform('scans[*:(scan)].barcode', '[:(scan)].serialNumber'); // transform barcode to serialNumber
-JsonGo.transform('scans[{$.success = true}:(scan)].identifier', '[:(scan)].identifier'); // only add identifier if success = true
-JsonGo.transform('timestamp', '[*].time', { formatter(value) { return new Date(value).getTime(); } }); // add time from timestamp as new Date().getTime() to every record
+// transform barcode to serialNumber
+JsonGo.transform('scans[*:(scan)].barcode', '[:(scan)].serialNumber');
+// only add identifier if success = true
+JsonGo.transform('scans[{$.success = true}:(scan)].identifier', '[:(scan)].identifier'); 
+// add time from timestamp as new Date().getTime() to every record
+JsonGo.transform('timestamp', '[*].time', { formatter(value) { return new Date(value).getTime(); } }); 
 const result = JsonGo.export();
 /**
 [
