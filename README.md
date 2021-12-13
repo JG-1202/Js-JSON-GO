@@ -37,22 +37,22 @@ Construct a new JS-JSON-Go Map to map the result of the `origin` object into the
 #### map.transform(originPath, destinationPath, settings)
 Transforms a single value from `originPath` into destination object at `destinationPath`. Use custom `settings` when desired. 
 
+#### map.export
+Returns the (modified) JSON `destination` object.
+
 Example:
 ```javascript
 const inputObject = {
     timestamp: '2011-10-05T14:48:00.000Z',
     scans: [
-    { barcode: 'abc123', success: true, identifier: 'A' },
-    { barcode: 'def456', success: false, identifier: 'B' },
-    { barcode: 'ghi789', success: true, identifier: 'C' },
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
     ],
 };
 const JsonGo = new JG.Map(inputObject, []);
-// transform barcode to serialNumber
 JsonGo.transform('scans[*:(scan)].barcode', '[:(scan)].serialNumber');
-// only add identifier if success = true
 JsonGo.transform('scans[{$.success = true}:(scan)].identifier', '[:(scan)].identifier'); 
-// add time from timestamp as new Date().getTime() to every record
 JsonGo.transform('timestamp', '[*].time', { formatter(value) { return new Date(value).getTime(); } }); 
 const result = JsonGo.export();
 /**
@@ -63,9 +63,6 @@ const result = JsonGo.export();
 ]
  */
 ```
-
-#### map.export
-Returns the (modified) JSON `destination` object.
 
 
 ### new JG.Json(object, settings) 
