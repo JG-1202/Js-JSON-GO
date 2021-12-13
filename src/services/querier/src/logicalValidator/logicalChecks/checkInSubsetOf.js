@@ -10,10 +10,10 @@ const doesOperatorIndicateNotInSubsetOf = (operator) => (operator === '∉' || o
 
 /**
  * Logical check for operators ∈, @, ∉, and !@
- * @param {Any} variableA variable to check
- * @param {Any} variableB variable to check against
- * @param {String} operator operator (check for  ∈, @, ∉, and !@)
- * @returns {Boolean} indicator whether logical check for  ∈, @, ∉, and !@ suffices
+ * @param {any} variableA variable to check
+ * @param {any} variableB variable to check against
+ * @param {string} operator operator (check for  ∈, @, ∉, and !@)
+ * @returns {boolean} indicator whether logical check for  ∈, @, ∉, and !@ suffices
  */
 const checkInSubsetOf = (variableA, variableB, operator) => {
   if (doesOperatorIndicateInSubsetOf(operator)) {

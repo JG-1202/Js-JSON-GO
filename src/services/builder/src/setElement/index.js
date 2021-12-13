@@ -51,8 +51,8 @@ const getElement = (element, object) => {
   * @param {Object} element - input element with number, string or query key
   * @param {Object} object - tempObject containing the element at current location (from path)
   * @param {Object} nextElement - element of next iteration
-  * @param {Boolean} isFinalElement - boolean to indicate whether it is the last element of path
-  * @param {Any} val - value to be set at path
+  * @param {boolean} isFinalElement - boolean to indicate whether it is the last element of path
+  * @param {any} val - value to be set at path
   * @returns {Object} tempObject with new element
   */
 const setElement = (element, object, nextElement, isFinalElement, val) => {

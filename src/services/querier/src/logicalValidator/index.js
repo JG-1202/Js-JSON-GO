@@ -13,10 +13,10 @@ const defaultCheck = (value) => !!value;
 /**
  * Checks value with checkValue depending on operator
  * @param {Array} value - input value to check
- * @param {String} operator - operator
- * @param {Any} checkValue - other input value to check agains value
- * @param {Any} element - element to be checked
- * @returns {Boolean} - true if it complies, false otherwise
+ * @param {string} operator - operator
+ * @param {any} checkValue - other input value to check agains value
+ * @param {any} element - element to be checked
+ * @returns {boolean} - true if it complies, false otherwise
  */
 const logicalValidator = (value, operator, checkValue, element) => {
   const checks = [
