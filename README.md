@@ -32,32 +32,32 @@ const map = JG.Map(origin, destination, settings, functions);
 ```
 
 
-### new JG.Json(object, settings, functions) 
-Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` and custom `functions` that are made available for all actions on that JSON `object`.
+### new JG.Json(object, settings) 
+Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` that are made available for all actions on that JSON `object`.
 
-#### json.getOne(path, functions, settings)
-Retrieves single value from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the `path`.
+#### json.getOne(path, settings)
+Retrieves single value from objects specified `path`. Use custom `settings` when desired. Returns first element that matches the `path`.
 
-#### json.get(path, functions, settings)
-Retrieves values from objects specified `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the `path`.
+#### json.get(path, settings)
+Retrieves values from objects specified `path`. Use custom `settings` when desired. Returns all elements that match the `path`.
 
-#### json.getPath(path, functions, settings)
-Similar to `json.get`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`.
+#### json.getPath(path, settings)
+Similar to `json.get`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`.
 
-#### json.getPaths(path, functions, settings)
-Similar to `json.get`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`.
+#### json.getPaths(path, settings)
+Similar to `json.get`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Use custom `settings` when desired. Returns all elements that match the input `path`.
 
-#### json.resolveOne(path, functions, settings)
-Combining `json.getOne` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+#### json.resolveOne(path, settings)
+Combining `json.getOne` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
 
-#### json.resolve(path, functions, settings)
-Combining `json.get` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Pass an object with custom `functions` to make these available for this query. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
+#### json.resolve(path, settings)
+Combining `json.get` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
 
-#### json.setOne(path, value, functions, settings)
-Sets single `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets the first element that matches the `path`.
+#### json.setOne(path, value, settings)
+Sets single `value` on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
 
-#### json.set(path, value, functions, settings)
-Sets `value` on specified `path`. Pass an object with custom `functions` to make these available for this query. Sets all elements that matches the `path`.
+#### json.set(path, value, settings)
+Sets `value` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
 
 #### json.chop(chopSize)
 Chops an array or object into smaller pieces with a maximum size of `chopSize`.
@@ -65,11 +65,11 @@ Chops an array or object into smaller pieces with a maximum size of `chopSize`.
 #### json.export
 Returns the (modified) JSON `object`.
 
-### new JG.Map(origin, destination, settings, functions)
-Construct a new JS-JSON-Go Map to map the result of the `origin` object into the `destination` object. Customize it with `settings` and custom `functions` that are made available for all actions on the map.
+### new JG.Map(origin, destination, settings)
+Construct a new JS-JSON-Go Map to map the result of the `origin` object into the `destination` object. Customize it with `settings` that are used for all actions on the map.
 
-#### map.transform(originPath, destinationPath, functions, settings)
-Transforms a single value from `originPath` into destination object at `destinationPath`. Pass an object with custom `functions` to make these available for this query. 
+#### map.transform(originPath, destinationPath, settings)
+Transforms a single value from `originPath` into destination object at `destinationPath`. Use custom `settings` when desired. 
 
 #### map.export
 Returns the (modified) JSON `destination` object.
@@ -81,6 +81,7 @@ The following `settings` can be passed into the `settings` object:
 * `ignoreOnTransform`: array of responses from originObject that should not be translated within Map constructors translate functions into destinationObject. Default is `[]`.
 * `limit`: maximum number of values that should be resolved. Default is `0` (returning all values that match input path).
 * `formatter`: this function is called before returning `get`/`find` result. Input of the function is the resulting value of `get`/`find`. Output of the formatter function will be returned instead of the original value. Formatter will also be called on `transform`. Default is: `(value) => value`.
+* `functions`: object with functions that can be called from within query path. KeyName can be called with `$Function(`keyName`)` from query path. Default is: `{}`.
 
 ### Js-JSON-Go Path Syntax
 Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.
@@ -275,8 +276,8 @@ const result = JsonGo.export();
 -- translate from one object into another one
 */
 const JsonGo = new JG.Map(inputFixture, {});
-JsonGo.translateAll('stores[{$.storeName = Berlin}].items[{$.price >= $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$append}].expensiveItems'); //get expensive items from Berlin and place into expensiveItems
-JsonGo.translateAll('stores[{$.storeName = Berlin}].items[{$.price < $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$end}].nonExpensiveItems'); //get non-expensive items from Berlin and place into nonExpensiveItems
+JsonGo.transform('stores[{$.storeName = Berlin}].items[{$.price >= $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$append}].expensiveItems'); //get expensive items from Berlin and place into expensiveItems
+JsonGo.transform('stores[{$.storeName = Berlin}].items[{$.price < $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$end}].nonExpensiveItems'); //get non-expensive items from Berlin and place into nonExpensiveItems
 const result = JsonGo.export(); //result is: {"stores":[{"expensiveItems":["Granny Smith medium bag","Granny Smith large bag","Pink Lady small bag","Pink Lady medium bag"],"nonExpensiveItems":["Granny Smith small bag","Fuji small bag"]}]}
 ```
 
