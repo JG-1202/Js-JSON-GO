@@ -139,4 +139,23 @@ describe('Mapping', () => {
         { test: false }, { test: true }],
     });
   });
+  it('Simple transform with reference and formatting example', () => {
+    const inputObject = {
+      timestamp: '2011-10-05T14:48:00.000Z',
+      scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Map(inputObject, []);
+    JsonGo.transform('scans[*:(scan)].barcode', '[:(scan)].serialNumber'); // transform barcode to serialNumber
+    JsonGo.transform('scans[{$.success = true}:(scan)].identifier', '[:(scan)].identifier'); // only add identifier if success = true
+    JsonGo.transform('timestamp', '[*].time', { formatter(value) { return new Date(value).getTime(); } }); // add time from timestamp as new Date().getTime() to every record
+    expect(JsonGo.export()).toStrictEqual([
+      { serialNumber: 'abc123', identifier: 'A', time: 1317826080000 },
+      { serialNumber: 'def456', time: 1317826080000 },
+      { serialNumber: 'ghi789', identifier: 'C', time: 1317826080000 },
+    ]);
+  });
 });
