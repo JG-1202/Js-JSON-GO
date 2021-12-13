@@ -2,7 +2,7 @@ const BasicProcessor = require('../../services/basicProcessor');
 
 /**
  * Checks whether value is an Array, if so return value, otherwise return empty array
- * @param {Any} value - any value
+ * @param {any} value - any value
  * @returns {Array}
  */
 const makeArray = (value) => {

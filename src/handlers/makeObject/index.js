@@ -2,7 +2,7 @@ const BasicProcessor = require('../../services/basicProcessor');
 
 /**
  * Checks whether value is an Object, if so return value, otherwise return empty object
- * @param {Any} value - any value
+ * @param {any} value - any value
  * @returns {Object}
  */
 const makeObject = (value) => {

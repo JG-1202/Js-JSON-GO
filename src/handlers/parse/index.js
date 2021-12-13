@@ -2,8 +2,8 @@ const BasicProcessor = require('../../services/basicProcessor');
 
 /**
  * Parses value if it is not yet an object
- * @param {Any} value
- * @returns Parsed value
+ * @param {any} value
+ * @returns {(Object|Array)} Parsed value
  */
 const parse = (value) => {
   const basicProcessor = new BasicProcessor();

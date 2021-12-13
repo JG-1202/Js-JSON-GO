@@ -15,12 +15,39 @@ const mergeSettings = require('./src/mergeSettings');
 
 const SettingsLoader = require('../../services/settingsLoader');
 
+/**
+ * ResolveObject.
+ * @typedef {Object} ResolveObject
+ * @property {any} value - value at specified path
+ * @property {string} path - resolved path
+ * @property {Object.<string, (number|string)>} references - resolved references
+*/
+
+/**
+ * SettingsObject.
+ * @typedef {Object} SettingsObject
+ * @property {boolean=} unlinkInputObject - if set to true, the origin object will not be
+ * altered by anyof the operations, default value is false.
+ * @property {boolean=} mapIfNotFound - if set to true the query result will always be
+ * mapped, even if the query did not return any matches, default value is false.
+ * @property {Array=} ignoreOnTransform - array of responses from originObject that should
+ * not be translated within Map constructors translate functions into destinationObject.
+ * Default is [].
+ * @property {number=} limit - maximum number of values that should be resolved.
+ * Default is 0 (returning all values that match input path).
+ * @property {function=} formatter this function is called before translating. Output of
+ * the formatter function will be translated instead of the original value.
+ * Default is: (value) => value.
+ * @property {Object.<string, function>=} functions object with functions that can be called
+ * from within query path. KeyName can be called with `$Function(`keyName`)` from query path.
+ * Default is: `{}`.
+ */
+
 class Json {
   /**
    * Construct Json
-   * @param {any} object - input object/array
-   * @param {Object} settings - object with settings
-   * @param {Object} functions - object of functions that can be called within query.
+   * @param {(Object|Array)} object - input object/array
+   * @param {SettingsObject=} settings - object with settings
    */
   constructor(object, settings) {
     const settingsLoader = new SettingsLoader({ settings });
@@ -34,7 +61,8 @@ class Json {
 
   /**
    * Retrieves single value from objects specified query path
-   * @param {any} path - string or array representation of path to set.
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
    * @returns {any} returns value found at specified path, in case that multiple logical checks
    * satisfy the first element will be returned
    */
@@ -47,8 +75,9 @@ class Json {
 
   /**
    * Finds single value and path from objects specified query path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {any} returns value and resolved path found at specified path,
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {ResolveObject} returns value and resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
   findOne(path, settings) {
@@ -60,8 +89,9 @@ class Json {
 
   /**
    * Retrieves resolved path from objects specified path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {any} returns resolved path found at specified path,
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {string} returns resolved path found at specified path,
    * in case that multiple logical checks satisfy the first element will be returned
    */
   getPath(path, settings) {
@@ -73,7 +103,8 @@ class Json {
 
   /**
    * Retrieves values from objects specified query path
-   * @param {any} path - string or array representation of path to set.
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   get(path, settings) {
@@ -85,7 +116,8 @@ class Json {
 
   /**
    * Retrieves all values from objects specified query path
-   * @param {any} path - string or array representation of path to set.
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
    * @returns {Array} returns array of values that match the specified path with logical checks
    */
   getAll(path, settings) {
@@ -97,8 +129,9 @@ class Json {
 
   /**
    * Finds values and paths from objects specified query path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {Array} returns array of objects with value/path property
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {ResolveObject[]} returns array of objects with value/path property
    * that match the specified path with logical checks
    */
   find(path, settings) {
@@ -110,8 +143,9 @@ class Json {
 
   /**
    * Finds all values and paths from objects specified query path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {Array} returns array of objects with value/path property
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {ResolveObject[]} returns array of objects with value/path property
    * that match the specified path with logical checks
    */
   findAll(path, settings) {
@@ -123,8 +157,9 @@ class Json {
 
   /**
    * Retrieves resolved paths from objects specified path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {Array} returns array of paths that match the specified path with logical checks
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {string[]} returns array of paths that match the specified path with logical checks
    */
   getPaths(path, settings) {
     return getPaths(
@@ -135,8 +170,9 @@ class Json {
 
   /**
    * Retrieves all resolved paths from objects specified path
-   * @param {any} path - string or array representation of path to set.
-   * @returns {Array} returns array of paths that match the specified path with logical checks
+   * @param {string} path - string representation of path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {string[]} returns array of paths that match the specified path with logical checks
    */
   getAllPaths(path, settings) {
     return getAllPaths(
@@ -147,9 +183,10 @@ class Json {
 
   /**
    * Sets single value on specified path
-   * @param {any} path - string or array representation of path to set.
-   * @param {any} val - value to be set at specified path.
-   * @returns {object} object with newly set path in case that multiple logical checks
+   * @param {string} path - string representation of path
+   * @param {any} val - value to be set at specified path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {Object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
   setOne(path, val, settings) {
@@ -161,9 +198,10 @@ class Json {
 
   /**
    * Sets values on specified path
-   * @param {any} path - string or array representation of path to set.
-   * @param {any} val - value to be set at specified path.
-   * @returns {object} object with newly set path in case that multiple logical checks
+   * @param {string} path - string representation of path
+   * @param {any} val - value to be set at specified path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {Object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
   set(path, val, settings) {
@@ -175,9 +213,10 @@ class Json {
 
   /**
    * Sets all values on specified path
-   * @param {any} path - string or array representation of path to set.
-   * @param {any} val - value to be set at specified path.
-   * @returns {object} object with newly set path in case that multiple logical checks
+   * @param {string} path - string representation of path
+   * @param {any} val - value to be set at specified path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {Object} object with newly set path in case that multiple logical checks
    * satisfy the first element will be set.
    */
   setAll(path, val, settings) {
