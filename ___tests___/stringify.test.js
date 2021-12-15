@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const { stringify } = require('../index');
+const { stringify, safeStringify } = require('../index');
 
 describe('Make an array', () => {
   it('Input object will be stringified', () => {
@@ -27,5 +27,15 @@ describe('Make an array', () => {
   it('Input array will return a stringified array', () => {
     const result = stringify([true, true]);
     expect(result).toStrictEqual(JSON.stringify([true, true]));
+  });
+  it('Input object will be stringified on safeStringify', () => {
+    const result = safeStringify({ test: true });
+    expect(result).toStrictEqual(JSON.stringify({ test: true }));
+  });
+  it('Default value will be returned when fails to stringify', () => {
+    const foo = { };
+    foo.bar = foo;
+    const result = safeStringify(foo, 'default');
+    expect(result).toStrictEqual('default');
   });
 });

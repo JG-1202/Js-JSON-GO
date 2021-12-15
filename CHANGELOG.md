@@ -1,6 +1,35 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.0.0] - 2021-12-09
+### Added
+- references: References will be returned on find and can be used on transform
+- limit setting: limits the number of results returned on get, find, getPaths, and limits number of builds on set
+- findOne: Returns only single find result
+- getOne: Gets single value
+- getAllPaths: Returns all paths
+- setOne: Set single value only
+- safeParse: Tries to parse when non-parsed input is provided
+- safeStringify: Tries to stringify when object like input is provided
+- mergeArrays: Merges arrays
+- mergeObjects: Merges objects
+- formatter setting: formats value before it is returned on get, find and on transform
+
+### Changed
+- get returns array of values, use getOne to return single value
+- find returns array of results, use findOne to return single result
+- getPaths now accepts limit setting, use getAllPaths to return all paths
+- set will set multiple values, use limit = 1 or setOne to set single value only
+
+### Removed
+- defaultGetResponse, returns undefined when no results found
+- defaultGetAllResponse, returns empty array when no results found
+- translate, use transform with limit 1 instead
+- translateAll, use transform without limit instead
+- translateOneToAll, deprecated
+- translateAllToOne, deprecated
+
+
 ## [0.4.1] - 2021-11-07
 ### Changed
 - fix where falsy results did not show up on resolveAll

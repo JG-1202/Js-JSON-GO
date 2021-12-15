@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const checkLowerThan = require('../../src/helpers/query/src/logicalChecks/checkLowerThan');
+const checkLowerThan = require('../../src/services/querier/src/logicalValidator/logicalChecks/checkLowerThan');
 
 describe('Testing lower than', () => {
   it('Testing lower than (number)', () => {

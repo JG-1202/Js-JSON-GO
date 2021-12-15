@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const checkEquality = require('../../src/helpers/query/src/logicalChecks/checkEquality');
+const checkEquality = require('../../src/services/querier/src/logicalValidator/logicalChecks/checkEquality');
 const inputFixture = require('../fixtures/inputFixture.json');
 
 describe('Testing JSON equality', () => {

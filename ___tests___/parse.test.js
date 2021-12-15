@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const { parse } = require('../index');
+const { parse, safeParse } = require('../index');
 
 describe('Make an array', () => {
   it('Input object stays an object', () => {
@@ -13,35 +13,24 @@ describe('Make an array', () => {
     expect(result).toStrictEqual([true, true]);
   });
   it('Stringified object returns parsed object 1', () => {
-    const result = parse(JSON.stringify({ test: true }), { safeParse: true });
+    const result = safeParse(JSON.stringify({ test: true }));
     expect(result).toStrictEqual({ test: true });
   });
   it('Stringified object returns parsed object 2', () => {
-    const result = parse(JSON.stringify({ test: true }), { safeParse: false });
+    const result = parse(JSON.stringify({ test: true }));
     expect(result).toStrictEqual({ test: true });
   });
-  it('Safe parse returns string for non-parsable string input', () => {
-    const result = parse('test', { safeParse: true });
-    expect(result).toStrictEqual('test');
+  it('Safe parse returns default value for non-parsable string input', () => {
+    const result = safeParse('test', 'test123');
+    expect(result).toStrictEqual('test123');
   });
-  it('Stringified number remains unchanged', () => {
-    const result = parse('12', { safeParse: true });
-    expect(result).toStrictEqual('12');
+  it('Stringified number will be unstringified after parse', () => {
+    const result = safeParse('12');
+    expect(result).toStrictEqual(12);
   });
   it('Non-safe parse returns error for non-parsable string input', () => {
     try {
-      parse('test', { safeParse: false });
-    } catch (e) {
-      expect(e.message).toBe('Unexpected token e in JSON at position 1');
-    }
-  });
-  it('Safe parse returns string for non-parsable string input (backward compatability)', () => {
-    const result = parse('test', true);
-    expect(result).toStrictEqual('test');
-  });
-  it('Non-safe parse returns error for non-parsable string input (backward compatability)', () => {
-    try {
-      parse('test', false);
+      parse('test');
     } catch (e) {
       expect(e.message).toBe('Unexpected token e in JSON at position 1');
     }

@@ -1,96 +1,85 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable no-undef */
 
-const loadDefaultSettings = require('../src/settings/loadDefaultSettings');
+const SettingsLoader = require('../src/services/settingsLoader');
+const defaultFormatter = require('../src/services/settingsLoader/src/defaultFormatter');
 
-describe('Test loadDefaultSettings', () => {
+describe('Test SettingsLoader', () => {
   it('Test undefined settings', () => {
-    const settings = loadDefaultSettings();
-    expect(settings).toStrictEqual({
+    const settingsLoader = new SettingsLoader({});
+    expect(settingsLoader.settings).toStrictEqual({
       fatalErrorOnCreate: false,
       mapIfNotFound: false,
-      ignoreOnTranslate: [],
+      ignoreOnTransform: [],
       unlinkInputObject: false,
-      defaultGetResponse: undefined,
-      defaultGetAllResponse: [],
-      defaultSettingsLoaded: true,
+      limit: 0,
+      formatter: defaultFormatter,
+      functions: {},
+      parse: false,
+    });
+  });
+  it('Test some settings', () => {
+    const settingsLoader = new SettingsLoader({
+      settings: { limit: 3 },
+    });
+    expect(settingsLoader.settings).toStrictEqual({
+      fatalErrorOnCreate: false,
+      mapIfNotFound: false,
+      ignoreOnTransform: [],
+      unlinkInputObject: false,
+      limit: 3,
+      formatter: defaultFormatter,
+      functions: {},
+      parse: false,
     });
   });
   it('Custom settings will be loaded correctly', () => {
-    const settings = loadDefaultSettings({
-      fatalErrorOnCreate: true,
-      mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
-      unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
+    const customFormatter = (value) => `${value}-test`;
+    const settingsLoader = new SettingsLoader({
+      settings: {
+        fatalErrorOnCreate: true,
+        mapIfNotFound: true,
+        ignoreOnTransform: [null, undefined],
+        unlinkInputObject: true,
+        limit: 10,
+        formatter: customFormatter,
+        functions: {},
+        parse: true,
+      },
     });
-    expect(settings).toStrictEqual({
+    expect(settingsLoader.settings).toStrictEqual({
       fatalErrorOnCreate: true,
       mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
+      ignoreOnTransform: [null, undefined],
       unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-      defaultSettingsLoaded: true,
+      limit: 10,
+      formatter: customFormatter,
+      functions: {},
+      parse: true,
     });
   });
   it('Custom settings of invalid type will be set to default', () => {
-    const settings = loadDefaultSettings({
-      fatalErrorOnCreate: undefined,
-      mapIfNotFound: null,
-      ignoreOnTranslate: {},
-      unlinkInputObject: 'true',
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
+    const settingsLoader = new SettingsLoader({
+      settings: {
+        fatalErrorOnCreate: undefined,
+        mapIfNotFound: null,
+        ignoreOnTransform: {},
+        unlinkInputObject: 'true',
+        limit: 'abc',
+        formatter: {},
+        functions: null,
+        parse: 'abc',
+      },
     });
-    expect(settings).toStrictEqual({
+    expect(settingsLoader.settings).toStrictEqual({
       fatalErrorOnCreate: false,
       mapIfNotFound: false,
-      ignoreOnTranslate: [],
+      ignoreOnTransform: [],
       unlinkInputObject: false,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-      defaultSettingsLoaded: true,
-    });
-  });
-  it('Deprecated ingnoreOnTranslate still supported until v1.0.0', () => {
-    const settings = loadDefaultSettings({
-      fatalErrorOnCreate: true,
-      mapIfNotFound: true,
-      ingnoreOnTranslate: [null, undefined],
-      unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-    });
-    expect(settings).toStrictEqual({
-      fatalErrorOnCreate: true,
-      mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined],
-      unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-      defaultSettingsLoaded: true,
-    });
-  });
-  it('Deprecated ingnoreOnTranslate still supported until v1.0.0, but ignoreOnTranslate has priority', () => {
-    const settings = loadDefaultSettings({
-      fatalErrorOnCreate: true,
-      mapIfNotFound: true,
-      ingnoreOnTranslate: [null, undefined],
-      ignoreOnTranslate: [null, undefined, ''],
-      unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-    });
-    expect(settings).toStrictEqual({
-      fatalErrorOnCreate: true,
-      mapIfNotFound: true,
-      ignoreOnTranslate: [null, undefined, ''],
-      unlinkInputObject: true,
-      defaultGetResponse: '',
-      defaultGetAllResponse: null,
-      defaultSettingsLoaded: true,
+      limit: 0,
+      formatter: defaultFormatter,
+      functions: {},
+      parse: false,
     });
   });
 });
