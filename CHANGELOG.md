@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented here.
 
-## [1.0.0] - 2021-12-09
+## [1.0.0] - 2021-12-15
 ### Added
 - references: References will be returned on find and can be used on transform
 - limit setting: limits the number of results returned on get, find, getPaths, and limits number of builds on set
