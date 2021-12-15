@@ -33,11 +33,8 @@ declare class QueryElementTransformer {
     transformPaths(): {
         relativePath: any;
         relativeDepth: number;
-        absolutePath?: undefined;
     } | {
         absolutePath: any;
-        relativePath?: undefined;
-        relativeDepth?: undefined;
     };
     transformQueryElement(): {
         value: any;
