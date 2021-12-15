@@ -1,3 +1,6 @@
+const chopArray = require('./src/chopArray');
+const chopObject = require('./src/chopObject');
+
 class BasicProcessor {
   constructor() {
     this.isObjectLike = (variable) => variable && typeof variable === 'object';
@@ -46,23 +49,14 @@ class BasicProcessor {
   }
 
   chop(variable, chopSize) {
-    const result = [];
     const toChop = this.safeParse(variable);
     if (this.isArray(toChop)) {
-      for (let i = 0; i < toChop.length; i += chopSize) {
-        result.push(toChop.slice(i, i + chopSize));
-      }
-    } else if (this.isObject(toChop)) {
-      for (let i = 0; i < Object.entries(toChop).length; i += chopSize) {
-        const objectEntries = Object.entries(toChop).slice(i, i + chopSize);
-        result.push(objectEntries.reduce((accumulativeObject, [key, value]) => {
-          const object = accumulativeObject;
-          object[key] = value;
-          return object;
-        }, {}));
-      }
+      return chopArray(toChop, chopSize);
     }
-    return result;
+    if (this.isObject(toChop)) {
+      return chopObject(toChop, chopSize);
+    }
+    return [];
   }
 
   mergeObjects(variableArray) {

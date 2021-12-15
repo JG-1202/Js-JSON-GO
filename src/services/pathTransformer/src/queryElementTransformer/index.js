@@ -1,3 +1,5 @@
+const transformPaths = require('./src/transformPaths');
+
 class QueryElementTransformer {
   constructor({ functions }) {
     this.functions = functions;
@@ -24,19 +26,17 @@ class QueryElementTransformer {
   }
 
   transformSpecials() {
+    let result;
     if (this.part === 'null') {
-      return { value: null };
+      result = { value: null };
+    } else if (this.part === 'undefined') {
+      result = { value: undefined };
+    } else if (this.part === 'true') {
+      result = { value: true };
+    } else if (this.part === 'false') {
+      result = { value: false };
     }
-    if (this.part === 'undefined') {
-      return { value: undefined };
-    }
-    if (this.part === 'true') {
-      return { value: true };
-    }
-    if (this.part === 'false') {
-      return { value: false };
-    }
-    return undefined;
+    return result;
   }
 
   transformJSON() {
@@ -91,28 +91,7 @@ class QueryElementTransformer {
   }
 
   transformPaths() {
-    const removeFirstChar = (el) => el.substr(1);
-    const validatePath = (path) => {
-      if (!path) {
-        throw new Error('Query element is invalid.');
-      }
-    };
-    if (this.part.charAt(0) === '$') {
-      let path = removeFirstChar(this.part);
-      if (path.charAt(0) === '.') {
-        let relativeDepth = 0;
-        path = removeFirstChar(path);
-        while (path.charAt(0) === '.') {
-          relativeDepth += -1;
-          path = removeFirstChar(path);
-        }
-        validatePath(path);
-        return { relativePath: path, relativeDepth };
-      }
-      validatePath(path);
-      return { absolutePath: path };
-    }
-    return undefined;
+    return transformPaths(this.part);
   }
 
   transformQueryElement() {
