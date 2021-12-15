@@ -8,3 +8,4 @@
 jest.config.js
 /.github
 .commitlintrc.json
+.husky/commit-msg
