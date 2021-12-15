@@ -567,7 +567,7 @@ Tests can be ran using the following command:
 ```bash
 npm run test
 ```
-Current code coverage (20 suites, 183 tests) is about 95-100%.
+Current code coverage 100%.
 
 ## Contributing
 Pull requests are welcome.
