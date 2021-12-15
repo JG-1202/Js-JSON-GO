@@ -172,7 +172,7 @@ const inputObject = {
     ],
 };
 const JsonGo = new JG.Json(inputObject, { limit: 2 });
-const result = JsonGo.get('scans[*].barcode');
+const result = JsonGo.getPath('scans[*].barcode');
 /**
 'scans[0].barcode'
 */
@@ -189,7 +189,7 @@ const inputObject = {
     ],
 };
 const JsonGo = new JG.Json(inputObject, { limit: 2 });
-const result = JsonGo.get('scans[*].barcode');
+const result = JsonGo.getAllPaths('scans[*].barcode');
 /**
 ['scans[0].barcode', 'scans[1].barcode', 'scans[2].barcode']
 */
