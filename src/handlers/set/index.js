@@ -18,6 +18,10 @@ const Builder = require('../../services/builder');
  * @property {Object.<string, function>=} functions object with functions that can be called
  * from within query path. KeyName can be called with `$Function(`keyName`)` from query path.
  * Default is: `{}`.
+ * @property {boolean=} parse - if set to true each queried element that is not yet of type object
+ * will be attempted to parse.
+ * By doing so there is no need to deep parse the input object before querying. This setting has no
+ * effect while building JSON paths. Default is: false
  */
 
 /**
@@ -30,7 +34,7 @@ const Builder = require('../../services/builder');
  * satisfy the first element will be set.
  */
 const set = (object, path, value, settings) => {
-  const builder = new Builder({ settings });
+  const builder = new Builder({ settings: { ...settings, parse: false } });
   return builder.build(object, path, value);
 };
 

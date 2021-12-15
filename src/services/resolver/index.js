@@ -88,6 +88,7 @@ class Resolver extends Querier {
       if (this.isArray(tempObject)) {
         elementValue = element.number;
       }
+      this.parseIfNeeded(tempObject, elementValue);
       tempObject = tempObject[elementValue];
       const {
         shouldItContinue, newTempObject,
@@ -158,6 +159,15 @@ class Resolver extends Querier {
     }
     results.push({ path, value, references });
     return true;
+  }
+
+  parseIfNeeded(object, element) {
+    const newObject = object;
+    if (this.settings.parse) {
+      if (object && object[element]) {
+        newObject[element] = this.safeParse(newObject[element], newObject[element]);
+      }
+    }
   }
 
   resolve(obj, path, references, intermediate) {

@@ -15,6 +15,7 @@ describe('Test SettingsLoader', () => {
       limit: 0,
       formatter: defaultFormatter,
       functions: {},
+      parse: false,
     });
   });
   it('Test some settings', () => {
@@ -29,6 +30,7 @@ describe('Test SettingsLoader', () => {
       limit: 3,
       formatter: defaultFormatter,
       functions: {},
+      parse: false,
     });
   });
   it('Custom settings will be loaded correctly', () => {
@@ -42,6 +44,7 @@ describe('Test SettingsLoader', () => {
         limit: 10,
         formatter: customFormatter,
         functions: {},
+        parse: true,
       },
     });
     expect(settingsLoader.settings).toStrictEqual({
@@ -52,6 +55,7 @@ describe('Test SettingsLoader', () => {
       limit: 10,
       formatter: customFormatter,
       functions: {},
+      parse: true,
     });
   });
   it('Custom settings of invalid type will be set to default', () => {
@@ -64,6 +68,7 @@ describe('Test SettingsLoader', () => {
         limit: 'abc',
         formatter: {},
         functions: null,
+        parse: 'abc',
       },
     });
     expect(settingsLoader.settings).toStrictEqual({
@@ -74,6 +79,7 @@ describe('Test SettingsLoader', () => {
       limit: 0,
       formatter: defaultFormatter,
       functions: {},
+      parse: false,
     });
   });
 });

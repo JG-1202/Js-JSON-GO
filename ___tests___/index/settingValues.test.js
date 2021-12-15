@@ -106,4 +106,30 @@ describe('Test setting value(s)', () => {
     JsonGo.setAll('[*]', 2);
     expect(JsonGo.export()).toStrictEqual([2, 2, 2]);
   });
+  it('Test with parse is false', () => {
+    const testObject = {
+      test: {
+        bla: JSON.stringify({ foo: { bar: true } }),
+      },
+    };
+    const JsonGo = new JG.Json(testObject, { unlinkInputObject: true, parse: false });
+    JsonGo.set('test.bla.foo', 'abc');
+    expect(JsonGo.export()).toStrictEqual(testObject);
+  });
+  it('Test with parse is true', () => {
+    const testObject = {
+      test: {
+        bla: JSON.stringify({ foo: { bar: true } }),
+      },
+    };
+    const JsonGo = new JG.Json(testObject, { unlinkInputObject: true, parse: true });
+    JsonGo.setOne('test.bla.foo', 'abc');
+    expect(JsonGo.export()).toStrictEqual(testObject);
+    JsonGo.set('[{$.bla.foo}].bla.foo', 123);
+    expect(JsonGo.export()).toStrictEqual(testObject);
+    JsonGo.setOne('[{$.bla.foo}].bla.foo', 123);
+    expect(JsonGo.export()).toStrictEqual(testObject);
+    JsonGo.setAll('[{$.bla.foo}].bla.foo', 123);
+    expect(JsonGo.export()).toStrictEqual(testObject);
+  });
 });

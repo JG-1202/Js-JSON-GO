@@ -77,3 +77,128 @@ describe('Test getting value(s)', () => {
     expect(JsonGo.findOne('stores[{$end}].storeName').value).toStrictEqual('Rome');
   });
 });
+
+describe('Testing deepParse', () => {
+  it('Stringified object within object can not be queried without parse setting', () => {
+    const testObject = {
+      test: {
+        bla: JSON.stringify({ foo: { bar: true } }),
+      },
+    };
+    const JsonGo = new JG.Json(testObject);
+    const result = JsonGo.get('test.bla.foo.bar');
+    const result2 = JsonGo.get('test[{$.foo.bar = true}]');
+    const result3 = JsonGo.get('test.bla[{$.bar = true}]');
+    const result4 = JsonGo.get('[{$.bla.foo.bar = true}]');
+    const result5 = JsonGo.get('[{$.bla.foo.bar = true}].non.existing');
+    const result6 = JsonGo.get('[{$.non.existing = true}].bla.foo');
+    expect(result).toStrictEqual([]);
+    expect(result2).toStrictEqual([]);
+    expect(result3).toStrictEqual([]);
+    expect(result4).toStrictEqual([]);
+    expect(result5).toStrictEqual([]);
+    expect(result6).toStrictEqual([]);
+  });
+
+  it('Stringified object within object can be queried with parse = true', () => {
+    const testObject = {
+      test: {
+        bla: JSON.stringify({ foo: { bar: true } }),
+      },
+    };
+    const JsonGo = new JG.Json(testObject, { parse: true });
+    expect(JsonGo.settings.parse).toStrictEqual(true);
+    const result = JsonGo.get('test.bla.foo.bar');
+    const result2 = JsonGo.get('test[{$.foo.bar = true}]');
+    const result3 = JsonGo.get('test.bla[{$.bar = true}]');
+    const result4 = JsonGo.get('[{$.bla.foo.bar = true}]');
+    const result5 = JsonGo.get('[{$.bla.foo.bar = true}].non.existing');
+    const result6 = JsonGo.get('[{$.non.existing = true}].bla.foo');
+    expect(result).toStrictEqual([true]);
+    expect(result2).toStrictEqual([{ foo: { bar: true } }]);
+    expect(result3).toStrictEqual([{ bar: true }]);
+    expect(result4).toStrictEqual([{ bla: { foo: { bar: true } } }]);
+    expect(result5).toStrictEqual([]);
+    expect(result6).toStrictEqual([]);
+  });
+});
+
+const inputObject = {
+  scans: [
+    { barcode: 'abc123', success: true, identifier: 'A' },
+    { barcode: 'def456', success: false, identifier: 'B' },
+    { barcode: 'ghi789', success: true, identifier: 'C' },
+  ],
+};
+
+describe('README examples', () => {
+  it('get', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.get('scans[*].barcode');
+    const result2 = JsonGo.get('scans[{$.success = true}].barcode');
+    const result3 = JsonGo.get('some.non.existing.path');
+    expect(result).toStrictEqual(['abc123', 'def456']);
+    expect(result2).toStrictEqual(['abc123', 'ghi789']);
+    expect(result3).toStrictEqual([]);
+  });
+  it('getOne', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.getOne('scans[*].barcode');
+    const result2 = JsonGo.getOne('scans[{$.success = false}].barcode');
+    const result3 = JsonGo.getOne('some.non.existing.path');
+    expect(result).toStrictEqual('abc123');
+    expect(result2).toStrictEqual('def456');
+    expect(result3).toStrictEqual(undefined);
+  });
+  it('getAll', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.getAll('scans[*].barcode');
+    const result2 = JsonGo.getAll('scans[{$.success = false}].barcode');
+    const result3 = JsonGo.getAll('some.non.existing.path');
+    expect(result).toStrictEqual(['abc123', 'def456', 'ghi789']);
+    expect(result2).toStrictEqual(['def456']);
+    expect(result3).toStrictEqual([]);
+  });
+  it('getPaths', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.getPaths('scans[*].barcode');
+    expect(result).toStrictEqual(['scans[0].barcode', 'scans[1].barcode']);
+  });
+  it('getPath', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.getPath('scans[*].barcode');
+    expect(result).toStrictEqual('scans[0].barcode');
+  });
+  it('getAllPaths', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.getAllPaths('scans[*].barcode');
+    expect(result).toStrictEqual(['scans[0].barcode', 'scans[1].barcode', 'scans[2].barcode']);
+  });
+  it('find', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.find('scans[*].barcode');
+    expect(result).toStrictEqual([{ value: 'abc123', path: 'scans[0].barcode', references: {} },
+      { value: 'def456', path: 'scans[1].barcode', references: {} }]);
+    const result2 = JsonGo.find('scans[*:(scan)].barcode');
+    expect(result2).toStrictEqual([{ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } },
+      { value: 'def456', path: 'scans[1].barcode', references: { scan: 1 } }]);
+  });
+  it('findOne', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.findOne('scans[*].barcode');
+    expect(result).toStrictEqual({ value: 'abc123', path: 'scans[0].barcode', references: {} });
+    const result2 = JsonGo.findOne('scans[*:(scan)].barcode');
+    expect(result2).toStrictEqual({ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } });
+  });
+  it('findAll', () => {
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    const result = JsonGo.findAll('scans[*].barcode');
+    expect(result).toStrictEqual([{ value: 'abc123', path: 'scans[0].barcode', references: {} },
+      { value: 'def456', path: 'scans[1].barcode', references: {} },
+      { value: 'ghi789', path: 'scans[2].barcode', references: {} }]);
+    const result2 = JsonGo.findAll('scans[*:(scan)].barcode');
+    expect(result2).toStrictEqual([{ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } },
+      { value: 'def456', path: 'scans[1].barcode', references: { scan: 1 } },
+      { value: 'ghi789', path: 'scans[2].barcode', references: { scan: 2 } }]);
+  });
+});

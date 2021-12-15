@@ -37,9 +37,6 @@ Construct a new JS-JSON-Go Map to map the result of the `origin` object into the
 #### map.transform(originPath, destinationPath, settings)
 Transforms a single value from `originPath` into destination object at `destinationPath`. Use custom `settings` when desired. 
 
-#### map.export
-Returns the (modified) JSON `destination` object.
-
 Example:
 ```javascript
 const inputObject = {
@@ -64,33 +61,220 @@ const result = JsonGo.export();
  */
 ```
 
+#### map.export
+Returns the (modified) JSON `destination` object.
+
 
 ### new JG.Json(object, settings) 
 Construct a new JS-JSON-Go Json to query or update a single JSON `object`, customize it with `settings` that are made available for all actions on that JSON `object`.
 
-#### json.getOne(path, settings)
-Retrieves single value from objects specified `path`. Use custom `settings` when desired. Returns first element that matches the `path`.
-
 #### json.get(path, settings)
 Retrieves values from objects specified `path`. Use custom `settings` when desired. Returns all elements that match the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.get('scans[*].barcode');
+/**
+[ 'abc123', 'def456' ]
+ */
+const result2 = JsonGo.get('scans[{$.success = true}].barcode');
+/**
+[ 'abc123', 'ghi789' ]
+ */
+const result3 = JsonGo.get('some.non.existing.path');
+/**
+[ ]
+ */
+```
 
-#### json.getPath(path, settings)
-Similar to `json.get`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`.
+#### json.getOne(path, settings)
+Retrieves single value from objects specified `path`. This is overruling the limit setting and will always return a single result. Use custom `settings` when desired. Returns first element that matches the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.getOne('scans[*].barcode');
+/**
+'abc123'
+ */
+const result2 = JsonGo.getOne('scans[{$.success = false}].barcode');
+/**
+'def456'
+ */
+const result3 = JsonGo.getOne('some.non.existing.path');
+/**
+undefined
+ */
+```
+
+#### json.getAll(path, settings)
+Retrieves all values from objects specified `path`. This is overruling the limit setting and will always return a all results. Use custom `settings` when desired. Returns all elements that match the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.getAll('scans[*].barcode');
+/**
+[ 'abc123', 'def456', 'ghi789' ]
+ */
+const result2 = JsonGo.getAll('scans[{$.success = false}].barcode');
+/**
+[ 'def456' ]
+ */
+const result3 = JsonGo.getAll('some.non.existing.path');
+/**
+[ ]
+ */
+```
 
 #### json.getPaths(path, settings)
 Similar to `json.get`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Use custom `settings` when desired. Returns all elements that match the input `path`.
 
-#### json.resolveOne(path, settings)
-Combining `json.getOne` and `json.getPath`. Retrieves resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.getPaths('scans[*].barcode');
+/**
+['scans[0].barcode', 'scans[1].barcode']
+*/
+```
 
-#### json.resolve(path, settings)
+#### json.getPath(path, settings)
+Similar to `json.getOne`, but returns the resolved path, rather than the value on that path. Retrieves resolved path from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.get('scans[*].barcode');
+/**
+'scans[0].barcode'
+*/
+```
+
+#### json.getAllPaths(path, settings)
+Similar to `json.getAll`, but returns the resolved paths, rather than the values on these paths. Retrieves all resolved paths from objects specified input `path`. Use custom `settings` when desired. Returns all elements that match the input `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.get('scans[*].barcode');
+/**
+['scans[0].barcode', 'scans[1].barcode', 'scans[2].barcode']
+*/
+```
+
+#### json.find(path, settings)
 Combining `json.get` and `json.getPaths`. Retrieves all resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns all elements that match the input `path`. Output is an array with objects containing resolved `path` and `value` properties.
+
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.find('scans[*].barcode');
+/**
+[{ value: 'abc123', path: 'scans[0].barcode', references: {} }, 
+ { value: 'def456', path: 'scans[1].barcode', references: {} }]
+*/
+const result2 = JsonGo.find('scans[*:(scan)].barcode');
+/**
+[{ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } }, 
+ { value: 'def456', path: 'scans[1].barcode', references: { scan: 1 } }]
+*/
+```
+
+#### json.findOne(path, settings)
+Combining `json.getOne` and `json.getPaths`. Retrieves resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.findOne('scans[*].barcode');
+/**
+{ value: 'abc123', path: 'scans[0].barcode', references: {} }
+*/
+const result2 = JsonGo.findOne('scans[*:(scan)].barcode');
+/**
+{ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } }
+*/
+```
+
+#### json.findAll(path, settings)
+Combining `json.getAll` and `json.getAllPaths`. Retrieves resolved `path` and `value` from objects specified input `path`. Use custom `settings` when desired. Returns first element that matches the input `path`. Returns an object with resolved `path` and `value` properties.
+
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+const result = JsonGo.findAll('scans[*].barcode');
+/**
+[{ value: 'abc123', path: 'scans[0].barcode', references: {} }, 
+ { value: 'def456', path: 'scans[1].barcode', references: {} }, 
+ { value: 'ghi789', path: 'scans[2].barcode', references: {} }]
+*/
+const result2 = JsonGo.findAll('scans[*:(scan)].barcode');
+/**
+[{ value: 'abc123', path: 'scans[0].barcode', references: { scan: 0 } }, 
+ { value: 'def456', path: 'scans[1].barcode', references: { scan: 1 } }, 
+ { value: 'ghi789', path: 'scans[2].barcode', references: { scan: 2 } }]
+*/
+```
+
+#### json.set(path, value, settings)
+Sets `value` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
 
 #### json.setOne(path, value, settings)
 Sets single `value` on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
 
-#### json.set(path, value, settings)
-Sets `value` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
+#### json.setAll(path, value, settings)
+Sets all `value`s on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
 
 #### json.chop(chopSize)
 Chops an array or object into smaller pieces with a maximum size of `chopSize`.
@@ -106,6 +290,7 @@ The following `settings` can be passed into the `settings` object:
 * `limit`: maximum number of values that should be resolved. Default is `0` (returning all values that match input path).
 * `formatter`: this function is called before returning `get`/`find` result. Input of the function is the resulting value of `get`/`find`. Output of the formatter function will be returned instead of the original value. Formatter will also be called on `transform`. Default is: `(value) => value`.
 * `functions`: object with functions that can be called from within query path. KeyName can be called with `$Function(`keyName`)` from query path. Default is: `{}`.
+* `parse`: if set to true each queried element that is not yet of type object will be attempted to parse. By doing so there is no need to deep parse the input object before querying. This setting has no effect while building JSON paths. Default is: `false`
 
 ### Js-JSON-Go Path Syntax
 Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or dot notation in JavaScript. In principle applies that a dot-notated child refers to a child within an object, and a bracket-notated child to either an object or an array. Moreover, with bracket notation Js-JSON-Go allows to query over all children/elements at the regarding depth. Querying is not limited to its regarding depth, meaning it is allowed to query both parents and children, but also parents and children that contain their own query.
@@ -231,7 +416,7 @@ const JG = require('js-json-go');
 const inputFixture = require('./fixtures/inputFixture.json');
 
 /*
--- use of get will return a single output (first result that complies with input query)
+-- use of getOne will return a single output (first result that complies with input query)
 */
 const JsonGo = new JG.Json(inputFixture);
 const result1 = JsonGo.getOne('stores[0].storeName'); //'Berlin' -> get storeName from stores with element 0 
@@ -295,15 +480,6 @@ JsonGo.setOne('stores[{$end}].items', []);
 JsonGo.set(`stores[{1 = 1}].items[{$.name ∈ $JSON(${JSON.stringify(['Pink Lady medium bag', 'Pink Lady small bag'])})}].price`, 8); //sets price = 8 for all items in all stores where items name is in ['Pink Lady medium bag', 'Pink Lady small bag']
 JsonGo.set('stores[{$.storeName = $mainStore}].items[{$.price >= $stores[{$.storeName = $mainStore}].expensive}].expensive', true); // sets expensive key/value where price >= expensive field of mainStore
 const result = JsonGo.export();
-
-
-/*
--- translate from one object into another one
-*/
-const JsonGo = new JG.Map(inputFixture, {});
-JsonGo.transform('stores[{$.storeName = Berlin}].items[{$.price >= $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$append}].expensiveItems'); //get expensive items from Berlin and place into expensiveItems
-JsonGo.transform('stores[{$.storeName = Berlin}].items[{$.price < $stores[{$.storeName = Berlin}].expensive}].name', 'stores[{$end}].nonExpensiveItems'); //get non-expensive items from Berlin and place into nonExpensiveItems
-const result = JsonGo.export(); //result is: {"stores":[{"expensiveItems":["Granny Smith medium bag","Granny Smith large bag","Pink Lady small bag","Pink Lady medium bag"],"nonExpensiveItems":["Granny Smith small bag","Fuji small bag"]}]}
 ```
 
 ## Performance

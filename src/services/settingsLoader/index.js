@@ -17,6 +17,7 @@ class SettingsLoader extends BasicProcessor {
       limit: (setting) => Number(setting),
       formatter: (setting) => typeof setting === 'function',
       functions: (setting) => this.isObject(setting),
+      parse: (setting) => typeof setting === 'boolean',
     };
     if (settingsValidator[settingName] && settingsValidator[settingName](settingValue)) {
       this.settings[settingName] = settingValue;
@@ -34,6 +35,7 @@ class SettingsLoader extends BasicProcessor {
       limit: 0,
       formatter: defaultFormatter,
       functions: {},
+      parse: false,
     };
     if (userSettings && typeof userSettings === 'object') {
       Object.keys(defaultSettings).forEach((settingName) => (
