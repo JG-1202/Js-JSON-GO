@@ -269,15 +269,92 @@ const result2 = JsonGo.findAll('scans[*:(scan)].barcode');
 
 #### json.set(path, value, settings)
 Sets `value` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.set('scans[*].attributes[0].code', 8);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A', attributes: [{ code: 8 }] },
+        { barcode: 'def456', accuracy: 50, identifier: 'B', attributes: [{ code: 8 }] },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+}
+*/
+```
 
 #### json.setOne(path, value, settings)
 Sets single `value` on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
 
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.setOne('scans[{$.accuracy >= 90}].success', true);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A', success: true },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+}
+*/
+```
+
 #### json.setAll(path, value, settings)
 Sets all `value`s on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.setAll('scans[{$.accuracy > 30}].accuracy', 99);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 99, identifier: 'A' },
+        { barcode: 'def456', accuracy: 99, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 99, identifier: 'C' },
+    ],
+}
+*/
+```
 
 #### json.chop(chopSize)
 Chops an array or object into smaller pieces with a maximum size of `chopSize`.
+```javascript
+const barcodes = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010'];
+const JsonGo = new JG.Json(barcodes);
+const result = JsonGo.chop(3);
+/**
+[
+    ['001', '002', '003'],
+    ['004', '005', '006'],
+    ['007', '008', '009'],
+    ['010'],
+]
+*/
+```
 
 #### json.export
 Returns the (modified) JSON `object`.
@@ -483,52 +560,7 @@ const result = JsonGo.export();
 ```
 
 ## Performance
-The querying performance of this library is tested with some simple queries on 3 datasets of different sizes using the "json-querying-performance-testing" library of andykais (https://github.com/andykais/json-querying-performance-testing) and compared to different libraries that also facilitate JSON querying.
-Shallow: `features[*].properties`
-Deep: `features[*].properties.BLOCK_NUM`
-Conditional: `features[{$.properties.STREET = UNKNOWN}].properties.BLOCK_NUM`
-
-Summary (tested with Js-JSON-Go version 1.0.0 on 2,9 GHz Dual-Core Intel Core i5):
-
-
-smallCityLots
-
-|      (index)      |      shallow      |       deep        |    conditional    |
-| :---------------- | :---------------- | :---------------- | :---------------- |
-│    json-query     │      0.0112       │      0.0162       │      0.0205       │
-│   jsonpath-plus   │      0.8449       │      0.4725       │       0.311       │
-│     jsonpath      │      1.0833       │      7.9322       │      0.0239       │
-│    JSONStream     │      2.5622       │      2.9156       │  'not possible'   │
-│       oboe        │      4.2289       │       4.819       │  'not possible'   │
-│ map-filter-reduce │ 'not implemented' │ 'not implemented' │ 'not implemented' │
-|                   |                   |                   |                   |
-│    js-json-go     │      0.2307       │      0.3229       │      0.5133       │
-
-mediumCityLots
-|      (index)      |      shallow      |       deep        |    conditional    |
-| :---------------- | :---------------- | :---------------- | :---------------- |
-│    json-query     │      0.0169       │      0.0287       │      0.0268       │
-│   jsonpath-plus   │      1.2109       │      1.1099       │      0.6319       │
-│     jsonpath      │      2.4078       │      38.6892      │      0.0502       │
-│    JSONStream     │      6.2154       │      6.0155       │  'not possible'   │
-│       oboe        │      9.5313       │      9.9939       │  'not possible'   │
-│ map-filter-reduce │ 'not implemented' │ 'not implemented' │ 'not implemented' │
-|                   |                   |                   |                   |
-│    js-json-go     │      0.1888       │      0.1681       │      0.4447       │
-
-largeCityLots
-
-|      (index)      |      shallow      |       deep        |    conditional    |
-| :---------------- | :---------------- | :---------------- | :---------------- |
-│    json-query     │     'failed'      │     'failed'      │     'failed'      │
-│   jsonpath-plus   │      3.5187       │      3.4389       │      1.4037       │
-│     jsonpath      │      7.0401       │     166.0362      │      0.1226       │
-│    JSONStream     │      16.6928      │      17.3235      │  'not possible'   │
-│       oboe        │      26.2005      │      31.8993      │  'not possible'   │
-│ map-filter-reduce │ 'not implemented' │ 'not implemented' │ 'not implemented' │
-|                   |                   |                   |                   |
-│    js-json-go     │      1.0888       │      0.8577       │      1.1567       │
-
+The querying performance of this library is tested with some simple queries on 3 datasets of different sizes using the "json-querying-performance-testing" library of andykais (https://github.com/andykais/json-querying-performance-testing) and compared to different libraries that also facilitate JSON querying. Js-JSON-Go is outperforming most of them on both small and large datasets.
 
 ## Testing
 Tests can be ran using the following command:

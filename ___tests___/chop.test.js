@@ -22,4 +22,15 @@ describe('Chops an array', () => {
     const result = JsonGo.chop(10);
     expect(result).toStrictEqual([]);
   });
+  it('README chop example', () => {
+    const barcodes = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010'];
+    const JsonGo = new JG.Json(barcodes);
+    const result = JsonGo.chop(3);
+    expect(result).toStrictEqual([
+      ['001', '002', '003'],
+      ['004', '005', '006'],
+      ['007', '008', '009'],
+      ['010'],
+    ]);
+  });
 });

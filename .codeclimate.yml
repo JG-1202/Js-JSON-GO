@@ -1,2 +1,4 @@
 exclude_patterns:
 - "___tests___/"
+- "declarations/"
+- "src/handlers/"

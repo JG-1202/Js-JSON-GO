@@ -133,3 +133,69 @@ describe('Test setting value(s)', () => {
     expect(JsonGo.export()).toStrictEqual(testObject);
   });
 });
+
+describe('README examples', () => {
+  it('set', () => {
+    const inputObject = {
+      scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    JsonGo.set('scans[*].attributes[0].code', 8);
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      scans: [
+        {
+          barcode: 'abc123', accuracy: 90, identifier: 'A', attributes: [{ code: 8 }],
+        },
+        {
+          barcode: 'def456', accuracy: 50, identifier: 'B', attributes: [{ code: 8 }],
+        },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+      ],
+    });
+  });
+  it('setOne', () => {
+    const inputObject = {
+      scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    JsonGo.setOne('scans[{$.accuracy >= 90}].success', true);
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      scans: [
+        {
+          barcode: 'abc123', accuracy: 90, identifier: 'A', success: true,
+        },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+      ],
+    });
+  });
+  it('setAll', () => {
+    const inputObject = {
+      scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Json(inputObject, { limit: 2 });
+    JsonGo.setAll('scans[{$.accuracy > 30}].accuracy', 99);
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({
+      scans: [
+        { barcode: 'abc123', accuracy: 99, identifier: 'A' },
+        { barcode: 'def456', accuracy: 99, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 99, identifier: 'C' },
+      ],
+    });
+  });
+});
