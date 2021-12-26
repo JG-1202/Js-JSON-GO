@@ -57,6 +57,30 @@ class Map {
   }
 
   /**
+   * Sets values on specified path on destination object
+   * @param {string} path - string representation of path
+   * @param {any} val - value to be set at specified path
+   * @param {SettingsObject=} settings - object with settings
+   * @returns {Object} object with newly set path in case that multiple logical checks
+   * satisfy the first element will be set.
+   */
+  set(path, val, settings) {
+    return this.destinationObject.set(path, val, settings);
+  }
+
+  /**
+   * Builds function output on specified path on destination object
+   * @param {string} path - string or array representation of path to set.
+   * @param {function} functionToCall - function to call from which output should be set
+   * on provided path.
+   * @param {SettingsObject=} settings - object with settings.
+   * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
+   */
+  build(path, functionToCall, settings) {
+    return this.destinationObject.build(path, functionToCall, settings);
+  }
+
+  /**
    * Exports the destination object
    * @returns {(Object.<string, any>|Array)} destination object
    */

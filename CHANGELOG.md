@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.1.0] - 2021-12-26
+### Added
+- build, buildOne, buildAll handlers: sets function output on specified json path
+- build, buildOne, build added to Json class
+- added build and set to Map client
+
+
 ## [1.0.0] - 2021-12-15
 ### Added
 - references: References will be returned on find and can be used on transform

@@ -51,4 +51,11 @@ describe('Testing handlers', () => {
     expect(JG.mergeObjects([
       { test: true }, { test2: true }])).toStrictEqual({ test: true, test2: true });
   });
+  it('build, buildOne, buildAll', () => {
+    const testObject = [{}, {}, {}];
+    JG.buildOne(testObject, '[*].test', () => 'abc', { limit: 2 });
+    JG.buildAll(testObject, '[*].abc', () => 123, { limit: 2 });
+    JG.build(testObject, '[*].foo', () => 'bar', { limit: 2 });
+    expect(testObject).toStrictEqual([{ test: 'abc', abc: 123, foo: 'bar' }, { abc: 123, foo: 'bar' }, { abc: 123 }]);
+  });
 });

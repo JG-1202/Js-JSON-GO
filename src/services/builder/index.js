@@ -13,28 +13,31 @@ class Builder extends Resolver {
   }
 
   setComplexPath({
-    obj, arrayPath, val, complexIndex,
+    object, arrayPath, value, complexIndex, func,
   }) {
     const complexPart = arrayPath.slice(0, complexIndex);
     const simplePart = arrayPath.slice(complexIndex);
-    const allResolved = this.resolve(obj, complexPart);
+    const allResolved = this.resolve(object, complexPart);
     if (allResolved.length === 0 && this.settings.fatalErrorOnCreate) {
       throw new Error('Path invalid. No results found for query.');
     }
-    allResolved.forEach((resolved) => setSimplePath(obj, [...resolved.path, ...simplePart], val));
+    allResolved.forEach((resolved) => (
+      setSimplePath(object, [...resolved.path, ...simplePart], typeof func === 'function' ? func() : value)));
   }
 
-  build(obj, path, val) {
+  build({
+    object, path, value, func,
+  }) {
     const arrayPath = this.transformPath(path);
     const { isComplex, complexIndex } = isComplexPathToBuild(arrayPath);
     if (!isComplex) {
-      setSimplePath(obj, arrayPath, val);
+      setSimplePath(object, arrayPath, typeof func === 'function' ? func() : value);
     } else {
       this.setComplexPath({
-        obj, arrayPath, val, complexIndex,
+        object, arrayPath, value, complexIndex, func,
       });
     }
-    return obj;
+    return object;
   }
 }
 

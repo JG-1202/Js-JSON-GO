@@ -33,11 +33,11 @@ class JsonTransformer extends Builder {
     const toMap = this.determineWhatToMap(validResults, destinationPath);
     const toMapKeys = Object.keys(toMap);
     toMapKeys.forEach((path) => {
-      const valueToBuild = toMap[path].length === 1 ? toMap[path][0] : toMap[path];
-      this.build(destinationObject, path, valueToBuild);
+      const value = toMap[path].length === 1 ? toMap[path][0] : toMap[path];
+      this.build({ object: destinationObject, path, value });
     });
     if (this.settings.mapIfNotFound && toMapKeys.length === 0) {
-      this.build(destinationObject, destinationPath, undefined);
+      this.build({ object: destinationObject, path: destinationPath });
     }
   }
 }

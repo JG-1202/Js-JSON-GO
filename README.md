@@ -27,8 +27,8 @@ Use the Map constructor to translate one JSON Object/Array into another JSON Obj
 
 ```javascript
 const JG = require('js-json-go');
-const json = JG.Json(object, settings);
-const map = JG.Map(origin, destination, settings);
+const json = new JG.Json(object, settings);
+const map = new JG.Map(origin, destination, settings);
 ```
 
 ### new JG.Map(origin, destination, settings)
@@ -59,6 +59,40 @@ const result = JsonGo.export();
     { serialNumber: 'ghi789', identifier: 'C', time: 1317826080000 },
 ]
  */
+```
+#### map.set
+Sets `value` on specified `path` onto `destinationObject`. Use custom `settings` when desired. Sets all elements that matches the `path`.
+```javascript
+const originObject = null;
+const destinationObject = [{}, {}, {}];
+const JsonGo = new JG.Map(originObject, destinationObject);
+JsonGo.set('[*].attributes[0].code', 8);
+const result = JsonGo.export();
+/**
+[
+    { attributes: [{ code: 8 }] }, 
+    { attributes: [{ code: 8 }] }, 
+    { attributes: [{ code: 8 }] }
+]
+*/
+```
+
+#### map.build
+Similar to set, but build will set the returned output of `functionToCall` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
+```javascript
+const originObject = null;
+const destinationObject = [{}, {}, {}];
+const JsonGo = new JG.Map(originObject, destinationObject);
+const functionToCall = () => 8;
+JsonGo.build('[*].attributes[0].code', functionToCall);
+const result = JsonGo.export();
+/**
+[
+    { attributes: [{ code: 8 }] }, 
+    { attributes: [{ code: 8 }] }, 
+    { attributes: [{ code: 8 }] }
+]
+*/
 ```
 
 #### map.export
@@ -328,6 +362,79 @@ const inputObject = {
 };
 const JsonGo = new JG.Json(inputObject, { limit: 2 });
 JsonGo.setAll('scans[{$.accuracy > 30}].accuracy', 99);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 99, identifier: 'A' },
+        { barcode: 'def456', accuracy: 99, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 99, identifier: 'C' },
+    ],
+}
+*/
+```
+
+#### json.build(path, value, settings)
+Similar to set, but build will set the returned output of `functionToCall` on specified `path`. Use custom `settings` when desired. Sets all elements that matches the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.build('scans[*].attributes[0].code', () => 8);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A', attributes: [{ code: 8 }] },
+        { barcode: 'def456', accuracy: 50, identifier: 'B', attributes: [{ code: 8 }] },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+}
+*/
+```
+
+#### json.buildOne(path, value, settings)
+Similar to setOne, but build will set the returned output of `functionToCall` on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
+
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.setOne('scans[{$.accuracy >= 90}].success', () => true);
+const result = JsonGo.export();
+/**
+{
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A', success: true },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+}
+*/
+```
+
+#### json.buildAll(path, value, settings)
+Similar to setAll, but build will set the returned output of `functionToCall` on specified `path`. Use custom `settings` when desired. Sets the first element that matches the `path`.
+```javascript
+const inputObject = {
+    scans: [
+        { barcode: 'abc123', accuracy: 90, identifier: 'A' },
+        { barcode: 'def456', accuracy: 50, identifier: 'B' },
+        { barcode: 'ghi789', accuracy: 94, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Json(inputObject, { limit: 2 });
+JsonGo.buildAll('scans[{$.accuracy > 30}].accuracy', () => 99);
 const result = JsonGo.export();
 /**
 {

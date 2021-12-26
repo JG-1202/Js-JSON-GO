@@ -25,17 +25,17 @@ const Builder = require('../../services/builder');
  */
 
 /**
- * Sets values on specified path
+ * Builds function output on specified path
  * @param {(Object|Array)} object - object
  * @param {string} path - string or array representation of path to set.
- * @param {any} value - value to be set at specified path.
+ * @param {function} functionToCall - function to call from which output should be set
+ * on provided path.
  * @param {SettingsObject=} settings - object with settings.
- * @returns {(Object|Array)} object with newly set path in case that multiple logical checks
- * satisfy the first element will be set.
+ * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
  */
-const set = (object, path, value, settings) => {
+const build = (object, path, functionToCall, settings) => {
   const builder = new Builder({ settings: { ...settings, parse: false } });
-  return builder.build({ object, path, value });
+  return builder.build({ object, path, func: functionToCall });
 };
 
-module.exports = set;
+module.exports = build;

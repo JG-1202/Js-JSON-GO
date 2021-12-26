@@ -35,7 +35,7 @@ const Builder = require('../../services/builder');
  */
 const setOne = (object, path, value, settings) => {
   const builder = new Builder({ settings: { ...settings, limit: 1, parse: false } });
-  return builder.build(object, path, value);
+  return builder.build({ object, path, value });
 };
 
 module.exports = setOne;
