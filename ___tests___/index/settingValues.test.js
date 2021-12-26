@@ -202,4 +202,13 @@ describe('README examples', () => {
       ],
     });
   });
+  it('set from Map', () => {
+    const originObject = null;
+    const destinationObject = [{}, {}, {}];
+    const JsonGo = new JG.Map(originObject, destinationObject);
+    JsonGo.set('[*].attributes[0].code', 8);
+    const result = JsonGo.export();
+    // eslint-disable-next-line max-len
+    expect(result).toStrictEqual([{ attributes: [{ code: 8 }] }, { attributes: [{ code: 8 }] }, { attributes: [{ code: 8 }] }]);
+  });
 });
