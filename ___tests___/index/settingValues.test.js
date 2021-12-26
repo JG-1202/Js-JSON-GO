@@ -132,6 +132,10 @@ describe('Test setting value(s)', () => {
     JsonGo.setAll('[{$.bla.foo}].bla.foo', 123);
     expect(JsonGo.export()).toStrictEqual(testObject);
   });
+  it('It does not fail when non-existing wildcard is attempted to be set', () => {
+    const result = JG.set([], 'test[*].test', 8);
+    expect(result).toStrictEqual([]);
+  });
 });
 
 describe('README examples', () => {
@@ -197,14 +201,5 @@ describe('README examples', () => {
         { barcode: 'ghi789', accuracy: 99, identifier: 'C' },
       ],
     });
-  });
-  it('set from Map', () => {
-    const originObject = null;
-    const destinationObject = [{}, {}, {}];
-    const JsonGo = new JG.Map(originObject, destinationObject);
-    JsonGo.set('[*].attributes[0].code', 8);
-    const result = JsonGo.export();
-    // eslint-disable-next-line max-len
-    expect(result).toStrictEqual([{ attributes: [{ code: 8 }] }, { attributes: [{ code: 8 }] }, { attributes: [{ code: 8 }] }]);
   });
 });
