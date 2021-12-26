@@ -1,11 +1,17 @@
 export = Builder;
 declare class Builder extends Resolver {
-    setComplexPath({ obj, arrayPath, val, complexIndex, }: {
-        obj: any;
+    setComplexPath({ object, arrayPath, value, complexIndex, func, }: {
+        object: any;
         arrayPath: any;
-        val: any;
+        value: any;
         complexIndex: any;
+        func: any;
     }): void;
-    build(obj: any, path: any, val: any): any;
+    build({ object, path, value, func, }: {
+        object: any;
+        path: any;
+        value: any;
+        func: any;
+    }): any;
 }
 import Resolver = require("../resolver");

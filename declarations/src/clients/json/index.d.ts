@@ -134,6 +134,35 @@ declare class Json {
      */
     setAll(path: string, val: any, settings?: SettingsObject | undefined): any;
     /**
+     * Builds function output on specified path
+     * @param {string} path - string or array representation of path to set.
+     * @param {function} functionToCall - function to call from which output should be set
+     * on provided path.
+     * @param {SettingsObject=} settings - object with settings.
+     * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
+     */
+    build(path: string, functionToCall: Function, settings?: SettingsObject | undefined): (any | any[]);
+    /**
+     * Builds function output on single specified path
+     * @param {string} path - string or array representation of path to set.
+     * @param {function} functionToCall - function to call from which output should be set
+     * on provided path.
+     * @param {SettingsObject=} settings - object with settings.
+     * @returns {(Object|Array)} object with newly set path in case that multiple logical checks
+     * satisfy the first element will be set.
+     */
+    buildOne(path: string, functionToCall: Function, settings?: SettingsObject | undefined): (any | any[]);
+    /**
+     * Builds function output on every possible specified path
+     * @param {string} path - string or array representation of path to set.
+     * @param {function} functionToCall - function to call from which output should be set
+     * on provided path.
+     * @param {SettingsObject=} settings - object with settings.
+     * @returns {(Object|Array)} object with newly set path in case that multiple logical checks
+     * satisfy the all elements will be set.
+     */
+    buildAll(path: string, functionToCall: Function, settings?: SettingsObject | undefined): (any | any[]);
+    /**
      * Chops an array or object into smaller pieces
      * @param {object} value - object or array
      * @param {number} chopSize - size of pieces.

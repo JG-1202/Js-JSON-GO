@@ -72,4 +72,22 @@ describe('Testing with multiple JG instances', () => {
       expect(test.settings.functions.testFunc4).toBeDefined();
     });
   });
+  it('Map.set is calling Map.destinationObject.set', () => {
+    // eslint-disable-next-line global-require
+    const Json = require('../../src/clients/json');
+    jest.mock('../../src/clients/json');
+    const JGMap = new JG.Map(inputFixture, {});
+    JGMap.destinationObject = new Json();
+    JGMap.set('path', 'value', { limit: 3 });
+    expect(JGMap.destinationObject.set).toBeCalledWith('path', 'value', { limit: 3 });
+  });
+  it('Map.build is calling Map.destinationObject.build', () => {
+    // eslint-disable-next-line global-require
+    const Json = require('../../src/clients/json');
+    jest.mock('../../src/clients/json');
+    const JGMap = new JG.Map(inputFixture, {});
+    JGMap.destinationObject = new Json();
+    JGMap.build('path', 'value', { limit: 3 });
+    expect(JGMap.destinationObject.build).toBeCalledWith('path', 'value', { limit: 3 });
+  });
 });

@@ -1,4 +1,4 @@
-export = Map;
+export = build;
 /**
  * SettingsObject.
  * @typedef {Object} SettingsObject
@@ -22,56 +22,19 @@ export = Map;
  * By doing so there is no need to deep parse the input object before querying. This setting has no
  * effect while building JSON paths. Default is: false
  */
-declare class Map {
-    /**
-     * Construct a map containing origin object, destination object and settings
-     * @param {(Object|Array)} originObject - origin object,
-     * from where data should be obtained
-     * @param {(Object|Array)} destinationObject - destination object,
-     * to where data should be mapped
-     * @param {SettingsObject=} settings - object with settings
-     */
-    constructor(originObject: (any | any[]), destinationObject: (any | any[]), settings?: SettingsObject | undefined);
-    originObject: Json;
-    destinationObject: Json;
-    /**
-     * Transform values from origin object into destination object.
-     * @param {string} originPath - path from where data should be obtained from origin object
-     * @param {string} destinationPath - path to where data should be mapped into destination
-     * object
-     * @param {SettingsObject=} settings - object with settings
-     */
-    transform(originPath: string, destinationPath: string, settings?: SettingsObject | undefined): void;
-    /**
-     * Sets values on specified path on destination object
-     * @param {string} path - string representation of path
-     * @param {any} val - value to be set at specified path
-     * @param {SettingsObject=} settings - object with settings
-     * @returns {Object} object with newly set path in case that multiple logical checks
-     * satisfy the first element will be set.
-     */
-    set(path: string, val: any, settings?: SettingsObject | undefined): any;
-    /**
-     * Builds function output on specified path on destination object
-     * @param {string} path - string or array representation of path to set.
-     * @param {function} functionToCall - function to call from which output should be set
-     * on provided path.
-     * @param {SettingsObject=} settings - object with settings.
-     * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
-     */
-    build(path: string, functionToCall: Function, settings?: SettingsObject | undefined): (any | any[]);
-    /**
-     * Exports the destination object
-     * @returns {(Object.<string, any>|Array)} destination object
-     */
-    export(): ({
-        [x: string]: any;
-    } | any[]);
-}
-declare namespace Map {
+/**
+ * Builds function output on specified path
+ * @param {(Object|Array)} object - object
+ * @param {string} path - string or array representation of path to set.
+ * @param {function} functionToCall - function to call from which output should be set
+ * on provided path.
+ * @param {SettingsObject=} settings - object with settings.
+ * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
+ */
+declare function build(object: (any | any[]), path: string, functionToCall: Function, settings?: SettingsObject | undefined): (any | any[]);
+declare namespace build {
     export { SettingsObject };
 }
-import Json = require("../json");
 /**
  * SettingsObject.
  */

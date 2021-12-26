@@ -2,6 +2,9 @@ const setOne = require('../../handlers/setOne');
 const set = require('../../handlers/set');
 const setAll = require('../../handlers/setAll');
 const findOne = require('../../handlers/findOne');
+const build = require('../../handlers/build');
+const buildAll = require('../../handlers/buildAll');
+const buildOne = require('../../handlers/buildOne');
 const find = require('../../handlers/find');
 const findAll = require('../../handlers/findAll');
 const getOne = require('../../handlers/getOne');
@@ -226,6 +229,53 @@ class Json {
   setAll(path, val, settings) {
     return setAll(
       this.object, path, val,
+      mergeSettings(this.settings, settings),
+    );
+  }
+
+  /**
+   * Builds function output on specified path
+   * @param {string} path - string or array representation of path to set.
+   * @param {function} functionToCall - function to call from which output should be set
+   * on provided path.
+   * @param {SettingsObject=} settings - object with settings.
+   * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
+   */
+  build(path, functionToCall, settings) {
+    return build(
+      this.object, path, functionToCall,
+      mergeSettings(this.settings, settings),
+    );
+  }
+
+  /**
+   * Builds function output on single specified path
+   * @param {string} path - string or array representation of path to set.
+   * @param {function} functionToCall - function to call from which output should be set
+   * on provided path.
+   * @param {SettingsObject=} settings - object with settings.
+   * @returns {(Object|Array)} object with newly set path in case that multiple logical checks
+   * satisfy the first element will be set.
+   */
+  buildOne(path, functionToCall, settings) {
+    return buildOne(
+      this.object, path, functionToCall,
+      mergeSettings(this.settings, settings),
+    );
+  }
+
+  /**
+   * Builds function output on every possible specified path
+   * @param {string} path - string or array representation of path to set.
+   * @param {function} functionToCall - function to call from which output should be set
+   * on provided path.
+   * @param {SettingsObject=} settings - object with settings.
+   * @returns {(Object|Array)} object with newly set path in case that multiple logical checks
+   * satisfy the all elements will be set.
+   */
+  buildAll(path, functionToCall, settings) {
+    return buildAll(
+      this.object, path, functionToCall,
       mergeSettings(this.settings, settings),
     );
   }
