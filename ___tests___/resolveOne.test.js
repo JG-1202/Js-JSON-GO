@@ -92,4 +92,12 @@ describe('Test get function', () => {
   it('Getting falsy value', () => {
     test({ test: false }, 'test', false);
   });
+  it('Gets wildcard non existing property of an array', () => {
+    test([], 'test', undefined);
+    test([], 'test[*].test', undefined);
+  });
+  it('Gets wildcard non existing property of an object', () => {
+    test({}, 'test', undefined);
+    test({}, 'test[*].test', undefined);
+  });
 });

@@ -132,6 +132,10 @@ describe('Test setting value(s)', () => {
     JsonGo.setAll('[{$.bla.foo}].bla.foo', 123);
     expect(JsonGo.export()).toStrictEqual(testObject);
   });
+  it('It does not fail when non-existing wildcard is attempted to be set', () => {
+    const result = JG.set([], 'test[*].test', 8);
+    expect(result).toStrictEqual([]);
+  });
 });
 
 describe('README examples', () => {

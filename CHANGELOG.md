@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.1.1] - 2021-12-26
+### Changed
+- resolved issue where it failed to query non existing element from an array
+
 ## [1.1.0] - 2021-12-26
 ### Added
 - build, buildOne, buildAll handlers: sets function output on specified json path

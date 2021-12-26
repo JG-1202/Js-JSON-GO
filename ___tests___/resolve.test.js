@@ -127,6 +127,14 @@ describe('Test getAll function', () => {
     test([], '[*][*]', []);
     test(null, '[*][*]', []);
   });
+  it('Gets wildcard non existing property of an array', () => {
+    test([], 'test', []);
+    test([], 'test[*].test', []);
+  });
+  it('Gets wildcard non existing property of an object', () => {
+    test({}, 'test', []);
+    test({}, 'test[*].test', []);
+  });
 });
 
 describe('Testing JSON equality', () => {
