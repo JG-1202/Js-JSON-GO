@@ -135,6 +135,12 @@ describe('Test getAll function', () => {
     test({}, 'test', []);
     test({}, 'test[*].test', []);
   });
+  it('Does not fail when looking for array but found object', () => {
+    test({ someObject: { 0: true } }, '[*][0]', []);
+  });
+  it('Does not fail when looking for object but found array', () => {
+    test({ someObject: ['1'] }, '[*]["0"]', []);
+  });
 });
 
 describe('Testing JSON equality', () => {

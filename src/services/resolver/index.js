@@ -39,7 +39,7 @@ class Resolver extends Querier {
     const results = [];
     if (element[type] !== undefined) {
       results.push(element);
-    } else {
+    } else if (element.query) {
       const queryResult = this.query({
         query: element.query, object: obj, tempObject, priorPath, refObject, intermediate,
       });
