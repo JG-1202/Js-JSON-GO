@@ -1,6 +1,6 @@
 {
   "name": "js-json-go",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Retrieves and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects.",
   "main": "index.js",
   "scripts": {
