@@ -59,11 +59,8 @@ class Json {
   constructor(object, settings) {
     const settingsLoader = new SettingsLoader({ settings });
     this.settings = settingsLoader.settings;
-    if (this.settings.unlinkInputObject) {
-      this.object = settingsLoader.unlink(settingsLoader.makeJson(object));
-    } else {
-      this.object = settingsLoader.makeJson(object);
-    }
+    const thisObject = settingsLoader.safeParse(object, object);
+    this.object = this.settings.unlinkInputObject ? settingsLoader.unlink(thisObject) : thisObject;
   }
 
   /**
@@ -197,10 +194,11 @@ class Json {
    * satisfy the first element will be set.
    */
   setOne(path, val, settings) {
-    return setOne(
+    this.object = setOne(
       this.object, path, val,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**
@@ -212,10 +210,11 @@ class Json {
    * satisfy the first element will be set.
    */
   set(path, val, settings) {
-    return set(
+    this.object = set(
       this.object, path, val,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**
@@ -227,10 +226,11 @@ class Json {
    * satisfy the first element will be set.
    */
   setAll(path, val, settings) {
-    return setAll(
+    this.object = setAll(
       this.object, path, val,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**
@@ -242,10 +242,11 @@ class Json {
    * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
    */
   build(path, functionToCall, settings) {
-    return build(
+    this.object = build(
       this.object, path, functionToCall,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**
@@ -258,10 +259,11 @@ class Json {
    * satisfy the first element will be set.
    */
   buildOne(path, functionToCall, settings) {
-    return buildOne(
+    this.object = buildOne(
       this.object, path, functionToCall,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**
@@ -274,10 +276,11 @@ class Json {
    * satisfy the all elements will be set.
    */
   buildAll(path, functionToCall, settings) {
-    return buildAll(
+    this.object = buildAll(
       this.object, path, functionToCall,
       mergeSettings(this.settings, settings),
     );
+    return this.object;
   }
 
   /**

@@ -76,6 +76,25 @@ describe('Test getting value(s)', () => {
     expect(JsonGo.getOne('stores[{$end}].storeName')).toStrictEqual('Rome');
     expect(JsonGo.findOne('stores[{$end}].storeName').value).toStrictEqual('Rome');
   });
+  it('Get something when input is not json', () => {
+    const JsonGo = new JG.Json(null);
+    const result = JsonGo.get('some.path');
+    expect(result).toStrictEqual([]);
+  });
+  it('Test non existing element when querying with wildcard', () => {
+    const JsonGo = new JG.Json({ test: true });
+    expect(JsonGo.get('[*]')).toStrictEqual([true]);
+    expect(JsonGo.get('[*][*]')).toStrictEqual([]);
+    const JsonGo2 = new JG.Json([true]);
+    expect(JsonGo2.get('[*]')).toStrictEqual([true]);
+    expect(JsonGo2.get('[*][*]')).toStrictEqual([]);
+    const JsonGo3 = new JG.Json({ test: null });
+    expect(JsonGo3.get('[*]')).toStrictEqual([null]);
+    expect(JsonGo3.get('[*][*]')).toStrictEqual([]);
+    const JsonGo4 = new JG.Json([null]);
+    expect(JsonGo4.get('[*]')).toStrictEqual([null]);
+    expect(JsonGo4.get('[*][*]')).toStrictEqual([]);
+  });
 });
 
 describe('Testing deepParse', () => {

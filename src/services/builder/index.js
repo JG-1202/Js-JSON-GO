@@ -31,12 +31,11 @@ class Builder extends Resolver {
     const arrayPath = this.transformPath(path);
     const { isComplex, complexIndex } = isComplexPathToBuild(arrayPath);
     if (!isComplex) {
-      setSimplePath(object, arrayPath, typeof func === 'function' ? func() : value);
-    } else {
-      this.setComplexPath({
-        object, arrayPath, value, complexIndex, func,
-      });
+      return setSimplePath(object, arrayPath, typeof func === 'function' ? func() : value);
     }
+    this.setComplexPath({
+      object, arrayPath, value, complexIndex, func,
+    });
     return object;
   }
 }
