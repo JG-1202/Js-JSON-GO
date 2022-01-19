@@ -17,7 +17,25 @@ describe('Test setting value(s)', () => {
     const result = JsonGo.export();
     expect(result).toStrictEqual([true]);
   });
-  it('Set element at end of array with $end when it is not an array results in error by default', () => {
+  it('Creates object', () => {
+    const JsonGo = new JG.Json();
+    JsonGo.setOne('test', true);
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({ test: true });
+  });
+  it('Creates object on input number as string', () => {
+    const JsonGo = new JG.Json();
+    JsonGo.setOne('["1"]', true);
+    const result = JsonGo.export();
+    expect(result).toStrictEqual({ 1: true });
+  });
+  it('Creates array', () => {
+    const JsonGo = new JG.Json();
+    JsonGo.setOne('[1]', true);
+    const result = JsonGo.export();
+    expect(result[1]).toStrictEqual(true);
+  });
+  it('Set element at end of array with $end when it is not an array results in error based on setting', () => {
     let errorMessage = null;
     try {
       const JsonGo = new JG.Json(undefined, { fatalErrorOnCreate: true });
@@ -29,7 +47,7 @@ describe('Test setting value(s)', () => {
     expect(errorMessage).toBe('Path invalid. No results found for query.');
   });
   it('Set element at end of array with $end when it is not an array results not in error based on settings', () => {
-    const JsonGo = new JG.Json({}, { fatalErrorOnCreate: false });
+    const JsonGo = new JG.Json(undefined, { fatalErrorOnCreate: false });
     JsonGo.setOne('test', {});
     JsonGo.setOne('test2', {});
     JsonGo.set('test[{$end}]', true);

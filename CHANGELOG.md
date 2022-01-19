@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.1.3] - 2022-01-19
+### Changed
+- parse input on new Json or new Map when not yet parsed
+- does not on default create empty object on new Json with undefined input, but instead let set/build determine whether an object or array is desired
+
 ## [1.1.2] - 2022-01-08
 ### Changed
 - resolved critical issue where query failed if one was expecting an array but found an object or the other way around

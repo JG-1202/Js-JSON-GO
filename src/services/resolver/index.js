@@ -58,7 +58,7 @@ class Resolver extends Querier {
           toReturn.push({ number: index });
           return this.isMaxResultsReached(intermediate);
         });
-      } else if (this.isObject(tempObject)) {
+      } else {
         Object.keys(tempObject).some((el) => {
           toReturn.push({ string: el });
           return this.isMaxResultsReached(intermediate);
@@ -174,23 +174,23 @@ class Resolver extends Querier {
     const {
       refObject, arrayPath, priorPath, results,
     } = this.initiateResolver({ references, path, intermediate });
-    if (!isComplexPathToResolve(arrayPath)) {
-      return this.simpleResolve({
-        arrayPath, obj, refObject,
-      });
-    }
     let tempObject = obj;
-    arrayPath.every((element, index) => {
-      const { shouldItContinue, newTempObject } = this.resolveIteration({
-        element, obj, tempObject, priorPath, results, index, arrayPath, refObject, intermediate,
+    if (this.isJson(tempObject)) {
+      if (!isComplexPathToResolve(arrayPath)) {
+        return this.simpleResolve({ arrayPath, obj, refObject });
+      }
+      arrayPath.every((element, index) => {
+        const { shouldItContinue, newTempObject } = this.resolveIteration({
+          element, obj, tempObject, priorPath, results, index, arrayPath, refObject, intermediate,
+        });
+        tempObject = newTempObject;
+        return shouldItContinue;
       });
-      tempObject = newTempObject;
-      return shouldItContinue;
-    });
-    if (tempObject !== undefined) {
-      this.addResult({
-        results, path: priorPath, value: tempObject, references: { ...refObject }, intermediate,
-      });
+      if (tempObject !== undefined) {
+        this.addResult({
+          results, path: priorPath, value: tempObject, references: { ...refObject }, intermediate,
+        });
+      }
     }
     return results;
   }

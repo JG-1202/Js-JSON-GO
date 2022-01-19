@@ -72,6 +72,14 @@ describe('Testing with multiple JG instances', () => {
       expect(test.settings.functions.testFunc4).toBeDefined();
     });
   });
+  it('Parses input object', () => {
+    const testObject = { test: true };
+    const json = new JG.Json(JSON.stringify(testObject));
+    expect(json.object).toStrictEqual(testObject);
+    const map = new JG.Map(JSON.stringify(testObject), JSON.stringify(testObject));
+    expect(map.originObject.object).toStrictEqual(testObject);
+    expect(map.destinationObject.object).toStrictEqual(testObject);
+  });
   it('Map.set is calling Map.destinationObject.set', () => {
     // eslint-disable-next-line global-require
     const Json = require('../../src/clients/json');
