@@ -158,4 +158,76 @@ describe('Mapping', () => {
       { serialNumber: 'ghi789', identifier: 'C', time: 1317826080000 },
     ]);
   });
+  it('Test with placeholders', () => {
+    const input = [
+      { barcode: 'abc123', success: true, identifier: 'A' },
+      { barcode: 'def456', success: false, identifier: 'B' },
+      { barcode: 'ghi789', success: true, identifier: 'C' },
+    ];
+    const JsonGo = new JG.Map(input);
+    JsonGo.transform('[*:(x)].identifier', '[=([:(x)].barcode)].id');
+    expect(JsonGo.export()).toStrictEqual({ abc123: { id: 'A' }, def456: { id: 'B' }, ghi789: { id: 'C' } });
+  });
+  it('Transform with placeholder and multiple results', () => {
+    const inputObject = {
+      timestamp: '2011-10-05T14:48:00.000Z',
+      scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Map(inputObject);
+    JsonGo.transform('scans[*:(scan)].identifier', '[=(scans[:(scan)].barcode)].ID');
+    JsonGo.transform('timestamp', '[=(scans[{$.barcode != "abc123"}].barcode)].ts');
+    JsonGo.transform('timestamp', '[=(scans[{$.barcode != "abc123"}].barcode)].ts2', { limit: 1 });
+    expect(JsonGo.export()).toStrictEqual({
+      abc123: { ID: 'A' },
+      def456: { ID: 'B', ts: inputObject.timestamp, ts2: inputObject.timestamp },
+      ghi789: { ID: 'C', ts: inputObject.timestamp },
+    });
+  });
+  it('Simple transform with reference and placeholder where placeholder is part of string', () => {
+    const inputObject = {
+      timestamp: '2011-10-05T14:48:00.000Z',
+      scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Map(inputObject);
+    JsonGo.transform('scans[*:(scan)].identifier', '[=(scans[:(scan)].barcode)-x].ID');
+    expect(JsonGo.export()).toStrictEqual({ 'abc123-x': { ID: 'A' }, 'def456-x': { ID: 'B' }, 'ghi789-x': { ID: 'C' } });
+  });
+  it('Invalid placeholder will not be translated', () => {
+    const inputObject = {
+      timestamp: '2011-10-05T14:48:00.000Z',
+      scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Map(inputObject);
+    JsonGo.transform('scans[*:(scan)].identifier', '[=((scans[:(scan)].barcode)].ID');
+    expect(JsonGo.export()).toStrictEqual();
+  });
+  it('Has functions available on transform', () => {
+    const inputObject = {
+      timestamp: '2011-10-05T14:48:00.000Z',
+      scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+      ],
+    };
+    const JsonGo = new JG.Map(inputObject, [], {
+      functions: {
+        testFunction: (element) => element.success === true,
+      },
+    });
+    JsonGo.transform('scans[{$Function(testFunction)}].identifier', '[0]');
+    expect(JsonGo.export()).toStrictEqual([['A', 'C']]);
+  });
 });

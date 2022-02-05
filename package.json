@@ -1,6 +1,6 @@
 {
   "name": "js-json-go",
-  "version": "1.1.3",
+  "version": "1.2.0",
   "description": "Retrieves and constructs values from/into JSON objects. Js-JSON-Go is a lightweight library that offers the ability to query JSON objects to obtain data and use the same query format to build JSON objects.",
   "main": "index.js",
   "scripts": {
@@ -29,14 +29,14 @@
   },
   "homepage": "https://github.com/JG-1202/Js-JSON-GO",
   "devDependencies": {
-    "@commitlint/cli": "^15.0.0",
-    "@commitlint/config-conventional": "^15.0.0",
+    "@commitlint/cli": "^16.1.0",
+    "@commitlint/config-conventional": "^16.0.0",
     "codecov": "^3.8.2",
-    "eslint": "^8.2.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.25.2",
+    "eslint": "^8.7.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
     "husky": "^7.0.4",
-    "jest": "^27.3.1",
-    "typescript": "^4.5.3"
+    "jest": "^27.4.7",
+    "typescript": "^4.5.5"
   }
 }

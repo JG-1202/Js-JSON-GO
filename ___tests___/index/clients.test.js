@@ -80,22 +80,22 @@ describe('Testing with multiple JG instances', () => {
     expect(map.originObject.object).toStrictEqual(testObject);
     expect(map.destinationObject.object).toStrictEqual(testObject);
   });
-  it('Map.set is calling Map.destinationObject.set', () => {
+  it('Map.set is updating destination object', () => {
     // eslint-disable-next-line global-require
     const Json = require('../../src/clients/json');
     jest.mock('../../src/clients/json');
     const JGMap = new JG.Map(inputFixture, {});
     JGMap.destinationObject = new Json();
     JGMap.set('path', 'value', { limit: 3 });
-    expect(JGMap.destinationObject.set).toBeCalledWith('path', 'value', { limit: 3 });
+    expect(JGMap.export()).toStrictEqual({ path: 'value' });
   });
-  it('Map.build is calling Map.destinationObject.build', () => {
+  it('Map.build is updating destination object', () => {
     // eslint-disable-next-line global-require
     const Json = require('../../src/clients/json');
     jest.mock('../../src/clients/json');
     const JGMap = new JG.Map(inputFixture, {});
     JGMap.destinationObject = new Json();
-    JGMap.build('path', 'value', { limit: 3 });
-    expect(JGMap.destinationObject.build).toBeCalledWith('path', 'value', { limit: 3 });
+    JGMap.build('path', () => true, { limit: 3 });
+    expect(JGMap.export()).toStrictEqual({ path: true });
   });
 });

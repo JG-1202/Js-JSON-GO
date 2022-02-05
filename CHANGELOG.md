@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.2.0] - 2022-02-05
+### Added
+- placeholders on Map (transform/build/set) that will be resolved from originObject
+
+### Changed
+- on undefined destinationObject (Map), let first transform, build, or set determine whether an object/array is desired.
+
 ## [1.1.3] - 2022-01-19
 ### Changed
 - parse input on new Json or new Map when not yet parsed

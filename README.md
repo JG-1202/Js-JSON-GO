@@ -60,6 +60,28 @@ const result = JsonGo.export();
 ]
  */
 ```
+
+Example 2:
+```javascript
+const inputObject = {
+    timestamp: '2011-10-05T14:48:00.000Z',
+    scans: [
+        { barcode: 'abc123', success: true, identifier: 'A' },
+        { barcode: 'def456', success: false, identifier: 'B' },
+        { barcode: 'ghi789', success: true, identifier: 'C' },
+    ],
+};
+const JsonGo = new JG.Map(inputObject, []);
+JsonGo.transform('scans[*:(scan)].identifier', '[=(scans[:(scan)].barcode)].ID');
+const result = JsonGo.export();
+/**
+{ 
+    abc123: { ID: 'A' },
+    def456: { ID: 'B' },
+    ghi789: { ID: 'C' }
+}
+*/
+```
 #### map.set
 Sets `value` on specified `path` onto `destinationObject`. Use custom `settings` when desired. Sets all elements that matches the `path`.
 ```javascript
@@ -481,20 +503,21 @@ Js-JSON-Go refers to a JSON-structure in a similar manner as the bracket and/or 
 
 The following syntax can be used (note that this table is reflecting priority, meaning that the upper syntax is dominant over lower syntax):
 
-| Element Syntax                 | Description                                             |
-| :----------------------------- | :------------------------------------------------------ |
-| `[`element`]`                  | Bracket-notated child                                   |
-| `.`element                     | Dot-notated child                                       |
-| `["`element`"]`                | Element is considered a single string                   |
-| `['`element`']`                | Element is considered a single string                   |
-| `[{`element`}]`                | Element is considered a query                           |
-| `[xxx:(ref)]`                  | `ref` is considered a reference that can be reused      |
+| Element Syntax                 | Description                                               |
+| :----------------------------- | :-------------------------------------------------------- |
+| `[`element`]`                  | Bracket-notated child                                     |
+| `.`element                     | Dot-notated child                                         |
+| `["`element`"]`                | Element is considered a single string                     |
+| `['`element`']`                | Element is considered a single string                     |
+| `[{`element`}]`                | Element is considered a query                             |
+| `[xxx:(ref)]`                  | `ref` is considered a reference that can be reused        |
+| `[=(some.path.at.origin)]`     | `some.path.at.origin` will be resolved from origin object |
 
-| Custom Syntax                  | Description                                             |
-| :----------------------------- | :------------------------------------------------------ |
-| `[*]` or `[{*}]` or `[{$all}]` | Wildcard, relates to existing, but unknown element(s)   |
-| `[{$end}]`                     | Refers to last element in array                         |
-| `[{$append}]`                  | May be used on set to indicate a new element in array   |
+| Custom Syntax                  | Description                                               |
+| :----------------------------- | :-------------------------------------------------------- |
+| `[*]` or `[{*}]` or `[{$all}]` | Wildcard, relates to existing, but unknown element(s)     |
+| `[{$end}]`                     | Refers to last element in array                           |
+| `[{$append}]`                  | May be used on set to indicate a new element in array     |
 
 
 A query is considered a logical test of two `path`s or `elements` separated by an `operator`, or a single path / element which will then be tested as `!falsy`. `$Function()` Queries are considered special. Instead of defining a logical test within the query, a function refers to a `functionName`. The corresponding function (passed in the `functions` object of the Json/Map constructor or regarding query (get, set, translate)) is then expected to return a boolean response as result of a custom logical test.

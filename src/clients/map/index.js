@@ -2,6 +2,7 @@ const Json = require('../json');
 const JsonTransformer = require('../../services/jsonTransformer');
 const makeObject = require('../../handlers/makeObject');
 const mergeSettings = require('../json/src/mergeSettings');
+const MapBuilder = require('../../services/mapBuilder');
 
 /**
  * SettingsObject.
@@ -52,8 +53,12 @@ class Map {
     const jsonTransformer = new JsonTransformer({
       settings: mergeSettings(this.originObject.settings, makeObject(settings)),
     });
-    return jsonTransformer.transform(originPath, destinationPath,
-      this.originObject.object, this.destinationObject.object);
+    this.destinationObject.object = jsonTransformer.transform(
+      originPath,
+      destinationPath,
+      this.originObject.object,
+      this.destinationObject.object,
+    );
   }
 
   /**
@@ -65,7 +70,16 @@ class Map {
    * satisfy the first element will be set.
    */
   set(path, val, settings) {
-    return this.destinationObject.set(path, val, settings);
+    const mapBuilder = new MapBuilder({
+      settings: { ...mergeSettings(this.originObject.settings, settings), parse: false },
+    });
+    this.destinationObject.object = mapBuilder.buildWithPlaceholders({
+      object: this.destinationObject.object,
+      path,
+      value: val,
+      originObject: this.originObject.object,
+    });
+    return this.destinationObject.object;
   }
 
   /**
@@ -77,7 +91,16 @@ class Map {
    * @returns {(Object|Array)} object with newly set path in case that multiple logical checks.
    */
   build(path, functionToCall, settings) {
-    return this.destinationObject.build(path, functionToCall, settings);
+    const mapBuilder = new MapBuilder({
+      settings: { ...mergeSettings(this.originObject.settings, settings), parse: false },
+    });
+    this.destinationObject.object = mapBuilder.buildWithPlaceholders({
+      object: this.destinationObject.object,
+      path,
+      func: functionToCall,
+      originObject: this.originObject.object,
+    });
+    return this.destinationObject.object;
   }
 
   /**
