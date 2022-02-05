@@ -72,7 +72,8 @@ class Json {
    */
   getOne(path, settings) {
     return getOne(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -86,7 +87,8 @@ class Json {
    */
   findOne(path, settings) {
     return findOne(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -100,7 +102,8 @@ class Json {
    */
   getPath(path, settings) {
     return getPath(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -113,7 +116,8 @@ class Json {
    */
   get(path, settings) {
     return get(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -126,7 +130,8 @@ class Json {
    */
   getAll(path, settings) {
     return getAll(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -140,7 +145,8 @@ class Json {
    */
   find(path, settings) {
     return find(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -154,7 +160,8 @@ class Json {
    */
   findAll(path, settings) {
     return findAll(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -167,7 +174,8 @@ class Json {
    */
   getPaths(path, settings) {
     return getPaths(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -180,7 +188,8 @@ class Json {
    */
   getAllPaths(path, settings) {
     return getAllPaths(
-      this.object, path,
+      this.object,
+      path,
       mergeSettings(this.settings, settings),
     );
   }
@@ -195,7 +204,9 @@ class Json {
    */
   setOne(path, val, settings) {
     this.object = setOne(
-      this.object, path, val,
+      this.object,
+      path,
+      val,
       mergeSettings(this.settings, settings),
     );
     return this.object;
@@ -211,7 +222,9 @@ class Json {
    */
   set(path, val, settings) {
     this.object = set(
-      this.object, path, val,
+      this.object,
+      path,
+      val,
       mergeSettings(this.settings, settings),
     );
     return this.object;
@@ -227,7 +240,9 @@ class Json {
    */
   setAll(path, val, settings) {
     this.object = setAll(
-      this.object, path, val,
+      this.object,
+      path,
+      val,
       mergeSettings(this.settings, settings),
     );
     return this.object;
@@ -243,7 +258,9 @@ class Json {
    */
   build(path, functionToCall, settings) {
     this.object = build(
-      this.object, path, functionToCall,
+      this.object,
+      path,
+      functionToCall,
       mergeSettings(this.settings, settings),
     );
     return this.object;
@@ -260,7 +277,9 @@ class Json {
    */
   buildOne(path, functionToCall, settings) {
     this.object = buildOne(
-      this.object, path, functionToCall,
+      this.object,
+      path,
+      functionToCall,
       mergeSettings(this.settings, settings),
     );
     return this.object;
@@ -277,7 +296,9 @@ class Json {
    */
   buildAll(path, functionToCall, settings) {
     this.object = buildAll(
-      this.object, path, functionToCall,
+      this.object,
+      path,
+      functionToCall,
       mergeSettings(this.settings, settings),
     );
     return this.object;

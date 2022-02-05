@@ -1,6 +1,6 @@
 export = JsonTransformer;
-declare class JsonTransformer extends Builder {
+declare class JsonTransformer extends MapBuilder {
     determineWhatToMap(validResults: any, destinationPath: any): {};
-    transform(originPath: any, destinationPath: any, originObject: any, destinationObject: any): void;
+    transform(originPath: any, destinationPath: any, originObject: any, destinationObject: any): any;
 }
-import Builder = require("../builder");
+import MapBuilder = require("../mapBuilder");
