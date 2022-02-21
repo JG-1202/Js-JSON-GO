@@ -31,9 +31,9 @@ const MapBuilder = require('../../services/mapBuilder');
 class Map {
   /**
    * Construct a map containing origin object, destination object and settings
-   * @param {(Object|Array)} originObject - origin object,
+   * @param {any?} originObject - origin object,
    * from where data should be obtained
-   * @param {(Object|Array)} destinationObject - destination object,
+   * @param {any?} destinationObject - destination object,
    * to where data should be mapped
    * @param {SettingsObject=} settings - object with settings
    */

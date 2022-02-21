@@ -53,7 +53,7 @@ const SettingsLoader = require('../../services/settingsLoader');
 class Json {
   /**
    * Construct Json
-   * @param {(Object|Array)} object - input object/array
+   * @param {any?} object - input object/array
    * @param {SettingsObject=} settings - object with settings
    */
   constructor(object, settings) {

@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.2.1] - 2022-02-21
+### Changed
+- JSdoc Json/Map input
+- declaration files Json/Map input
+
 ## [1.2.0] - 2022-02-05
 ### Added
 - placeholders on Map (transform/build/set) that will be resolved from originObject
