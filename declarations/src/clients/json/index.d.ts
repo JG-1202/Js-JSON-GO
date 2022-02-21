@@ -32,10 +32,10 @@ export = Json;
 declare class Json {
     /**
      * Construct Json
-     * @param {(Object|Array)} object - input object/array
+     * @param {any?} object - input object/array
      * @param {SettingsObject=} settings - object with settings
      */
-    constructor(object: (any | any[]), settings?: SettingsObject | undefined);
+    constructor(object: any | null, settings?: SettingsObject | undefined);
     settings: {};
     object: any;
     /**
