@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented here.
 
+## [1.2.2] - 2022-03-02
+### Changed
+- fixed issue where evaluating checkInSubsetOf causes an error on an undefined path
+
 ## [1.2.1] - 2022-02-21
 ### Changed
 - JSdoc Json/Map input
