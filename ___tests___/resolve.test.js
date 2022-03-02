@@ -141,6 +141,9 @@ describe('Test getAll function', () => {
   it('Does not fail when looking for object but found array', () => {
     test({ someObject: ['1'] }, '[*]["0"]', []);
   });
+  it('Check in subset of something undefined', () => {
+    test(inputFixture, 'stores[{"someValue" @ $.some.path}]', []);
+  });
 });
 
 describe('Testing JSON equality', () => {

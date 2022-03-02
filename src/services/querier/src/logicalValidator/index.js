@@ -30,9 +30,7 @@ const logicalValidator = (value, operator, checkValue, element) => {
   ];
   let result;
   checks.some((check) => {
-    const functionOutput = check(
-      value, checkValue, operator, element,
-    );
+    const functionOutput = check(value, checkValue, operator, element);
     if (typeof functionOutput === 'boolean') {
       result = functionOutput;
       return true;
